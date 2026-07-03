@@ -1,4 +1,4 @@
-Package: lsdfe
+Package: lsbgc
 Type: Package
 Title: What the Package Does (Title Case)
 Version: 0.1.0
@@ -11,8 +11,12 @@ Authors@R: c(
   )
 Description: More about what it does (maybe more than one line).
     Continuation lines should be indented.
-License: What license is it under?
+License: AGPL (>= 3)
 Encoding: UTF-8
 LazyData: true
 URL: https://github.com/sylvainglemin/lsdfe
 BugReports: https://github.com/sylvainglemin/lsdfe/issues
+Config/roxygen2/version: 8.0.0
+Suggests: 
+    testthat (>= 3.0.0)
+Config/testthat/edition: 3
