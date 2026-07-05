@@ -7,7 +7,7 @@
 hn(n)
 }
 \arguments{
-\item{n}{an integer}
+\item{n}{a positive integer}
 }
 \value{
 the harmonic number of n

@@ -27,7 +27,7 @@ ens_neutral <- function(theta,j) {
   if(!is.numeric(theta) || theta <=0) {
     abort("theta must be a positive numeric value")
   }
-  if(!is.numeric(j) || j <=0) {
+  if(!is.numeric(j) || j <=0 || floor(n)!=n) {
     abort("j must be a positive integer")
   }
   #Main
@@ -65,10 +65,10 @@ ens_constant <- function(theta,B,n,j) {
   if(!is.numeric(B)) {
     abort("B must be a positive numeric value")
   }
-  if(!is.numeric(n) || n<=1) {
+  if(!is.numeric(n) || n<=1 || floor(n)!=n) {
     abort("n must be an integer higher than 1")
   }
-  if(!is.numeric(j) || j<=0 || j>=n) {
+  if(!is.numeric(j) || j<=0 || j>=n || floor(j)!=j) {
     abort("j must be a positive integer lower than n")
   }
   #Main
@@ -112,10 +112,10 @@ ens_hotspot1 <- function(theta,B,f,n,j) {
   if(!is.numeric(f) || f<0 || f>1) {
     abort("f must be a numeric value between 0 and 1")
   }
-  if(!is.numeric(n) || n<=1) {
+  if(!is.numeric(n) || n<=1 || floor(n)!=n) {
     abort("n must be an integer higher than 1")
   }
-  if(!is.numeric(j) || j<=0 || j>=n) {
+  if(!is.numeric(j) || j<=0 || j>=n || floor(j)!=j) {
     abort("j must be a positive integer lower than n")
   }
   #Main
@@ -163,10 +163,10 @@ ens_hotspot2 <- function(theta,B0,B1,f,n,j) {
   if(!is.numeric(f) || f<0 || f>1) {
     abort("f must be a numeric value between 0 and 1")
   }
-  if(!is.numeric(n) || n<=1) {
+  if(!is.numeric(n) || n<=1 || floor(n)!=n) {
     abort("n must be an integer higher than 1")
   }
-  if(!is.numeric(j) || j<=0 || j>=n) {
+  if(!is.numeric(j) || j<=0 || j>=n || floor(j)!=j) {
     abort("j must be a positive integer lower than n")
   }
   #Main
@@ -217,10 +217,10 @@ ens_neutral_err <- function(theta1,theta2,e1,e2,n,j) {
   if(!is.numeric(e2) || e2<0 || e2>1) {
     abort("e2 must be a numeric value between 0 and 1")
   }
-  if(!is.numeric(n) || n<=1) {
+  if(!is.numeric(n) || n<=1 || floor(n)!=n) {
     abort("n must be an integer higher than 1")
   }
-  if(!is.numeric(j) || j<=0 || j>=n) {
+  if(!is.numeric(j) || j<=0 || j>=n || floor(j)!=j) {
     abort("j must be a positive integer lower than n")
   }
   #Main
@@ -274,10 +274,10 @@ ens_constant_err <- function(theta1,theta2,B,e1,e2,n,j) {
   if(!is.numeric(e2) || e2<0 || e2>1) {
     abort("e2 must be a numeric value between 0 and 1")
   }
-  if(!is.numeric(n) || n<=1) {
+  if(!is.numeric(n) || n<=1 || floor(n)!=n) {
     abort("n must be an integer higher than 1")
   }
-  if(!is.numeric(j) || j<=0 || j>=n) {
+  if(!is.numeric(j) || j<=0 || j>=n || floor(j)!=j) {
     abort("j must be a positive integer lower than n")
   }
   #Main
@@ -336,10 +336,10 @@ ens_hotspot1_err <- function(theta1,theta2,B,f,e1,e2,n,j) {
   if(!is.numeric(e2) || e2<0 || e2>1) {
     abort("e2 must be a numeric value between 0 and 1")
   }
-  if(!is.numeric(n) || n<=1) {
+  if(!is.numeric(n) || n<=1 || floor(n)!=n) {
     abort("n must be an integer higher than 1")
   }
-  if(!is.numeric(j) || j<=0 || j>=n) {
+  if(!is.numeric(j) || j<=0 || j>=n || floor(j)!=j) {
     abort("j must be a positive integer lower than n")
   }
   #Main
@@ -403,10 +403,10 @@ ens_hotspot2_err <- function(theta1,theta2,B0,B1,f,e1,e2,n,j) {
   if(!is.numeric(e2) || e2<0 || e2>1) {
     abort("e2 must be a numeric value between 0 and 1")
   }
-  if(!is.numeric(n) || n<=1) {
+  if(!is.numeric(n) || n<=1 || floor(n)!=n) {
     abort("n must be an integer higher than 1")
   }
-  if(!is.numeric(j) || j<=0 || j>=n) {
+  if(!is.numeric(j) || j<=0 || j>=n || floor(j)!=j) {
     abort("j must be a positive integer lower than n")
   }
   #Main

@@ -9,7 +9,7 @@
 
 #' @title Harmonic number
 #'
-#' @param n an integer
+#' @param n a positive integer
 #'
 #' @returns the harmonic number of n
 #'
@@ -18,7 +18,12 @@
 #' @examples
 #' hn(10)
 hn <- function(n) {
-  sum(1/c(1:n))
+  #Error checking
+  if(!is.numeric(n) || n<1 || floor(n)!=n) {
+    abort("n must be a positive integer")
+  }
+  #Main
+  return(sum(1/c(1:n)))
 }
 
 
@@ -40,6 +45,11 @@ hn <- function(n) {
 #' sfs <- c(100,50,30,20,30,40,80)
 #' skewness_sfs(sfs)
 skewness_sfs <- function(sfs) {
+  #Error checking
+  if(!is.numeric(sfs) || length(sfs)<2){
+    abort("sfs must be a numeric vector of size greater or equal to 2")
+  }
+  #Main
   Nclass <- length(sfs)+1
   Nobs <- sum(sfs)
   freq <- c(1:(Nclass-1))/Nclass
@@ -65,6 +75,13 @@ skewness_sfs <- function(sfs) {
 #' sfs <- c(100,50,30,20,30,40,80)
 #' project_sfs(sfs,5)
 project_sfs <- function(sfs,m){
+  #Error checking
+  if(!is.numeric(sfs) || length(sfs)<2){
+    abort("sfs must be a numeric vector of size greater or equal to 2")
+  }
+  if(!is.numeric(m) || (length(sfs)+1) < m || floor(m)!=m){
+    abort("m must be a positive integer lower or equal to the length of SFS +1 (i.e. current sample size")
+  }
   n <- length(sfs)
   output <- rep(0,m)
   index<-c(1:m)
