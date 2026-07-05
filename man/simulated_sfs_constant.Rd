@@ -12,6 +12,7 @@ simulated_sfs_constant(
   GC = 0.5,
   eWS = 0,
   eSW = 0,
+  vect_r = rep(1, (n - 1)),
   fix_snp = "free"
 )
 }
@@ -29,6 +30,8 @@ simulated_sfs_constant(
 \item{eWS}{polarization error for WS mutations}
 
 \item{eSW}{polarization error for SW mutations}
+
+\item{vect_r}{vector of noise parameters (default = rep(1,(n-1)))}
 
 \item{fix_snp}{choice between three possibilities:
 "free" (default): in each frequency class a Poisson number of SNPs is drawn so that the total number is also a random variable.

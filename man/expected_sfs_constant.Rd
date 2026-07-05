@@ -11,7 +11,8 @@ expected_sfs_constant(
   mut_bias = 1,
   GC = 0.5,
   eWS = 0,
-  eSW = 0
+  eSW = 0,
+  vect_r = rep(1, (n - 1))
 )
 }
 \arguments{
@@ -28,6 +29,8 @@ expected_sfs_constant(
 \item{eWS}{polarization error for WS mutations (default = 0)}
 
 \item{eSW}{polarization error for SW mutations (default = 0)}
+
+\item{vect_r}{vector of noise parameters (default = rep(1,(n-1)))}
 }
 \value{
 the expected WS and SW SFS

@@ -20,3 +20,7 @@ Config/roxygen2/version: 8.0.0
 Suggests: 
     testthat (>= 3.0.0)
 Config/testthat/edition: 3
+Roxygen: list(markdown = TRUE)
+RoxygenNote: 8.0.0
+Imports: 
+    stats

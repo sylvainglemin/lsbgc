@@ -8,12 +8,12 @@ sum_of_squares_hotspot2(par, WS, SW, GC)
 }
 \arguments{
 \item{par}{a vector with the six parameters of the model.
-par[1] = B0 (gBGC background)
-par[2] = B1 (gBGC in hotspots)
-par[3] = f (proportion of hotspots)
-par[4] = M (i.e. log(mut_bias))
-par[5] = e1
-par[6] = e2}
+par(1) = B0 (gBGC background)
+par(2) = B1 (gBGC in hotspots)
+par(3) = f (proportion of hotspots)
+par(4) = M (i.e. log(mut_bias))
+par(5) = e1
+par(6) = e2}
 
 \item{WS}{the WS observed SFS}
 

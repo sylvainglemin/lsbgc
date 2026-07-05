@@ -8,9 +8,9 @@ sum_of_squares_M(par, WS, SW, GC)
 }
 \arguments{
 \item{par}{a vector with the for parameters of the model.
-par[1] = M (i.e. log(mut_bias))
-par[2] = e1
-par[3] = e2}
+par(1) = M (i.e. log(mut_bias))
+par(2) = e1
+par(3) = e2}
 
 \item{WS}{the WS observed SFS}
 

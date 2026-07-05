@@ -7,12 +7,12 @@
 sum_of_squares_hotspot2bis(par, WS, SW, GC, f)
 }
 \arguments{
-\item{par}{a vector with the six parameters of the model.
-par[1] = B0 (gBGC background)
-par[2] = B1 (gBGC in hotspots)
-par[3] = M (i.e. log(mut_bias))
-par[4] = e1
-par[5] = e2}
+\item{par}{a vector with the five parameters of the model.
+par(1) = B0 (gBGC background)
+par(2) = B1 (gBGC in hotspots)
+par(3) = M (i.e. log(mut_bias))
+par(4) = e1
+par(5) = e2}
 
 \item{WS}{the WS observed SFS}
 

@@ -13,6 +13,7 @@
 #' @param GC GC content
 #' @param eWS polarization error for WS mutations (default = 0)
 #' @param eSW polarization error for SW mutations (default = 0)
+#' @param vect_r vector of noise parameters (default = rep(1,(n-1)))
 #'
 #' @returns the expected WS and SW SFS
 #'
@@ -22,12 +23,12 @@
 #' sfs <- expected_sfs_constant(20,100,1,2,0.5,0,0)
 #' barplot(sfs$WS)
 #' barplot(sfs$SW)
-expected_sfs_constant <- function(n,theta,B=0,mut_bias=1,GC=0.5,eWS=0,eSW=0){
+expected_sfs_constant <- function(n,theta,B=0,mut_bias=1,GC=0.5,eWS=0,eSW=0,vect_r=rep(1,(n-1))){
   thetaWS <- theta*(1-GC)
   thetaSW <- theta*mut_bias*GC
   freq <- c(1:(n-1))
-  sfsWS <- sapply(freq, function(j) ens_constant_err(thetaWS,thetaSW,B,eWS,eSW,n,j))
-  sfsSW <- sapply(freq, function(j) ens_constant_err(thetaSW,thetaWS,-B,eSW,eWS,n,j))
+  sfsWS <- vect_r*sapply(freq, function(j) ens_constant_err(thetaWS,thetaSW,B,eWS,eSW,n,j))
+  sfsSW <- vect_r*sapply(freq, function(j) ens_constant_err(thetaSW,thetaWS,-B,eSW,eWS,n,j))
   return(list("WS"=sfsWS,"SW"=sfsSW))
 }
 
@@ -49,6 +50,7 @@ expected_sfs_constant <- function(n,theta,B=0,mut_bias=1,GC=0.5,eWS=0,eSW=0){
 #' @param GC GC content
 #' @param eWS polarization error for WS mutations (default = 0)
 #' @param eSW polarization error for SW mutations (default = 0)
+#' @param vect_r vector of noise parameters (default = rep(1,(n-1)))
 #'
 #' @returns expected WS and SW SFS
 #'
@@ -58,12 +60,12 @@ expected_sfs_constant <- function(n,theta,B=0,mut_bias=1,GC=0.5,eWS=0,eSW=0){
 #' sfs <- expected_sfs_hotspot(20,100,3,0.1,0.1,2,0.5,0,0)
 #' barplot(sfs$WS)
 #' barplot(sfs$SW)
-expected_sfs_hotspot <- function(n,theta,B0,B1,f,mut_bias,GC,eWS=0,eSW=0){
+expected_sfs_hotspot <- function(n,theta,B0,B1,f,mut_bias,GC,eWS=0,eSW=0,vect_r=rep(1,(n-1))){
   thetaWS <- theta*(1-GC)
   thetaSW <- theta*mut_bias*GC
   freq <- c(1:(n-1))
-  sfsWS <- sapply(freq, function(j) ens_hotspot2_err(thetaWS,thetaSW,B0,B1,f,eWS,eSW,n,j))
-  sfsSW <- sapply(freq, function(j) ens_hotspot2_err(thetaSW,thetaWS,-B0,-B1,f,eSW,eWS,n,j))
+  sfsWS <- vect_r*sapply(freq, function(j) ens_hotspot2_err(thetaWS,thetaSW,B0,B1,f,eWS,eSW,n,j))
+  sfsSW <- vect_r*sapply(freq, function(j) ens_hotspot2_err(thetaSW,thetaWS,-B0,-B1,f,eSW,eWS,n,j))
   return(list("WS"=sfsWS,"SW"=sfsSW))
 }
 
@@ -81,6 +83,7 @@ expected_sfs_hotspot <- function(n,theta,B0,B1,f,mut_bias,GC,eWS=0,eSW=0){
 #' @param GC GC content
 #' @param eWS polarization error for WS mutations
 #' @param eSW polarization error for SW mutations
+#' @param vect_r vector of noise parameters (default = rep(1,(n-1)))
 #' @param fix_snp choice between three possibilities:
 #' "free" (default): in each frequency class a Poisson number of SNPs is drawn so that the total number is also a random variable.
 #' "fixed_sfs": for each SFS (WS and SW) the number of sampled SNPs is fixed to the expected number of the model.
@@ -96,8 +99,8 @@ expected_sfs_hotspot <- function(n,theta,B0,B1,f,mut_bias,GC,eWS=0,eSW=0){
 #' sim_sfs <- simulated_sfs_constant(20,100,1,2,0.5,0,0)
 #' barplot(sim_sfs$WS)
 #' barplot(sim_sfs$SW)
-simulated_sfs_constant <- function(n,theta,B=0,mut_bias=1,GC=0.5,eWS=0,eSW=0,fix_snp="free"){
-  exp_sfs <- expected_sfs_constant(n, theta,B,mut_bias,GC,eWS,eSW)
+simulated_sfs_constant <- function(n,theta,B=0,mut_bias=1,GC=0.5,eWS=0,eSW=0,vect_r=rep(1,(n-1)),fix_snp="free"){
+  exp_sfs <- expected_sfs_constant(n, theta,B,mut_bias,GC,eWS,eSW,vect_r)
   if(fix_snp=="free") {
     sfsWS <- sapply(exp_sfs$WS,function(x) rpois(1,x))
     sfsSW <- sapply(exp_sfs$SW,function(x) rpois(1,x))
@@ -142,6 +145,7 @@ simulated_sfs_constant <- function(n,theta,B=0,mut_bias=1,GC=0.5,eWS=0,eSW=0,fix
 #' @param GC GC content
 #' @param eWS polarization error for WS mutations
 #' @param eSW polarization error for SW mutations
+#' @param vect_r vector of noise parameters (default = rep(1,(n-1)))
 #' @param fix_snp choice between three possibilities:
 #' "free" (default): in each frequency class a Poisson number of SNPs is drawn so that the total number is also a random variable.
 #' "fixed_sfs": for each SFS (WS and SW) the number of sampled SNPs is fixed to the expected number of the model.
@@ -157,8 +161,8 @@ simulated_sfs_constant <- function(n,theta,B=0,mut_bias=1,GC=0.5,eWS=0,eSW=0,fix
 #' sim_sfs <- simulated_sfs_constant(20,100,1,2,0.5,0,0)
 #' barplot(sim_sfs$WS)
 #' barplot(sim_sfs$SW)
-simulated_sfs_hotspot <- function(n,theta,B0,B1,f,mut_bias,GC,eWS=0,eSW=0,fix_snp="free"){
-  exp_sfs <- expected_sfs_hotspot(n,theta,B0,B1,f,mut_bias,GC,eWS,eSW)
+simulated_sfs_hotspot <- function(n,theta,B0,B1,f,mut_bias,GC,eWS=0,eSW=0,vect_r=rep(1,(n-1)),fix_snp="free"){
+  exp_sfs <- expected_sfs_hotspot(n,theta,B0,B1,f,mut_bias,GC,eWS,eSW,vect_r)
   if(fix_snp=="free") {
     sfsWS <- sapply(exp_sfs$WS,function(x) rpois(1,x))
     sfsSW <- sapply(exp_sfs$SW,function(x) rpois(1,x))

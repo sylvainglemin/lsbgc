@@ -8,9 +8,9 @@ sum_of_squares_B(par, WS, SW, GC)
 }
 \arguments{
 \item{par}{a vector with the three parameters of the model.
-par[1] = B
-par[2] = e1
-par[3] = e2}
+par(1) = B
+par(2) = e1
+par(3) = e2}
 
 \item{WS}{the WS observed SFS}
 

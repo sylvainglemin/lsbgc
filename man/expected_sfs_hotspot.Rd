@@ -4,7 +4,18 @@
 \alias{expected_sfs_hotspot}
 \title{Expected SFS hotspot gBGC}
 \usage{
-expected_sfs_hotspot(n, theta, B0, B1, f, mut_bias, GC, eWS = 0, eSW = 0)
+expected_sfs_hotspot(
+  n,
+  theta,
+  B0,
+  B1,
+  f,
+  mut_bias,
+  GC,
+  eWS = 0,
+  eSW = 0,
+  vect_r = rep(1, (n - 1))
+)
 }
 \arguments{
 \item{n}{sample size}
@@ -24,6 +35,8 @@ expected_sfs_hotspot(n, theta, B0, B1, f, mut_bias, GC, eWS = 0, eSW = 0)
 \item{eWS}{polarization error for WS mutations (default = 0)}
 
 \item{eSW}{polarization error for SW mutations (default = 0)}
+
+\item{vect_r}{vector of noise parameters (default = rep(1,(n-1)))}
 }
 \value{
 expected WS and SW SFS

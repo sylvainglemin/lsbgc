@@ -68,9 +68,9 @@ sum_of_squares_NULL <- function(WS,SW,GC) {
 #' w(j) = Ows(j)*Osw(j) / (Ows(j)+Osw(j)) is the weight used in the least square
 #'
 #' @param par a vector with the for parameters of the model.
-#' par[1] = M (i.e. log(mut_bias))
-#' par[2] = e1
-#' par[3] = e2
+#' par(1) = M (i.e. log(mut_bias))
+#' par(2) = e1
+#' par(3) = e2
 #' @param WS the WS observed SFS
 #' @param SW the SW observed SFS
 #' @param GC GC content
@@ -127,9 +127,9 @@ sum_of_squares_M <- function(par,WS,SW,GC) {
 #' @description Gradient of the sum of squares function
 #'
 #' @param par a vector with the for parameters of the model.
-#' par[1] = M (i.e. log(mut_bias))
-#' par[2] = e1
-#' par[3] = e2
+#' par(1) = M (i.e. log(mut_bias))
+#' par(2) = e1
+#' par(3) = e2
 #' @param WS the WS observed SFS
 #' @param SW the SW observed SFS
 #' @param GC the GC content
@@ -200,9 +200,9 @@ gr_sum_of_squares_M <- function(par,WS,SW,GC) {
 #' w(j) = Ows(j)*Osw(j) / (Ows(j)+Osw(j)) is the weight used in the least square
 #'
 #' @param par a vector with the three parameters of the model.
-#' par[1] = B
-#' par[2] = e1
-#' par[3] = e2
+#' par(1) = B
+#' par(2) = e1
+#' par(3) = e2
 #' @param WS the WS observed SFS
 #' @param SW the SW observed SFS
 #' @param GC the GC content
@@ -261,9 +261,9 @@ sum_of_squares_B <- function(par,WS,SW,GC) {
 #' @description Gradient of the sum of squares function
 #'
 #' @param par a vector with the four parameters of the model.
-#' par[1] = B
-#' par[2] = e1
-#' par[3] = e2
+#' par(1) = B
+#' par(2) = e1
+#' par(3) = e2
 #' @param WS the WS observed SFS
 #' @param SW the SW observed SFS
 #' @param GC the GC content
@@ -332,10 +332,10 @@ gr_sum_of_squares_B <- function(par,WS,SW,GC) {
 #' w(j) = Ows(j)*Osw(j) / (Ows(j)+Osw(j)) is the weight used in the least square
 #'
 #' @param par a vector with the four parameters of the model.
-#' par[1] = B
-#' par[2] = M (i.e. log(mut_bias))
-#' par[3] = e1
-#' par[4] = e2
+#' par(1) = B
+#' par(2) = M (i.e. log(mut_bias))
+#' par(3) = e1
+#' par(4) = e2
 #' @param WS the WS observed SFS
 #' @param SW the SW observed SFS
 #' @param GC the GC content
@@ -407,10 +407,10 @@ sum_of_squares_BM <- function(par,WS,SW,GC) {
 #' @description Gradient of the sum of squares function
 #'
 #' @param par a vector with the four parameters of the model.
-#' par[1] = B
-#' par[2] = M (i.e. log(mut_bias))
-#' par[3] = e1
-#' par[4] = e2
+#' par(1) = B
+#' par(2) = M (i.e. log(mut_bias))
+#' par(3) = e1
+#' par(4) = e2
 #' @param WS the WS observed SFS
 #' @param SW the SW observed SFS
 #' @param GC the GC content

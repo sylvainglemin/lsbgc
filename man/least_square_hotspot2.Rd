@@ -53,8 +53,10 @@ It's better to use the analytical gradient function but the option can be turn o
 }
 \value{
 A list of two lists:
-- param: Optimized parameters
-- criteria: Model fit criteria
+\itemize{
+\item param: Optimized parameters
+\item criteria: Model fit criteria
+}
 }
 \description{
 Function that searches for the six parameters that minimize the sum_of_squares function

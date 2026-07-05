@@ -21,11 +21,11 @@
 #' w(j) = Ows(j)*Osw(j) / (Ows(j)+Osw(j)) is the weight used in the least square
 #'
 #' @param par a vector with the six parameters of the model.
-#' par[1] = B (gBGC background)
-#' par[2] = f (proportion of hotspots)
-#' par[3] = M (i.e. log(mut_bias))
-#' par[4] = e1
-#' par[5] = e2
+#' par(1) = B (gBGC background)
+#' par(2) = f (proportion of hotspots)
+#' par(3) = M (i.e. log(mut_bias))
+#' par(4) = e1
+#' par(5) = e2
 #' @param WS the WS observed SFS
 #' @param SW the SW observed SFS
 #' @param GC the GC content
@@ -89,11 +89,11 @@ sum_of_squares_hotspot1 <- function(par,WS,SW,GC) {
 #' @description Gradient of the sum of squares function
 #'
 #' @param par a vector with the six parameters of the model.
-#' par[1] = B
-#' par[2] = f
-#' par[3] = M (i.e. log(mut_bias))
-#' par[4] = e1
-#' par[5] = e2
+#' par(1) = B
+#' par(2) = f
+#' par(3) = M (i.e. log(mut_bias))
+#' par(4) = e1
+#' par(5) = e2
 #' @param WS the WS observed SFS
 #' @param SW the SW observed SFS
 #' @param GC the GC content
@@ -175,12 +175,12 @@ gr_sum_of_squares_hotspot1 <- function(par,WS,SW,GC) {
 #' w(j) = Ows(j)*Osw(j) / (Ows(j)+Osw(j)) is the weight used in the least square
 #'
 #' @param par a vector with the six parameters of the model.
-#' par[1] = B0 (gBGC background)
-#' par[2] = B1 (gBGC in hotspots)
-#' par[3] = f (proportion of hotspots)
-#' par[4] = M (i.e. log(mut_bias))
-#' par[5] = e1
-#' par[6] = e2
+#' par(1) = B0 (gBGC background)
+#' par(2) = B1 (gBGC in hotspots)
+#' par(3) = f (proportion of hotspots)
+#' par(4) = M (i.e. log(mut_bias))
+#' par(5) = e1
+#' par(6) = e2
 #' @param WS the WS observed SFS
 #' @param SW the SW observed SFS
 #' @param GC the GC content
@@ -245,12 +245,12 @@ sum_of_squares_hotspot2 <- function(par,WS,SW,GC) {
 #' @description Gradient of the sum of squares function
 #'
 #' @param par a vector with the six parameters of the model.
-#' par[1] = B0
-#' par[2] = B1
-#' par[3] = f
-#' par[4] = M (i.e. log(mut_bias))
-#' par[5] = e1
-#' par[6] = e2
+#' par(1) = B0
+#' par(2) = B1
+#' par(3) = f
+#' par(4) = M (i.e. log(mut_bias))
+#' par(5) = e1
+#' par(6) = e2
 #' @param WS the WS observed SFS
 #' @param SW the SW observed SFS
 #' @param GC the GC content
@@ -333,12 +333,12 @@ gr_sum_of_squares_hotspot2 <- function(par,WS,SW,GC) {
 #' where Tws and Tsw are expressed as a function of Ows, Osw, e1 and e2
 #' w(j) = Ows(j)*Osw(j) / (Ows(j)+Osw(j)) is the weight used in the least square
 #'
-#' @param par a vector with the six parameters of the model.
-#' par[1] = B0 (gBGC background)
-#' par[2] = B1 (gBGC in hotspots)
-#' par[3] = M (i.e. log(mut_bias))
-#' par[4] = e1
-#' par[5] = e2
+#' @param par a vector with the five parameters of the model.
+#' par(1) = B0 (gBGC background)
+#' par(2) = B1 (gBGC in hotspots)
+#' par(3) = M (i.e. log(mut_bias))
+#' par(4) = e1
+#' par(5) = e2
 #' @param WS the WS observed SFS
 #' @param SW the SW observed SFS
 #' @param GC the GC content
@@ -406,12 +406,12 @@ sum_of_squares_hotspot2bis <- function(par,WS,SW,GC,f) {
 #'
 #' @description Gradient of the sum of squares function
 #'
-#' @param par a vector with the six parameters of the model.
-#' par[1] = B0
-#' par[2] = B1
-#' par[3] = M (i.e. log(mut_bias))
-#' par[4] = e1
-#' par[5] = e2
+#' @param par a vector with the five parameters of the model.
+#' par(1) = B0
+#' par(2) = B1
+#' par(3) = M (i.e. log(mut_bias))
+#' par(4) = e1
+#' par(5) = e2
 #' @param WS the WS observed SFS
 #' @param SW the SW observed SFS
 #' @param GC the GC content
