@@ -2,12 +2,13 @@
 # Sylvain Glemin
 # sylvain.glemin@univ-rennes.fr
 
-# Files with constants and default parameters
-
+#' @title Internal Constants
+#'
+#' @description Constants used internally by the package.
+#' @noRd
 # Constants used when functions are not defined in 0
 ZERO <- 10^(-8)
 ONE <- 1 - ZERO
-
 # Default parameters for optimization
 # gBGC coefficient
 BMIN <- -100

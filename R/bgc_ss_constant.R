@@ -20,7 +20,6 @@
 #'
 #' @param WS the WS observed SFS
 #' @param SW the SW observed SFS
-#' @param GC the GC content
 #'
 #' @returns The weighted sum of squares
 #'
@@ -30,11 +29,15 @@
 #' sfsWS <- c(100,50,30,15,10)
 #' sfsSW <- c(200,80, 30, 10, 5)
 #' sum_of_squares_NULL(sfsWS,sfsSW)
-sum_of_squares_NULL <- function(WS,SW,GC) {
-  if(length(WS)!=length(SW)) {
-    print("ERROR: the two SFSs, WS and SW, must have the same length")
-    return(NA)
+sum_of_squares_NULL <- function(WS,SW) {
+  #Error checking
+  if(!is.numeric(c(WS,SW)) || length(which(c(WS,SW)<0))>0 ) {
+    abort("The two SFSs must have positive numeric values")
   }
+  if(length(WS)!=length(SW)) {
+    abort("The two SFSs, WS and SW, must have the same length")
+  }
+  #Main
   w <- WS*SW/(WS + SW)
   y <- log(WS/SW) + 1/(2*WS) - 1/(2*SW)
   removeNA <- which(WS!=0 & SW!=0)
@@ -81,21 +84,24 @@ sum_of_squares_NULL <- function(WS,SW,GC) {
 #'
 #' @examples
 #' sfsWS <- c(100,50,30,15,10)
-#' sfsSW <- c(200,80, 30, 10, 5)
-#' sum_of_squares_M(sfsWS,sfsSW,0.5)
+#' sfsSW <- c(200,80,30,10,5)
+#' param <- c(2,0.02,0.01)
+#' sum_of_squares_M(param,sfsWS,sfsSW,0.5)
 sum_of_squares_M <- function(par,WS,SW,GC) {
-  if(length(par)!=3) {
-    print("ERROR: a three values vector must be given as par")
-    return(NA)
+  #Error checking
+  if(!is.numeric(c(WS,SW)) || length(which(c(WS,SW)<0))>0 ) {
+    abort("The two SFSs must have positive numeric values")
   }
   if(length(WS)!=length(SW)) {
-    print("ERROR: the two SFSs, WS and SW, must have the same length")
-    return(NA)
+    abort("The two SFSs, WS and SW, must have the same length")
+  }
+  if(length(par)!=3) {
+    abort("A three values vector must be given as par")
   }
   if(GC<=0 | GC>=1) {
-    print("ERROR: GC content must be strictly between 0 and 1")
-    return(NA)
+    abort("GC content must be strictly between 0 and 1")
   }
+  #Main
   M <- par[1]
   e1 <- par[2]
   e2 <- par[3]
@@ -138,18 +144,20 @@ sum_of_squares_M <- function(par,WS,SW,GC) {
 #'
 #' @noRd
 gr_sum_of_squares_M <- function(par,WS,SW,GC) {
-  if(length(par)!=3) {
-    print("ERROR: a three values vector must be given as par")
-    return(NA)
+  #Error checking
+  if(!is.numeric(c(WS,SW)) || length(which(c(WS,SW)<0))>0 ) {
+    abort("The two SFSs must have positive numeric values")
   }
   if(length(WS)!=length(SW)) {
-    print("ERROR: the two SFSs, WS and SW, must have the same length")
-    return(NA)
+    abort("The two SFSs, WS and SW, must have the same length")
+  }
+  if(length(par)!=3) {
+    abort("A three values vector must be given as par")
   }
   if(GC<=0 | GC>=1) {
-    print("ERROR: GC content must be between 0 and 1")
-    return(NA)
+    abort("GC content must be strictly between 0 and 1")
   }
+  #Main
   M <- par[1]
   e1 <- par[2]
   e2 <- par[3]
@@ -214,21 +222,23 @@ gr_sum_of_squares_M <- function(par,WS,SW,GC) {
 #' @examples
 #' sfsWS <- c(100,50,30,15,10)
 #' sfsSW <- c(200,80, 30, 10, 5)
-#' param <- c(1,2,0.02,0.01)
+#' param <- c(1,0.02,0.01)
 #' sum_of_squares_B(param,sfsWS,sfsSW,0.5)
 sum_of_squares_B <- function(par,WS,SW,GC) {
-  if(length(par)!=3) {
-    print("ERROR: a three values vector must be given as par")
-    return(NA)
+  #Error checking
+  if(!is.numeric(c(WS,SW)) || length(which(c(WS,SW)<0))>0 ) {
+    abort("The two SFSs must have positive numeric values")
   }
   if(length(WS)!=length(SW)) {
-    print("ERROR: the two SFSs, WS and SW, must have the same length")
-    return(NA)
+    abort("The two SFSs, WS and SW, must have the same length")
+  }
+  if(length(par)!=3) {
+    abort("A three values vector must be given as par")
   }
   if(GC<=0 | GC>=1) {
-    print("ERROR: GC content must be strictly between 0 and 1")
-    return(NA)
+    abort("GC content must be strictly between 0 and 1")
   }
+  #Main
   B <- par[1]
   e1 <- par[2]
   e2 <- par[3]
@@ -272,18 +282,20 @@ sum_of_squares_B <- function(par,WS,SW,GC) {
 #'
 #' @noRd
 gr_sum_of_squares_B <- function(par,WS,SW,GC) {
-  if(length(par)!=3) {
-    print("ERROR: a three values vector must be given as par")
-    return(NA)
+  #Error checking
+  if(!is.numeric(c(WS,SW)) || length(which(c(WS,SW)<0))>0 ) {
+    abort("The two SFSs must have positive numeric values")
   }
   if(length(WS)!=length(SW)) {
-    print("ERROR: the two SFSs, WS and SW, must have the same length")
-    return(NA)
+    abort("The two SFSs, WS and SW, must have the same length")
+  }
+  if(length(par)!=3) {
+    abort("A three values vector must be given as par")
   }
   if(GC<=0 | GC>=1) {
-    print("ERROR: GC content must be between 0 and 1")
-    return(NA)
+    abort("GC content must be strictly between 0 and 1")
   }
+  #Main
   B <- par[1]
   e1 <- par[2]
   e2 <- par[3]
@@ -350,18 +362,20 @@ gr_sum_of_squares_B <- function(par,WS,SW,GC) {
 #' param <- c(1,2,0.02,0.01)
 #' sum_of_squares_BM(param,sfsWS,sfsSW,0.5)
 sum_of_squares_BM <- function(par,WS,SW,GC) {
-  if(length(par)!=4) {
-    print("ERROR: a four values vector must be given as par")
-    return(NA)
+  #Error checking
+  if(!is.numeric(c(WS,SW)) || length(which(c(WS,SW)<0))>0 ) {
+    abort("The two SFSs must have positive numeric values")
   }
   if(length(WS)!=length(SW)) {
-    print("ERROR: the two SFSs, WS and SW, must have the same length")
-    return(NA)
+    abort("The two SFSs, WS and SW, must have the same length")
+  }
+  if(length(par)!=4) {
+    abort("A four values vector must be given as par")
   }
   if(GC<=0 | GC>=1) {
-    print("ERROR: GC content must be strictly between 0 and 1")
-    return(NA)
+    abort("GC content must be strictly between 0 and 1")
   }
+  #Main
   B <- par[1]
   M <- par[2]
   e1 <- par[3]
@@ -419,18 +433,20 @@ sum_of_squares_BM <- function(par,WS,SW,GC) {
 #'
 #' @noRd
 gr_sum_of_squares_BM <- function(par,WS,SW,GC) {
-  if(length(par)!=4) {
-    print("ERROR: a four values vector must be given as par")
-    return(NA)
+  #Error checking
+  if(!is.numeric(c(WS,SW)) || length(which(c(WS,SW)<0))>0 ) {
+    abort("The two SFSs must have positive numeric values")
   }
   if(length(WS)!=length(SW)) {
-    print("ERROR: the two SFSs, WS and SW, must have the same length")
-    return(NA)
+    abort("The two SFSs, WS and SW, must have the same length")
+  }
+  if(length(par)!=4) {
+    abort("A four values vector must be given as par")
   }
   if(GC<=0 | GC>=1) {
-    print("ERROR: GC content must be between 0 and 1")
-    return(NA)
+    abort("GC content must be strictly between 0 and 1")
   }
+  #Main
   B <- par[1]
   M <- par[2]
   e1 <- par[3]

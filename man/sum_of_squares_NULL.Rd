@@ -4,14 +4,12 @@
 \alias{sum_of_squares_NULL}
 \title{Sum of squares of the null model}
 \usage{
-sum_of_squares_NULL(WS, SW, GC)
+sum_of_squares_NULL(WS, SW)
 }
 \arguments{
 \item{WS}{the WS observed SFS}
 
 \item{SW}{the SW observed SFS}
-
-\item{GC}{the GC content}
 }
 \value{
 The weighted sum of squares

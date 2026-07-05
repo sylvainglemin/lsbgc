@@ -33,6 +33,7 @@ w(j) = Ows(j)*Osw(j) / (Ows(j)+Osw(j)) is the weight used in the least square
 }
 \examples{
 sfsWS <- c(100,50,30,15,10)
-sfsSW <- c(200,80, 30, 10, 5)
-sum_of_squares_M(sfsWS,sfsSW,0.5)
+sfsSW <- c(200,80,30,10,5)
+param <- c(2,0.02,0.01)
+sum_of_squares_M(param,sfsWS,sfsSW,0.5)
 }
