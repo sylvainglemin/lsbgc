@@ -25,6 +25,6 @@ B can be positive (W->S mutations) or negative (S->W) mutations
 theta <- 100
 B <- 1.2
 n <- 10
-sfs <- sapply(c(1:(n-1)), function(x) ens_constant(theta,B,n,x))
+sfs <- ens_constant(theta,B,n,j = 1:(n-1))
 barplot(sfs)
 }

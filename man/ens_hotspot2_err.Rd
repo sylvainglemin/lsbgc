@@ -40,6 +40,6 @@ f <- 0.2
 e1 <- 0.01
 e2 <- 0.02
 n <- 10
-sfs <- sapply(c(1:(n-1)), function(x) ens_hotspot2_err(theta1,theta2,B0,B1,f,e1,e2,n,x))
+sfs <- ens_hotspot2_err(theta1,theta2,B0,B1,f,e1,e2,n,j = 1:(n-1))
 barplot(sfs)
 }

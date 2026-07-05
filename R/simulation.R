@@ -26,9 +26,8 @@
 expected_sfs_constant <- function(n,theta,B=0,mut_bias=1,GC=0.5,eWS=0,eSW=0,vect_r=rep(1,(n-1))){
   thetaWS <- theta*(1-GC)
   thetaSW <- theta*mut_bias*GC
-  freq <- c(1:(n-1))
-  sfsWS <- vect_r*sapply(freq, function(j) ens_constant_err(thetaWS,thetaSW,B,eWS,eSW,n,j))
-  sfsSW <- vect_r*sapply(freq, function(j) ens_constant_err(thetaSW,thetaWS,-B,eSW,eWS,n,j))
+  sfsWS <- vect_r*ens_constant_err(thetaWS,thetaSW,B,eWS,eSW,n,j = 1:(n-1))
+  sfsSW <- vect_r*ens_constant_err(thetaSW,thetaWS,-B,eSW,eWS,n,j = 1:(n-1))
   return(list("WS"=sfsWS,"SW"=sfsSW))
 }
 
@@ -63,9 +62,8 @@ expected_sfs_constant <- function(n,theta,B=0,mut_bias=1,GC=0.5,eWS=0,eSW=0,vect
 expected_sfs_hotspot <- function(n,theta,B0,B1,f,mut_bias,GC,eWS=0,eSW=0,vect_r=rep(1,(n-1))){
   thetaWS <- theta*(1-GC)
   thetaSW <- theta*mut_bias*GC
-  freq <- c(1:(n-1))
-  sfsWS <- vect_r*sapply(freq, function(j) ens_hotspot2_err(thetaWS,thetaSW,B0,B1,f,eWS,eSW,n,j))
-  sfsSW <- vect_r*sapply(freq, function(j) ens_hotspot2_err(thetaSW,thetaWS,-B0,-B1,f,eSW,eWS,n,j))
+  sfsWS <- vect_r*ens_hotspot2_err(thetaWS,thetaSW,B0,B1,f,eWS,eSW,n,j = 1:(n-1))
+  sfsSW <- vect_r*ens_hotspot2_err(thetaSW,thetaWS,-B0,-B1,f,eSW,eWS,n,j = 1:(n-1))
   return(list("WS"=sfsWS,"SW"=sfsSW))
 }
 

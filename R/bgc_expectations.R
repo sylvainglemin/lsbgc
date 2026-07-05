@@ -13,17 +13,22 @@
 #'
 #' @returns The expected number of SNPs in copy j in the sample
 #'
+#' @importFrom rlang abort
+#'
 #' @export
 #'
 #' @examples
 #' theta <- 100
 #' n <- 10
-#' sfs <- sapply(c(1:(n-1)), function(x) ens_neutral(theta,x))
+#' sfs <- ens_neutral(theta,j = 1:(n-1))
 #' barplot(sfs)
 ens_neutral <- function(theta,j) {
-  theta/j
+  if(!is.numeric(theta) || theta <=0) {
+    abort("theta must be a positive numeric value. Provided:{theta}")
+  }
+  return(theta/j)
 }
-
+ens_neutral <- Vectorize(ens_neutral,vectorize.args = "j")
 
 #' @title Expectation of constant gBGC with intensity B
 #'
@@ -43,12 +48,14 @@ ens_neutral <- function(theta,j) {
 #' theta <- 100
 #' B <- 1.2
 #' n <- 10
-#' sfs <- sapply(c(1:(n-1)), function(x) ens_constant(theta,B,n,x))
+#' sfs <- ens_constant(theta,B,n,j = 1:(n-1))
 #' barplot(sfs)
 ens_constant <- function(theta,B,n,j) {
   if (B==0) return(ens_neutral(theta,j))
   ((n*theta)/(j*(n-j))) * ((1-exp(-B*(1-j/n)))/(1-exp(-B)))
 }
+ens_constant <- Vectorize(ens_constant,vectorize.args = "j")
+
 
 #' @title Expectation of the first hotspot model
 #'
@@ -70,12 +77,14 @@ ens_constant <- function(theta,B,n,j) {
 #' B <- 1.2
 #' f <- 0.2
 #' n <- 10
-#' sfs <- sapply(c(1:(n-1)), function(x) ens_hotspot1(theta,B,f,n,x))
+#' sfs <- ens_hotspot1(theta,B,f,n,j = 1:(n-1))
 #' barplot(sfs)
 ens_hotspot1 <- function(theta,B,f,n,j) {
   if (B==0) return(ens_neutral(theta,j))
   f * ens_constant(theta,B,n,j) + (1-f) * ens_neutral(theta,j)
 }
+ens_hotspot1 <- Vectorize(ens_hotspot1,vectorize.args = "j")
+
 
 #' @title Expectation of the second hotspot model
 #' @description
@@ -98,7 +107,7 @@ ens_hotspot1 <- function(theta,B,f,n,j) {
 #' B1 <- 3.5
 #' f <- 0.2
 #' n <- 10
-#' sfs <- sapply(c(1:(n-1)), function(x) ens_hotspot2(theta,B0,B1,f,n,x))
+#' sfs <- ens_hotspot2(theta,B0,B1,f,n,j = 1:(n-1))
 #' barplot(sfs)
 ens_hotspot2 <- function(theta,B0,B1,f,n,j) {
   if (B0==0) return(ens_hotspot1(theta,B1,f,n,j))
@@ -106,6 +115,7 @@ ens_hotspot2 <- function(theta,B0,B1,f,n,j) {
   if (B0==0 & B1==0) return(ens_neutral(theta,j))
   f * ens_constant(theta,B1,n,j) + (1-f) * ens_constant(theta,B0,n,j)
 }
+ens_hotspot2 <- Vectorize(ens_hotspot2,vectorize.args = "j")
 
 
 
@@ -130,11 +140,13 @@ ens_hotspot2 <- function(theta,B0,B1,f,n,j) {
 #' e1 <- 0.01
 #' e2 <- 0.02
 #' n <- 10
-#' sfs <- sapply(c(1:(n-1)), function(x) ens_neutral_err(theta1,theta2,e1,e2,n,x))
+#' sfs <- ens_neutral_err(theta1,theta2,e1,e2,n,j = 1:(n-1))
 #' barplot(sfs)
 ens_neutral_err <- function(theta1,theta2,e1,e2,n,j) {
   (1-e1)*ens_neutral(theta1,j) + e2*ens_neutral(theta2,n-j)
 }
+ens_neutral_err <- Vectorize(ens_neutral_err,vectorize.args = "j")
+
 
 #' @title Expectation of constant gBGC with intensity B
 #'
@@ -160,11 +172,12 @@ ens_neutral_err <- function(theta1,theta2,e1,e2,n,j) {
 #' e1 <- 0.01
 #' e2 <- 0.02
 #' n <- 10
-#' sfs <- sapply(c(1:(n-1)), function(x) ens_constant_err(theta1,theta2,B,e1,e2,n,x))
+#' sfs <- ens_constant_err(theta1,theta2,B,e1,e2,n,j = 1:(n-1))
 #' barplot(sfs)
 ens_constant_err <- function(theta1,theta2,B,e1,e2,n,j) {
   (1-e1)*ens_constant(theta1,B,n,j) + e2*ens_constant(theta2,-B,n,n-j)
 }
+ens_constant_err <- Vectorize(ens_constant_err,vectorize.args = "j")
 
 #' @title Expectation of the first hotspot model
 #'
@@ -192,11 +205,13 @@ ens_constant_err <- function(theta1,theta2,B,e1,e2,n,j) {
 #' e1 <- 0.01
 #' e2 <- 0.02
 #' n <- 10
-#' sfs <- sapply(c(1:(n-1)), function(x) ens_hotspot1_err(theta1,theta2,B,f,e1,e2,n,x))
+#' sfs <- ens_hotspot1_err(theta1,theta2,B,f,e1,e2,n,j = 1:(n-1))
 #' barplot(sfs)
 ens_hotspot1_err <- function(theta1,theta2,B,f,e1,e2,n,j) {
   (1-e1)*ens_hotspot1(theta1,B,f,n,j) + e2*ens_hotspot1(theta2,-B,f,n,n-j)
 }
+ens_hotspot1_err <- Vectorize(ens_hotspot1_err,vectorize.args = "j")
+
 
 #' @title Expectation of the second hotspot model
 #'
@@ -227,8 +242,9 @@ ens_hotspot1_err <- function(theta1,theta2,B,f,e1,e2,n,j) {
 #' e1 <- 0.01
 #' e2 <- 0.02
 #' n <- 10
-#' sfs <- sapply(c(1:(n-1)), function(x) ens_hotspot2_err(theta1,theta2,B0,B1,f,e1,e2,n,x))
+#' sfs <- ens_hotspot2_err(theta1,theta2,B0,B1,f,e1,e2,n,j = 1:(n-1))
 #' barplot(sfs)
 ens_hotspot2_err <- function(theta1,theta2,B0,B1,f,e1,e2,n,j) {
   (1-e1)*ens_hotspot2(theta1,B0,B1,f,n,j) + e2*ens_hotspot2(theta2,-B0,-B1,f,n,n-j)
 }
+ens_hotspot2_err <- Vectorize(ens_hotspot2_err,vectorize.args = "j")

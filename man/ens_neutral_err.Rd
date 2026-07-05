@@ -31,6 +31,6 @@ theta2 <- 200
 e1 <- 0.01
 e2 <- 0.02
 n <- 10
-sfs <- sapply(c(1:(n-1)), function(x) ens_neutral_err(theta1,theta2,e1,e2,n,x))
+sfs <- ens_neutral_err(theta1,theta2,e1,e2,n,j = 1:(n-1))
 barplot(sfs)
 }

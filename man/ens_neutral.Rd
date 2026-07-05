@@ -20,6 +20,6 @@ Expectation of the neutral model
 \examples{
 theta <- 100
 n <- 10
-sfs <- sapply(c(1:(n-1)), function(x) ens_neutral(theta,x))
+sfs <- ens_neutral(theta,j = 1:(n-1))
 barplot(sfs)
 }

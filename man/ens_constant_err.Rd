@@ -34,6 +34,6 @@ B <- 1.2
 e1 <- 0.01
 e2 <- 0.02
 n <- 10
-sfs <- sapply(c(1:(n-1)), function(x) ens_constant_err(theta1,theta2,B,e1,e2,n,x))
+sfs <- ens_constant_err(theta1,theta2,B,e1,e2,n,j = 1:(n-1))
 barplot(sfs)
 }

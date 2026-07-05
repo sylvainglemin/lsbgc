@@ -31,6 +31,6 @@ B0 <- 0.2
 B1 <- 3.5
 f <- 0.2
 n <- 10
-sfs <- sapply(c(1:(n-1)), function(x) ens_hotspot2(theta,B0,B1,f,n,x))
+sfs <- ens_hotspot2(theta,B0,B1,f,n,j = 1:(n-1))
 barplot(sfs)
 }
