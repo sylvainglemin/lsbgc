@@ -93,6 +93,8 @@ expected_sfs_hotspot <- function(n,theta,B0,B1,f,mut_bias,GC,eWS=0,eSW=0,vect_r=
 #'
 #' @returns the expected SFS
 #'
+#' @importFrom stats rpois rmultinom
+#'
 #' @export
 #'
 #' @examples
@@ -154,6 +156,8 @@ simulated_sfs_constant <- function(n,theta,B=0,mut_bias=1,GC=0.5,eWS=0,eSW=0,vec
 #' Then a multinomial sampling is drawn fro the combined SFS
 #'
 #' @returns the expected SFS
+#'
+#' @importFrom stats rpois rmultinom
 #'
 #' @export
 #'
