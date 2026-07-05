@@ -23,12 +23,19 @@
 #' sfs <- ens_neutral(theta,j = 1:(n-1))
 #' barplot(sfs)
 ens_neutral <- function(theta,j) {
+  #Error checking
   if(!is.numeric(theta) || theta <=0) {
-    abort("theta must be a positive numeric value. Provided:{theta}")
+    abort("theta must be a positive numeric value")
   }
+  if(!is.numeric(j) || j <=0) {
+    abort("j must be a positive integer")
+  }
+  #Main
   return(theta/j)
 }
 ens_neutral <- Vectorize(ens_neutral,vectorize.args = "j")
+
+
 
 #' @title Expectation of constant gBGC with intensity B
 #'
@@ -51,8 +58,23 @@ ens_neutral <- Vectorize(ens_neutral,vectorize.args = "j")
 #' sfs <- ens_constant(theta,B,n,j = 1:(n-1))
 #' barplot(sfs)
 ens_constant <- function(theta,B,n,j) {
+  #Error checking
+  if(!is.numeric(theta) || theta <=0) {
+    abort("theta must be a positive numeric value")
+  }
+  if(!is.numeric(B)) {
+    abort("B must be a positive numeric value")
+  }
+  if(!is.numeric(n) || n<=1) {
+    abort("n must be an integer higher than 1")
+  }
+  if(!is.numeric(j) || j<=0 || j>=n) {
+    abort("j must be a positive integer lower than n")
+  }
+  #Main
   if (B==0) return(ens_neutral(theta,j))
-  ((n*theta)/(j*(n-j))) * ((1-exp(-B*(1-j/n)))/(1-exp(-B)))
+  ens <- ((n*theta)/(j*(n-j))) * ((1-exp(-B*(1-j/n)))/(1-exp(-B)))
+  return(ens)
 }
 ens_constant <- Vectorize(ens_constant,vectorize.args = "j")
 
@@ -80,8 +102,26 @@ ens_constant <- Vectorize(ens_constant,vectorize.args = "j")
 #' sfs <- ens_hotspot1(theta,B,f,n,j = 1:(n-1))
 #' barplot(sfs)
 ens_hotspot1 <- function(theta,B,f,n,j) {
+  #Error checking
+  if(!is.numeric(theta) || theta <=0) {
+    abort("theta must be a positive numeric value")
+  }
+  if(!is.numeric(B)) {
+    abort("B must be a positive numeric value")
+  }
+  if(!is.numeric(f) || f<0 || f>1) {
+    abort("f must be a numeric value between 0 and 1")
+  }
+  if(!is.numeric(n) || n<=1) {
+    abort("n must be an integer higher than 1")
+  }
+  if(!is.numeric(j) || j<=0 || j>=n) {
+    abort("j must be a positive integer lower than n")
+  }
+  #Main
   if (B==0) return(ens_neutral(theta,j))
-  f * ens_constant(theta,B,n,j) + (1-f) * ens_neutral(theta,j)
+  ens <- f * ens_constant(theta,B,n,j) + (1-f) * ens_neutral(theta,j)
+  return(ens)
 }
 ens_hotspot1 <- Vectorize(ens_hotspot1,vectorize.args = "j")
 
@@ -110,10 +150,31 @@ ens_hotspot1 <- Vectorize(ens_hotspot1,vectorize.args = "j")
 #' sfs <- ens_hotspot2(theta,B0,B1,f,n,j = 1:(n-1))
 #' barplot(sfs)
 ens_hotspot2 <- function(theta,B0,B1,f,n,j) {
+  #Error checking
+  if(!is.numeric(theta) || theta <=0) {
+    abort("theta must be a positive numeric value")
+  }
+  if(!is.numeric(B0)) {
+    abort("B0 must be a positive numeric value")
+  }
+  if(!is.numeric(B1)) {
+    abort("B1 must be a positive numeric value")
+  }
+  if(!is.numeric(f) || f<0 || f>1) {
+    abort("f must be a numeric value between 0 and 1")
+  }
+  if(!is.numeric(n) || n<=1) {
+    abort("n must be an integer higher than 1")
+  }
+  if(!is.numeric(j) || j<=0 || j>=n) {
+    abort("j must be a positive integer lower than n")
+  }
+  #Main
   if (B0==0) return(ens_hotspot1(theta,B1,f,n,j))
   if (B1==0) return(ens_hotspot1(theta,B0,1-f,n,j))
   if (B0==0 & B1==0) return(ens_neutral(theta,j))
-  f * ens_constant(theta,B1,n,j) + (1-f) * ens_constant(theta,B0,n,j)
+  ens <-f * ens_constant(theta,B1,n,j) + (1-f) * ens_constant(theta,B0,n,j)
+  return(ens)
 }
 ens_hotspot2 <- Vectorize(ens_hotspot2,vectorize.args = "j")
 
@@ -143,9 +204,31 @@ ens_hotspot2 <- Vectorize(ens_hotspot2,vectorize.args = "j")
 #' sfs <- ens_neutral_err(theta1,theta2,e1,e2,n,j = 1:(n-1))
 #' barplot(sfs)
 ens_neutral_err <- function(theta1,theta2,e1,e2,n,j) {
-  (1-e1)*ens_neutral(theta1,j) + e2*ens_neutral(theta2,n-j)
+  #Error checking
+  if(!is.numeric(theta1) || theta1 <=0) {
+    abort("theta1 must be a positive numeric value")
+  }
+  if(!is.numeric(theta2) || theta2 <=0) {
+    abort("theta2 must be a positive numeric value")
+  }
+  if(!is.numeric(e1) || e1<0 || e1>1) {
+    abort("e1 must be a numeric value between 0 and 1")
+  }
+  if(!is.numeric(e2) || e2<0 || e2>1) {
+    abort("e2 must be a numeric value between 0 and 1")
+  }
+  if(!is.numeric(n) || n<=1) {
+    abort("n must be an integer higher than 1")
+  }
+  if(!is.numeric(j) || j<=0 || j>=n) {
+    abort("j must be a positive integer lower than n")
+  }
+  #Main
+  ens <- (1-e1)*ens_neutral(theta1,j) + e2*ens_neutral(theta2,n-j)
+  return(ens)
 }
 ens_neutral_err <- Vectorize(ens_neutral_err,vectorize.args = "j")
+
 
 
 #' @title Expectation of constant gBGC with intensity B
@@ -175,9 +258,35 @@ ens_neutral_err <- Vectorize(ens_neutral_err,vectorize.args = "j")
 #' sfs <- ens_constant_err(theta1,theta2,B,e1,e2,n,j = 1:(n-1))
 #' barplot(sfs)
 ens_constant_err <- function(theta1,theta2,B,e1,e2,n,j) {
-  (1-e1)*ens_constant(theta1,B,n,j) + e2*ens_constant(theta2,-B,n,n-j)
+  #Error checking
+  if(!is.numeric(theta1) || theta1 <=0) {
+    abort("theta1 must be a positive numeric value")
+  }
+  if(!is.numeric(theta2) || theta2 <=0) {
+    abort("theta2 must be a positive numeric value")
+  }
+  if(!is.numeric(B)) {
+    abort("B0 must be a positive numeric value")
+  }
+  if(!is.numeric(e1) || e1<0 || e1>1) {
+    abort("e1 must be a numeric value between 0 and 1")
+  }
+  if(!is.numeric(e2) || e2<0 || e2>1) {
+    abort("e2 must be a numeric value between 0 and 1")
+  }
+  if(!is.numeric(n) || n<=1) {
+    abort("n must be an integer higher than 1")
+  }
+  if(!is.numeric(j) || j<=0 || j>=n) {
+    abort("j must be a positive integer lower than n")
+  }
+  #Main
+  ens <- (1-e1)*ens_constant(theta1,B,n,j) + e2*ens_constant(theta2,-B,n,n-j)
+  return(ens)
 }
 ens_constant_err <- Vectorize(ens_constant_err,vectorize.args = "j")
+
+
 
 #' @title Expectation of the first hotspot model
 #'
@@ -208,9 +317,37 @@ ens_constant_err <- Vectorize(ens_constant_err,vectorize.args = "j")
 #' sfs <- ens_hotspot1_err(theta1,theta2,B,f,e1,e2,n,j = 1:(n-1))
 #' barplot(sfs)
 ens_hotspot1_err <- function(theta1,theta2,B,f,e1,e2,n,j) {
-  (1-e1)*ens_hotspot1(theta1,B,f,n,j) + e2*ens_hotspot1(theta2,-B,f,n,n-j)
+  #Error checking
+  if(!is.numeric(theta1) || theta1 <=0) {
+    abort("theta1 must be a positive numeric value")
+  }
+  if(!is.numeric(theta2) || theta2 <=0) {
+    abort("theta2 must be a positive numeric value")
+  }
+  if(!is.numeric(B)) {
+    abort("B must be a positive numeric value")
+  }
+  if(!is.numeric(f) || f<0 || f>1) {
+    abort("f must be a numeric value between 0 and 1")
+  }
+  if(!is.numeric(e1) || e1<0 || e1>1) {
+    abort("e1 must be a numeric value between 0 and 1")
+  }
+  if(!is.numeric(e2) || e2<0 || e2>1) {
+    abort("e2 must be a numeric value between 0 and 1")
+  }
+  if(!is.numeric(n) || n<=1) {
+    abort("n must be an integer higher than 1")
+  }
+  if(!is.numeric(j) || j<=0 || j>=n) {
+    abort("j must be a positive integer lower than n")
+  }
+  #Main
+  ens <- (1-e1)*ens_hotspot1(theta1,B,f,n,j) + e2*ens_hotspot1(theta2,-B,f,n,n-j)
+  return(ens)
 }
 ens_hotspot1_err <- Vectorize(ens_hotspot1_err,vectorize.args = "j")
+
 
 
 #' @title Expectation of the second hotspot model
@@ -228,7 +365,6 @@ ens_hotspot1_err <- Vectorize(ens_hotspot1_err,vectorize.args = "j")
 #' @param n sample size
 #' @param j number of copies of the derived allele
 #'
-#'
 #' @returns The expected number of SNPs in copy j in the sample
 #'
 #' @export
@@ -245,6 +381,36 @@ ens_hotspot1_err <- Vectorize(ens_hotspot1_err,vectorize.args = "j")
 #' sfs <- ens_hotspot2_err(theta1,theta2,B0,B1,f,e1,e2,n,j = 1:(n-1))
 #' barplot(sfs)
 ens_hotspot2_err <- function(theta1,theta2,B0,B1,f,e1,e2,n,j) {
-  (1-e1)*ens_hotspot2(theta1,B0,B1,f,n,j) + e2*ens_hotspot2(theta2,-B0,-B1,f,n,n-j)
+  #Error checking
+  if(!is.numeric(theta1) || theta1 <=0) {
+    abort("theta1 must be a positive numeric value")
+  }
+  if(!is.numeric(theta2) || theta2 <=0) {
+    abort("theta2 must be a positive numeric value")
+  }
+  if(!is.numeric(B0)) {
+    abort("B0 must be a positive numeric value")
+  }
+  if(!is.numeric(B1)) {
+    abort("B1 must be a positive numeric value")
+  }
+  if(!is.numeric(f) || f<0 || f>1) {
+    abort("f must be a numeric value between 0 and 1")
+  }
+  if(!is.numeric(e1) || e1<0 || e1>1) {
+    abort("e1 must be a numeric value between 0 and 1")
+  }
+  if(!is.numeric(e2) || e2<0 || e2>1) {
+    abort("e2 must be a numeric value between 0 and 1")
+  }
+  if(!is.numeric(n) || n<=1) {
+    abort("n must be an integer higher than 1")
+  }
+  if(!is.numeric(j) || j<=0 || j>=n) {
+    abort("j must be a positive integer lower than n")
+  }
+  #Main
+  ens <- (1-e1)*ens_hotspot2(theta1,B0,B1,f,n,j) + e2*ens_hotspot2(theta2,-B0,-B1,f,n,n-j)
+  return(ens)
 }
 ens_hotspot2_err <- Vectorize(ens_hotspot2_err,vectorize.args = "j")
