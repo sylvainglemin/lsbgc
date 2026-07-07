@@ -37,21 +37,23 @@
 #' @examples
 #' sfsWS <- c(100,50,30,15,10)
 #' sfsSW <- c(200,80, 30, 10, 5)
-#' param <- c(1,2,0.02,0.01)
+#' param <- c(1,0.1,2,0.02,0.01)
 #' sum_of_squares_hotspot1(param,sfsWS,sfsSW,0.5)
 sum_of_squares_hotspot1 <- function(par,WS,SW,GC) {
+  #Error checking
+  if(!is.numeric(c(WS,SW)) || length(which(c(WS,SW)<0))>0 ) {
+    abort("The two SFSs must have positive numeric values")
+  }
   if(length(par)!=5) {
-    print("ERROR: a five values vector must be given as par")
-    return(NA)
+    abort("A five values vector must be given as par")
   }
   if(length(WS)!=length(SW)) {
-    print("ERROR: the two SFSs, WS and SW, must have the same length")
-    return(NA)
+    abort("The two SFSs, WS and SW, must have the same length")
   }
   if(GC<=0 | GC>=1) {
-    print("ERROR: GC content must be strictly between 0 and 1")
-    return(NA)
+    print("GC content must be strictly between 0 and 1")
   }
+  #Main
   B <- par[1]
   f <- par[2]
   M <- par[3]
@@ -102,18 +104,20 @@ sum_of_squares_hotspot1 <- function(par,WS,SW,GC) {
 #'
 #' @noRd
 gr_sum_of_squares_hotspot1 <- function(par,WS,SW,GC) {
+  #Error checking
+  if(!is.numeric(c(WS,SW)) || length(which(c(WS,SW)<0))>0 ) {
+    abort("The two SFSs must have positive numeric values")
+  }
   if(length(par)!=5) {
-    print("ERROR: a five values vector must be given as par")
-    return(NA)
+    abort("A five values vector must be given as par")
   }
   if(length(WS)!=length(SW)) {
-    print("ERROR: the two SFSs, WS and SW, must have the same length")
-    return(NA)
+    abort("The two SFSs, WS and SW, must have the same length")
   }
   if(GC<=0 | GC>=1) {
-    print("ERROR: GC content must be between 0 and 1")
-    return(NA)
+    print("GC content must be strictly between 0 and 1")
   }
+  #Main
   B <- par[1]
   f <- par[2]
   M <- par[3]
@@ -158,7 +162,6 @@ gr_sum_of_squares_hotspot1 <- function(par,WS,SW,GC) {
 
 
 
-
 ######################################### #
 # FULL HOTSPOT MODEL HOTSPOT 2 ############
 ######################################### #
@@ -192,21 +195,23 @@ gr_sum_of_squares_hotspot1 <- function(par,WS,SW,GC) {
 #' @examples
 #' sfsWS <- c(100,50,30,15,10)
 #' sfsSW <- c(200,80, 30, 10, 5)
-#' param <- c(1,2,0.02,0.01)
+#' param <- c(0.1,5,0.1,2,0.02,0.01)
 #' sum_of_squares_hotspot2(param,sfsWS,sfsSW,0.5)
 sum_of_squares_hotspot2 <- function(par,WS,SW,GC) {
+  #Error checking
+  if(!is.numeric(c(WS,SW)) || length(which(c(WS,SW)<0))>0 ) {
+    abort("The two SFSs must have positive numeric values")
+  }
   if(length(par)!=6) {
-    print("ERROR: a six values vector must be given as par")
-    return(NA)
+    abort("A six values vector must be given as par")
   }
   if(length(WS)!=length(SW)) {
-    print("ERROR: the two SFSs, WS and SW, must have the same length")
-    return(NA)
+    abort("The two SFSs, WS and SW, must have the same length")
   }
   if(GC<=0 | GC>=1) {
-    print("ERROR: GC content must be strictly between 0 and 1")
-    return(NA)
+    print("GC content must be strictly between 0 and 1")
   }
+  #Main
   B0 <- par[1]
   B1 <- par[2]
   f <- par[3]
@@ -259,18 +264,20 @@ sum_of_squares_hotspot2 <- function(par,WS,SW,GC) {
 #'
 #' @noRd
 gr_sum_of_squares_hotspot2 <- function(par,WS,SW,GC) {
+  #Error checking
+  if(!is.numeric(c(WS,SW)) || length(which(c(WS,SW)<0))>0 ) {
+    abort("The two SFSs must have positive numeric values")
+  }
   if(length(par)!=6) {
-    print("ERROR: a six values vector must be given as par")
-    return(NA)
+    abort("A six values vector must be given as par")
   }
   if(length(WS)!=length(SW)) {
-    print("ERROR: the two SFSs, WS and SW, must have the same length")
-    return(NA)
+    abort("The two SFSs, WS and SW, must have the same length")
   }
   if(GC<=0 | GC>=1) {
-    print("ERROR: GC content must be between 0 and 1")
-    return(NA)
+    print("GC content must be strictly between 0 and 1")
   }
+  #Main
   B0 <- par[1]
   B1 <- par[2]
   f <- par[3]
@@ -342,7 +349,7 @@ gr_sum_of_squares_hotspot2 <- function(par,WS,SW,GC) {
 #' @param WS the WS observed SFS
 #' @param SW the SW observed SFS
 #' @param GC the GC content
-#' @param f fraction of hotspot
+#' @param f fraction of hotspots, fixed, not estimated (0<f<1/2)
 #'
 #' @returns The weighted sum of squares
 #'
@@ -351,25 +358,26 @@ gr_sum_of_squares_hotspot2 <- function(par,WS,SW,GC) {
 #' @examples
 #' sfsWS <- c(100,50,30,15,10)
 #' sfsSW <- c(200,80, 30, 10, 5)
-#' param <- c(1,2,0.02,0.01)
-#' sum_of_squares_hotspot2bis(param,sfsWS,sfsSW,0.5)
+#' param <- c(0.1,5,2,0.02,0.01)
+#' sum_of_squares_hotspot2bis(param,sfsWS,sfsSW,0.5,0.1)
 sum_of_squares_hotspot2bis <- function(par,WS,SW,GC,f) {
+  #Error checking
+  if(!is.numeric(c(WS,SW)) || length(which(c(WS,SW)<0))>0 ) {
+    abort("The two SFSs must have positive numeric values")
+  }
   if(length(par)!=5) {
-    print("ERROR: a five values vector must be given as par")
-    return(NA)
+    abort("A five values vector must be given as par")
   }
   if(length(WS)!=length(SW)) {
-    print("ERROR: the two SFSs, WS and SW, must have the same length")
-    return(NA)
+    abort("The two SFSs, WS and SW, must have the same length")
   }
   if(GC<=0 | GC>=1) {
-    print("ERROR: GC content must be strictly between 0 and 1")
-    return(NA)
+    print("GC content must be strictly between 0 and 1")
   }
-  if(f<0 | f>1/2) {
-    print("ERROR: GC content must be between 0 and 1/2")
-    return(NA)
+  if(f<=0 | f>=1/2) {
+    print("f must be strictly between 0 and 1/2")
   }
+  #Main
   B0 <- par[1]
   B1 <- par[2]
   M <- par[3]
@@ -421,22 +429,23 @@ sum_of_squares_hotspot2bis <- function(par,WS,SW,GC,f) {
 #'
 #' @noRd
 gr_sum_of_squares_hotspot2bis <- function(par,WS,SW,GC,f) {
+  #Error checking
+  if(!is.numeric(c(WS,SW)) || length(which(c(WS,SW)<0))>0 ) {
+    abort("The two SFSs must have positive numeric values")
+  }
   if(length(par)!=5) {
-    print("ERROR: a six values vector must be given as par")
-    return(NA)
+    abort("A five values vector must be given as par")
   }
   if(length(WS)!=length(SW)) {
-    print("ERROR: the two SFSs, WS and SW, must have the same length")
-    return(NA)
+    abort("The two SFSs, WS and SW, must have the same length")
   }
   if(GC<=0 | GC>=1) {
-    print("ERROR: GC content must be between 0 and 1")
-    return(NA)
+    print("GC content must be strictly between 0 and 1")
   }
-  if(f<0 | f>1/2) {
-    print("ERROR: GC content must be between 0 and 1/2")
-    return(NA)
+  if(f<=0 | f>=1/2) {
+    print("f must be strictly between 0 and 1/2")
   }
+  #Main
   B0 <- par[1]
   B1 <- par[2]
   M <- par[3]

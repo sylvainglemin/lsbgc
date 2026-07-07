@@ -115,7 +115,7 @@ simulated_sfs_constant <- function(n,theta,B=0,mut_bias=1,GC=0.5,eWS=0,eSW=0,vec
     sfsSW <- rmultinom(1,nSW,probaSW)
     return(list("WS"=sfsWS,"SW"=sfsSW))
   }
-  if(fix_snp=="fixed_sfs") {
+  if(fix_snp=="fixed_tot") {
     ntot <- sum(exp_sfs$WS+exp_sfs$SW)
     probatot <- c(exp_sfs$WS,exp_sfs$SW)/ntot
     sfstot <- rmultinom(1,ntot,probatot)
@@ -123,8 +123,7 @@ simulated_sfs_constant <- function(n,theta,B=0,mut_bias=1,GC=0.5,eWS=0,eSW=0,vec
     sfsSW <- sfstot[n:(n-2)]
     return(list("WS"=sfsWS,"SW"=sfsSW))
   } else {
-    print("ERROR: the chosen option is not available")
-    return(NA)
+    abort("The chosen option is not available: must be free, fixed_sfs or fixed_tot")
   }
 }
 
@@ -187,7 +186,6 @@ simulated_sfs_hotspot <- function(n,theta,B0,B1,f,mut_bias,GC,eWS=0,eSW=0,vect_r
     sfsSW <- sfstot[n:(n-2)]
     return(list("WS"=sfsWS,"SW"=sfsSW))
   } else {
-    print("ERROR: the chosen option is not available")
-    return(NA)
+    abort("The chosen option is not available: must be free, fixed_sfs or fixed_tot")
   }
 }

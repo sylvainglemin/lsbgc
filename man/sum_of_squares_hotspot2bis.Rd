@@ -20,7 +20,7 @@ par(5) = e2}
 
 \item{GC}{the GC content}
 
-\item{f}{fraction of hotspot}
+\item{f}{fraction of hotspots, fixed, not estimated (0<f<1/2)}
 }
 \value{
 The weighted sum of squares
@@ -38,6 +38,6 @@ w(j) = Ows(j)*Osw(j) / (Ows(j)+Osw(j)) is the weight used in the least square
 \examples{
 sfsWS <- c(100,50,30,15,10)
 sfsSW <- c(200,80, 30, 10, 5)
-param <- c(1,2,0.02,0.01)
-sum_of_squares_hotspot2bis(param,sfsWS,sfsSW,0.5)
+param <- c(0.1,5,2,0.02,0.01)
+sum_of_squares_hotspot2bis(param,sfsWS,sfsSW,0.5,0.1)
 }

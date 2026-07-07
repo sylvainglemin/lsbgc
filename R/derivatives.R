@@ -17,6 +17,20 @@
 #'
 #' @noRd
 d_expected_log_ratio <- function(WS,SW,e1,e2){
+  #Error checking
+  if(!is.numeric(c(WS,SW)) || length(which(c(WS,SW)<0))>0 ) {
+    abort("The two SFSs must have positive numeric values")
+  }
+  if(length(WS)!=length(SW)) {
+    abort("The two SFSs, WS and SW, must have the same length")
+  }
+  if(e1<0 | e1>1) {
+    abort("e1 content must be between 0 and 1")
+  }
+  if(e2<0 | e2>1) {
+    abort("e2 content must be between 0 and 1")
+  }
+  #Main
   d1 <- (SW + rev(WS))/((1 - e1)*SW - e1*rev(WS)) - # Log term
     1/((1 - e2)*WS - e2*rev(SW)) + # First ratio term
     ((1 - e2)*rev(WS) - e2*SW)/(((1 - e1)*SW - e1*rev(WS))^2) # Second ratio term
@@ -38,12 +52,20 @@ d_expected_log_ratio <- function(WS,SW,e1,e2){
 #'
 #' @noRd
 ratio_B <- function(B,x){
+  #Error checking
+  if(!is.numeric(B)){
+    abort("B must be a numerical value")
+  }
+  if(x < 0 || x > 1){
+    abort("x must be between 0 and 1")
+  }
+  #Main
   if(B==0) return(1 - x)
   return(
     (exp(B) - exp(B*x))/((exp(B) - 1))
   )
 }
-ratio_B <- Vectorize(ratio_B)
+ratio_B <- Vectorize(ratio_B,vectorize.args = "x")
 
 #' @title derivative of the ratio of expectation of W->S and S->W SFS for constant B
 #'
@@ -54,6 +76,14 @@ ratio_B <- Vectorize(ratio_B)
 #'
 #' @noRd
 d_ratio_B <- function(B,x){
+  #Error checking
+  if(!is.numeric(B)){
+    abort("B must be a numerical value")
+  }
+  if(x < 0 || x > 1){
+    abort("x must be between 0 and 1")
+  }
+  #Main
   if(B==0) return(
     x*(1 - x)/2
   )
@@ -61,7 +91,9 @@ d_ratio_B <- function(B,x){
     (-exp(B) + exp(B*x)*(exp(B)* (1 - x) + x))/(-1 + exp(B))^2
   )
 }
-d_ratio_B <- Vectorize(d_ratio_B)
+d_ratio_B <- Vectorize(d_ratio_B,vectorize.args = "x")
+
+
 
 #' @title derivative of the ratio of expectation of W->S and S->W SFS for hotspot model 1
 #'
@@ -73,6 +105,17 @@ d_ratio_B <- Vectorize(d_ratio_B)
 #'
 #' @noRd
 d_hotspot1 <- function(B,f,x) {
+  #Error checking
+  if(!is.numeric(B)){
+    abort("B must be a numerical value")
+  }
+  if(f < 0 || f > 1){
+    abort("x must be between 0 and 1")
+  }
+  if(x < 0 || x > 1){
+    abort("x must be between 0 and 1")
+  }
+  #Main
   dB <- -f*(
     d_ratio_B(B,x)/((1-f)*(1-x) + f*ratio_B(B,x)) +
       d_ratio_B(-B,x)/((1-f)*(1-x) + f*ratio_B(-B,x))
@@ -82,6 +125,9 @@ d_hotspot1 <- function(B,f,x) {
         ((1-f)*(1-x) + f*ratio_B(-B,x)) )
   return(list("dB"=dB,"df"=df))
 }
+d_hotspot1 <- Vectorize(d_hotspot1,vectorize.args = "x")
+
+
 
 #' @title derivative of the ratio of expectation of W->S and S->W SFS for hotspot model 1
 #'
@@ -94,6 +140,20 @@ d_hotspot1 <- function(B,f,x) {
 #'
 #' @noRd
 d_hotspot2 <- function(B0,B1,f,x) {
+  #Error checking
+  if(!is.numeric(B0)){
+    abort("B0 must be a numerical value")
+  }
+  if(!is.numeric(B1)){
+    abort("B1 must be a numerical value")
+  }
+  if(f < 0 || f > 1){
+    abort("f must be between 0 and 1")
+  }
+  if(x < 0 || x > 1){
+    abort("x must be between 0 and 1")
+  }
+  #Main
   dB0 <- -(1-f)*(
     d_ratio_B(B0,x)/((1-f)*ratio_B(B0,x) + f*ratio_B(B1,x)) +
       d_ratio_B(-B0,x)/((1-f)*ratio_B(-B0,x) + f*ratio_B(-B1,x))
@@ -107,3 +167,5 @@ d_hotspot2 <- function(B0,B1,f,x) {
         ((1-f)*ratio_B(-B0,x) + f*ratio_B(-B1,x)) )
   return(list("dB0"=dB0,"dB1"=dB1,"df"=df))
 }
+d_hotspot2 <- Vectorize(d_hotspot2,vectorize.args = "x")
+
