@@ -21,6 +21,17 @@
 #' @examples
 #' AICls(100,8,123)
 AICls <- function(n,np,SSres){
+  #Error checking
+  if(n<=0) {
+    print("n must be strictly positive")
+  }
+  if(np<=0 || np > 0) {
+    print("np must be strictly positive and lower than n")
+  }
+  if(SSres<0) {
+    print("SSres must be positive")
+  }
+  #Main
   n*log(SSres/n) + 2*(np + 1)*(n + 2)/(n - np)
 }
 
@@ -62,14 +73,17 @@ least_square_M <- function(WS,SW,GC,
                            Mmin=MMIN,Mmax=MMAX,
                            Maxit=MAXIT,Factr=FACTR,Lmm=LMM,Verbose=VERBOSE,Usegr=USEGR) {
   # Determination of initial values for optimization: use of the simple regression
+  #Error checking
+  if(!is.numeric(c(WS,SW)) || length(which(c(WS,SW)<0))>0 ) {
+    abort("The two SFSs must have positive numeric values")
+  }
   if(length(WS)!=length(SW)) {
-    print("ERROR: the two SFSs, WS and SW, must have the same length")
-    return(NA)
+    abort("The two SFSs, WS and SW, must have the same length")
   }
   if(GC<=0 | GC>=1) {
-    print("ERROR: GC content must be strictly between 0 and 1")
-    return(NA)
+    print("GC content must be strictly between 0 and 1")
   }
+  #Main
   n <- length(WS)
   Minit <- mean(log(WS/SW),na.rm=T) + log(1 - GC) - log(GC)
   # To avoid negative values in SFS after transformation the error rates must be bounded as follows:
@@ -142,17 +156,21 @@ least_square_B <- function(WS,SW,GC,
                            Bmin=BMIN,Bmax=BMAX,
                            Maxit=MAXIT,Factr=FACTR,Lmm=LMM,Verbose=VERBOSE,Usegr=USEGR) {
   # Determination of initial values for optimization: use of the simple regression
+  #Error checking
+  if(!is.numeric(c(WS,SW)) || length(which(c(WS,SW)<0))>0 ) {
+    abort("The two SFSs must have positive numeric values")
+  }
   if(length(WS)!=length(SW)) {
-    print("ERROR: the two SFSs, WS and SW, must have the same length")
-    return(NA)
+    abort("The two SFSs, WS and SW, must have the same length")
   }
   if(GC<=0 | GC>=1) {
-    print("ERROR: GC content must be strictly between 0 and 1")
-    return(NA)
+    print("GC content must be strictly between 0 and 1")
   }
+  #Main
   n <- length(WS)
   x <- c(1:n)/(n+1)
   NONZERO <- which(WS!=0 & SW!=0)
+  # Determination of initial values for optimization: use of the simple regression
   reginit <- lm(log(WS[NONZERO]/SW[NONZERO]) ~ x[NONZERO] - 1)
   Binit <- reginit$coef
   # To avoid negative values in SFS after transformation the error rates must be bounded as follows:
@@ -227,17 +245,21 @@ least_square_BM <- function(WS,SW,GC,
                             Bmin=BMIN,Bmax=BMAX,Mmin=MMIN,Mmax=MMAX,
                             Maxit=MAXIT,Factr=FACTR,Lmm=LMM,Verbose=VERBOSE,Usegr=USEGR) {
   # Determination of initial values for optimization: use of the simple regression
+  #Error checking
+  if(!is.numeric(c(WS,SW)) || length(which(c(WS,SW)<0))>0 ) {
+    abort("The two SFSs must have positive numeric values")
+  }
   if(length(WS)!=length(SW)) {
-    print("ERROR: the two SFSs, WS and SW, must have the same length")
-    return(NA)
+    abort("The two SFSs, WS and SW, must have the same length")
   }
   if(GC<=0 | GC>=1) {
-    print("ERROR: GC content must be strictly between 0 and 1")
-    return(NA)
+    print("GC content must be strictly between 0 and 1")
   }
+  #Main
   n <- length(WS)
   x <- c(1:n)/(n+1)
   NONZERO <- which(WS!=0 & SW!=0)
+  # Determination of initial values for optimization: use of the simple regression
   reginit <- lm(log(WS[NONZERO]/SW[NONZERO]) ~ x[NONZERO])
   Minit <- -reginit$coef[1] + log(1 - GC) - log(GC)
   Binit <- reginit$coef[2]
@@ -315,19 +337,23 @@ least_square_hotspot1 <- function(WS,SW,GC,
                                   Bmin=BMIN,Bmax=BMAX,Mmin=MMIN,Mmax=MMAX,
                                   Maxit=MAXIT,Factr=FACTR,Lmm=LMM,Verbose=VERBOSE,Usegr=USEGR) {
   # Determination of initial values for optimization: use of the simple regression
+  #Error checking
+  if(!is.numeric(c(WS,SW)) || length(which(c(WS,SW)<0))>0 ) {
+    abort("The two SFSs must have positive numeric values")
+  }
   if(length(WS)!=length(SW)) {
-    print("ERROR: the two SFSs, WS and SW, must have the same length")
-    return(NA)
+    abort("The two SFSs, WS and SW, must have the same length")
   }
   if(GC<=0 | GC>=1) {
-    print("ERROR: GC content must be strictly between 0 and 1")
-    return(NA)
+    print("GC content must be strictly between 0 and 1")
   }
+  #Main
   n <- length(WS)
   x <- c(1:n)/(n+1)
   NONZERO <- which(WS!=0 & SW!=0)
   # Arbitray starting value fo f. Note that we assume 0 ≤ f ≤ 1/2
   finit <- 0.1
+  # Determination of initial values for optimization: use of the simple regression
   reginit <- lm(log(WS[NONZERO]/SW[NONZERO]) ~ x[NONZERO])
   Minit <- -reginit$coef[1] + log(1 - GC) - log(GC)
   Binit <- reginit$coef[2]/finit
@@ -408,20 +434,23 @@ least_square_hotspot1 <- function(WS,SW,GC,
 least_square_hotspot2 <- function(WS,SW,GC,
                                   B0min=BMIN,B0max=BMAX,B1min=BMIN,B1max=BMAX,Mmin=MMIN,Mmax=MMAX,
                                   Maxit=MAXIT,Factr=FACTR,Lmm=LMM,Verbose=VERBOSE,Usegr=USEGR) {
-  # Determination of initial values for optimization: use of the simple regression
+  #Error checking
+  if(!is.numeric(c(WS,SW)) || length(which(c(WS,SW)<0))>0 ) {
+    abort("The two SFSs must have positive numeric values")
+  }
   if(length(WS)!=length(SW)) {
-    print("ERROR: the two SFSs, WS and SW, must have the same length")
-    return(NA)
+    abort("The two SFSs, WS and SW, must have the same length")
   }
   if(GC<=0 | GC>=1) {
-    print("ERROR: GC content must be strictly between 0 and 1")
-    return(NA)
+    print("GC content must be strictly between 0 and 1")
   }
+  #Main
   n <- length(WS)
   x <- c(1:n)/(n+1)
   NONZERO <- which(WS!=0 & SW!=0)
   # Arbitrary starting value fo f. Note that we assume 0 ≤ f ≤ 1/2
   finit <- 0.1
+  # Determination of initial values for optimization: use of the simple regression
   reginit <- lm(log(WS[NONZERO]/SW[NONZERO]) ~ x[NONZERO])
   Minit <- -reginit$coef[1] + log(1 - GC) - log(GC)
   # Starting values such that B1 = 5*B0
@@ -507,23 +536,24 @@ least_square_hotspot2 <- function(WS,SW,GC,
 least_square_hotspot2bis <- function(WS,SW,GC,f,
                                      B0min=BMIN,B0max=BMAX,B1min=BMIN,B1max=BMAX,Mmin=MMIN,Mmax=MMAX,
                                      Maxit=MAXIT,Factr=FACTR,Lmm=LMM,Verbose=VERBOSE,Usegr=USEGR) {
-  # Determination of initial values for optimization: use of the simple regression
+  #Error checking
+  if(!is.numeric(c(WS,SW)) || length(which(c(WS,SW)<0))>0 ) {
+    abort("The two SFSs must have positive numeric values")
+  }
   if(length(WS)!=length(SW)) {
-    print("ERROR: the two SFSs, WS and SW, must have the same length")
-    return(NA)
+    abort("The two SFSs, WS and SW, must have the same length")
   }
   if(GC<=0 | GC>=1) {
-    print("ERROR: GC content must be strictly between 0 and 1")
-    return(NA)
+    print("GC content must be strictly between 0 and 1")
   }
   if(f<0 | f>1/2) {
-    print("ERROR: GC content must be between 0 and 1/2")
-    return(NA)
+    abort("f must be between 0 and 1/2")
   }
+  #Main
   n <- length(WS)
   x <- c(1:n)/(n+1)
   NONZERO <- which(WS!=0 & SW!=0)
-  # Arbitrary starting value fo f. Note that we assume 0 ≤ f ≤ 1/2
+  # Determination of initial values for optimization: use of the simple regression
   reginit <- lm(log(WS[NONZERO]/SW[NONZERO]) ~ x[NONZERO])
   Minit <- -reginit$coef[1] + log(1 - GC) - log(GC)
   # Starting values such that B1 = 5*B0
