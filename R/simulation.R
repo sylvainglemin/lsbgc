@@ -25,7 +25,7 @@
 #' barplot(sfs$SW)
 expected_sfs_constant <- function(n,theta,B=0,mut_bias=1,GC=0.5,eWS=0,eSW=0,vect_r=rep(1,(n-1))){
   #Error checking
-  if(!is.numeric(n) || floor(n)!=n || n < 1){
+  if(!is.numeric(n) || floor(n)!=n || n < 2){
     abort("n must be a positive integer higher than 1")
   }
   if(!is.numeric(theta) ||  theta < 0){
@@ -41,12 +41,12 @@ expected_sfs_constant <- function(n,theta,B=0,mut_bias=1,GC=0.5,eWS=0,eSW=0,vect
     abort("GC must be a numerical value strictly higher than 0 and lower than 1")
   }
   if(!is.numeric(eWS) ||  eWS < 0 || eWS > 1){
-    abort("eWS must be a numerical value  higher than 0 and lower than 1")
+    abort("eWS must be a numerical value higher than 0 and lower than 1")
   }
   if(!is.numeric(eSW) ||  eSW < 0 || eSW > 1){
-    abort("eSW must be a numerical value  higher than 0 and lower than 1")
+    abort("eSW must be a numerical value higher than 0 and lower than 1")
   }
-  if(!is.numeric(vect_r) ||  length(vect_r)!=(n-1) || prod(vect_r>=0)==0){
+  if (!is.numeric(vect_r) || length(vect_r) != (n - 1) || any(vect_r < 0)) {
     abort("vect_r must be a vector of positive numerical values of length n-1")
   }
   #Main
@@ -87,7 +87,7 @@ expected_sfs_constant <- function(n,theta,B=0,mut_bias=1,GC=0.5,eWS=0,eSW=0,vect
 #' barplot(sfs$SW)
 expected_sfs_hotspot <- function(n,theta,B0,B1,f,mut_bias,GC,eWS=0,eSW=0,vect_r=rep(1,(n-1))){
   #Error checking
-  if(!is.numeric(n) || floor(n)!=n || n < 1){
+  if(!is.numeric(n) || floor(n)!=n || n < 2){
     abort("n must be a positive integer higher than 1")
   }
   if(!is.numeric(theta) ||  theta < 0){
@@ -114,7 +114,7 @@ expected_sfs_hotspot <- function(n,theta,B0,B1,f,mut_bias,GC,eWS=0,eSW=0,vect_r=
   if(!is.numeric(eSW) ||  eSW < 0 || eSW > 1){
     abort("eSW must be a numerical value higher than 0 and lower than 1")
   }
-  if(!is.numeric(vect_r) ||  length(vect_r)!=(n-1) || prod(vect_r>=0)==0){
+  if (!is.numeric(vect_r) || length(vect_r) != (n - 1) || any(vect_r < 0)) {
     abort("vect_r must be a vector of positive numerical values of length n-1")
   }
   #Main
@@ -159,7 +159,7 @@ expected_sfs_hotspot <- function(n,theta,B0,B1,f,mut_bias,GC,eWS=0,eSW=0,vect_r=
 #' barplot(sim_sfs$SW)
 simulated_sfs_constant <- function(n,theta,B=0,mut_bias=1,GC=0.5,eWS=0,eSW=0,vect_r=rep(1,(n-1)),fix_snp="free"){
   #Error checking
-  if(!is.numeric(n) || floor(n)!=n || n < 1){
+  if(!is.numeric(n) || floor(n)!=n || n < 2){
     abort("n must be a positive integer higher than 1")
   }
   if(!is.numeric(theta) ||  theta < 0){
@@ -180,7 +180,7 @@ simulated_sfs_constant <- function(n,theta,B=0,mut_bias=1,GC=0.5,eWS=0,eSW=0,vec
   if(!is.numeric(eSW) ||  eSW < 0 || eSW > 1){
     abort("eSW must be a numerical value higher than 0 and lower than 1")
   }
-  if(!is.numeric(vect_r) ||  length(vect_r)!=(n-1) || prod(vect_r>=0)==0){
+  if (!is.numeric(vect_r) || length(vect_r) != (n - 1) || any(vect_r < 0)) {
     abort("vect_r must be a vector of positive numerical values of length n-1")
   }
   #Main
@@ -248,7 +248,7 @@ simulated_sfs_constant <- function(n,theta,B=0,mut_bias=1,GC=0.5,eWS=0,eSW=0,vec
 #' barplot(sim_sfs$SW)
 simulated_sfs_hotspot <- function(n,theta,B0,B1,f,mut_bias,GC,eWS=0,eSW=0,vect_r=rep(1,(n-1)),fix_snp="free"){
   #Error checking
-  if(!is.numeric(n) || floor(n)!=n || n < 1){
+  if(!is.numeric(n) || floor(n)!=n || n < 2){
     abort("n must be a positive integer higher than 1")
   }
   if(!is.numeric(theta) ||  theta < 0){
@@ -275,7 +275,7 @@ simulated_sfs_hotspot <- function(n,theta,B0,B1,f,mut_bias,GC,eWS=0,eSW=0,vect_r
   if(!is.numeric(eSW) ||  eSW < 0 || eSW > 1){
     abort("eSW must be a numerical value higher than 0 and lower than 1")
   }
-  if(!is.numeric(vect_r) ||  length(vect_r)!=(n-1) || prod(vect_r>=0)==0){
+  if (!is.numeric(vect_r) || length(vect_r) != (n - 1) || any(vect_r < 0)) {
     abort("vect_r must be a vector of positive numerical values of length n-1")
   }
   #Main
