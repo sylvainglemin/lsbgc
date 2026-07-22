@@ -27,7 +27,7 @@ ens_neutral <- function(theta,j) {
   if(!is.numeric(theta) || theta <=0) {
     abort("theta must be a positive numeric value")
   }
-  if(!is.numeric(j) || j <=0 || floor(n)!=n) {
+  if(!is.numeric(j) || j <= 0 || floor(j)!=j) {
     abort("j must be a positive integer")
   }
   #Main
