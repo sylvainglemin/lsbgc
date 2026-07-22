@@ -51,7 +51,7 @@ sum_of_squares_hotspot1 <- function(par,WS,SW,GC) {
     abort("The two SFSs, WS and SW, must have the same length")
   }
   if(GC<=0 | GC>=1) {
-    print("GC content must be strictly between 0 and 1")
+    abort("GC content must be strictly between 0 and 1")
   }
   #Main
   B <- par[1]
@@ -115,7 +115,7 @@ gr_sum_of_squares_hotspot1 <- function(par,WS,SW,GC) {
     abort("The two SFSs, WS and SW, must have the same length")
   }
   if(GC<=0 | GC>=1) {
-    print("GC content must be strictly between 0 and 1")
+    abort("GC content must be strictly between 0 and 1")
   }
   #Main
   B <- par[1]
@@ -209,7 +209,7 @@ sum_of_squares_hotspot2 <- function(par,WS,SW,GC) {
     abort("The two SFSs, WS and SW, must have the same length")
   }
   if(GC<=0 | GC>=1) {
-    print("GC content must be strictly between 0 and 1")
+    abort("GC content must be strictly between 0 and 1")
   }
   #Main
   B0 <- par[1]
@@ -275,7 +275,7 @@ gr_sum_of_squares_hotspot2 <- function(par,WS,SW,GC) {
     abort("The two SFSs, WS and SW, must have the same length")
   }
   if(GC<=0 | GC>=1) {
-    print("GC content must be strictly between 0 and 1")
+    abort("GC content must be strictly between 0 and 1")
   }
   #Main
   B0 <- par[1]
@@ -372,10 +372,10 @@ sum_of_squares_hotspot2bis <- function(par,WS,SW,GC,f) {
     abort("The two SFSs, WS and SW, must have the same length")
   }
   if(GC<=0 | GC>=1) {
-    print("GC content must be strictly between 0 and 1")
+    abort("GC content must be strictly between 0 and 1")
   }
   if(f<=0 | f>=1/2) {
-    print("f must be strictly between 0 and 1/2")
+    abort("f must be strictly between 0 and 1/2")
   }
   #Main
   B0 <- par[1]
@@ -440,10 +440,10 @@ gr_sum_of_squares_hotspot2bis <- function(par,WS,SW,GC,f) {
     abort("The two SFSs, WS and SW, must have the same length")
   }
   if(GC<=0 | GC>=1) {
-    print("GC content must be strictly between 0 and 1")
+    abort("GC content must be strictly between 0 and 1")
   }
   if(f<=0 | f>=1/2) {
-    print("f must be strictly between 0 and 1/2")
+    abort("f must be strictly between 0 and 1/2")
   }
   #Main
   B0 <- par[1]
