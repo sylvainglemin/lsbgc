@@ -9,7 +9,8 @@ project_sfs(sfs, m)
 \arguments{
 \item{sfs}{initial SFS of size n = 1 + length(sfs)}
 
-\item{m}{size of the projected sfs with m ≤ n}
+\item{m}{size of the projected sfs with m ≤ n
+Note that the projected sfs will have frequencies between 1/m and (m-1)/m}
 }
 \value{
 the projected sfs

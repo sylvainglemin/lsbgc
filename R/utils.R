@@ -66,6 +66,7 @@ skewness_sfs <- function(sfs) {
 #'
 #' @param sfs initial SFS of size n = 1 + length(sfs)
 #' @param m size of the projected sfs with m ≤ n
+#' Note that the projected sfs will have frequencies between 1/m and (m-1)/m
 #'
 #' @returns the projected sfs
 #'
@@ -79,14 +80,14 @@ project_sfs <- function(sfs,m){
   if(!is.numeric(sfs) || length(sfs)<2){
     abort("sfs must be a numeric vector of size greater or equal to 2")
   }
-  if(!is.numeric(m) || (length(sfs)+1) < m || floor(m)!=m){
-    abort("m must be a positive integer lower or equal to the length of SFS +1 (i.e. current sample size")
+  if(!is.numeric(m) || length(sfs)+1 < m || floor(m)!=m){
+    abort("m must be a positive integer lower or equal to the length of SFS + 1")
   }
-  n <- length(sfs)
-  output <- rep(0,m)
-  index<-c(1:m)
-  for(k in 1:n){
-    output <- output + sfs[k]*choose(k,index)*choose(n-k,m-index)/choose(n,m)
+  n <- length(sfs) + 1
+  output <- rep(0,(m-1))
+  j <- c(1:(m-1))
+  for(k in 1:(n-1)){
+    output <- output + sfs[k]*choose(k,j)*choose(n - k,m - j)/choose(n,m)
   }
   return(output)
 }
