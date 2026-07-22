@@ -23,13 +23,13 @@
 AICls <- function(n,np,SSres){
   #Error checking
   if(n<=0) {
-    print("n must be strictly positive")
+    abort("n must be strictly positive")
   }
-  if(np<=0 || np > 0) {
-    print("np must be strictly positive and lower than n")
+  if(np<=0 || np > n) {
+    abort("np must be strictly positive and lower than n")
   }
   if(SSres<0) {
-    print("SSres must be positive")
+    abort("SSres must be positive")
   }
   #Main
   n*log(SSres/n) + 2*(np + 1)*(n + 2)/(n - np)
@@ -81,7 +81,7 @@ least_square_M <- function(WS,SW,GC,
     abort("The two SFSs, WS and SW, must have the same length")
   }
   if(GC<=0 | GC>=1) {
-    print("GC content must be strictly between 0 and 1")
+    abort("GC content must be strictly between 0 and 1")
   }
   #Main
   n <- length(WS)
@@ -164,7 +164,7 @@ least_square_B <- function(WS,SW,GC,
     abort("The two SFSs, WS and SW, must have the same length")
   }
   if(GC<=0 | GC>=1) {
-    print("GC content must be strictly between 0 and 1")
+    abort("GC content must be strictly between 0 and 1")
   }
   #Main
   n <- length(WS)
@@ -253,7 +253,7 @@ least_square_BM <- function(WS,SW,GC,
     abort("The two SFSs, WS and SW, must have the same length")
   }
   if(GC<=0 | GC>=1) {
-    print("GC content must be strictly between 0 and 1")
+    abort("GC content must be strictly between 0 and 1")
   }
   #Main
   n <- length(WS)
@@ -345,7 +345,7 @@ least_square_hotspot1 <- function(WS,SW,GC,
     abort("The two SFSs, WS and SW, must have the same length")
   }
   if(GC<=0 | GC>=1) {
-    print("GC content must be strictly between 0 and 1")
+    abort("GC content must be strictly between 0 and 1")
   }
   #Main
   n <- length(WS)
@@ -442,7 +442,7 @@ least_square_hotspot2 <- function(WS,SW,GC,
     abort("The two SFSs, WS and SW, must have the same length")
   }
   if(GC<=0 | GC>=1) {
-    print("GC content must be strictly between 0 and 1")
+    abort("GC content must be strictly between 0 and 1")
   }
   #Main
   n <- length(WS)
@@ -529,10 +529,9 @@ least_square_hotspot2 <- function(WS,SW,GC,
 #' @examples
 #' sfsWS <- c(1000,500,300,200,80,50)
 #' sfsSW <- c(2000,800,400,150,50,10)
-#' LS <- least_square_hotspot2(sfsWS,sfsSW,0.5)
+#' LS <- least_square_hotspot2bis(sfsWS,sfsSW,0.5,0.2)
 #' LS$B0 # population-scaled background gBGC
 #' LS$B1 # population-scaled hotspot gBGC
-#' LS$f # proportion of hotspots
 least_square_hotspot2bis <- function(WS,SW,GC,f,
                                      B0min=BMIN,B0max=BMAX,B1min=BMIN,B1max=BMAX,Mmin=MMIN,Mmax=MMAX,
                                      Maxit=MAXIT,Factr=FACTR,Lmm=LMM,Verbose=VERBOSE,Usegr=USEGR) {
@@ -544,7 +543,7 @@ least_square_hotspot2bis <- function(WS,SW,GC,f,
     abort("The two SFSs, WS and SW, must have the same length")
   }
   if(GC<=0 | GC>=1) {
-    print("GC content must be strictly between 0 and 1")
+    abort("GC content must be strictly between 0 and 1")
   }
   if(f<0 | f>1/2) {
     abort("f must be between 0 and 1/2")

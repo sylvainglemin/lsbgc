@@ -68,8 +68,7 @@ This model is the same as model 2 except that f is fixed by the user
 \examples{
 sfsWS <- c(1000,500,300,200,80,50)
 sfsSW <- c(2000,800,400,150,50,10)
-LS <- least_square_hotspot2(sfsWS,sfsSW,0.5)
+LS <- least_square_hotspot2bis(sfsWS,sfsSW,0.5,0.2)
 LS$B0 # population-scaled background gBGC
 LS$B1 # population-scaled hotspot gBGC
-LS$f # proportion of hotspots
 }
