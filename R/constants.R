@@ -21,4 +21,4 @@ MAXIT <- 100
 FACTR <- 10^7
 LMM <- 20
 VERBOSE <- 0
-USEGR <- T
+USEGR <- F

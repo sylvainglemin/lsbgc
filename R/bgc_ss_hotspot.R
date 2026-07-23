@@ -64,16 +64,16 @@ sum_of_squares_hotspot1 <- function(par,WS,SW,GC) {
   WSt <- ((1 - e2)*WS - e2*rev(SW))/(1 - e1 - e2)
   SWt <- ((1 - e1)*SW - e1*rev(WS))/(1 - e1 - e2)
   # Same expression without 1-e1-e2 that simplifies in ratios
-  WSt2 <- ((1 - e2)*WS - e2*rev(SW))
-  SWt2 <- ((1 - e1)*SW - e1*rev(WS))
+  #WSt2 <- ((1 - e2)*WS - e2*rev(SW))
+  #SWt2 <- ((1 - e1)*SW - e1*rev(WS))
   # w <- WSt2*SWt2/(WSt2 + SWt2)
   # Here the weight is written as a function of corrected SFSs
   # This complexifies the whole equation as e1 and e2 appear in w
   # The gradient function is also more complicated
   # Instead we use the weight as a function of observed SFSs
-  w <- WS*SW/(WS + SW)
+  w <- 1/(t_variance(WS) + t_variance(SW))
   x <- c(1:n)/(n+1)
-  y <- log(WSt2/SWt2) + 1/(WSt) - 1/(SWt)
+  y <- t_sfs(WS) - t_sfs(SW)
   ypred <- - M - log(GC) + log(1 - GC) +
     log((1 - f)*ratio_B(0,x) + f*ratio_B(B,x)) -
     log((1 - f)*ratio_B(0,x) + f*ratio_B(-B,x))
@@ -128,11 +128,9 @@ gr_sum_of_squares_hotspot1 <- function(par,WS,SW,GC) {
   WSt <- ((1-e2)*WS - e2*rev(SW))/(1 - e1 - e2)
   SWt <- ((1-e1)*SW - e1*rev(WS))/(1 - e1 - e2)
   # Same expression without 1-e1-e2 that simplifies in ratios
-  WSt2 <- ((1 - e2)*WS - e2*rev(SW))
-  SWt2 <- ((1 - e1)*SW - e1*rev(WS))
-  w <- WS*SW/(WS + SW)
+  w <- 1/(t_variance(WS) + t_variance(SW))
   x <- c(1:n)/(n+1)
-  y <- log(WSt2/SWt2) + 1/(WSt) - 1/(SWt)
+  y <- t_sfs(WS) - t_sfs(SW)
   ypred <- - M - log(GC) + log(1 - GC) +
     log((1 - f)*ratio_B(0,x) + f*ratio_B(B,x)) -
     log((1 - f)*ratio_B(0,x) + f*ratio_B(-B,x))
@@ -222,17 +220,14 @@ sum_of_squares_hotspot2 <- function(par,WS,SW,GC) {
   # True SFS as a function of observed one.
   WSt <- ((1 - e2)*WS - e2*rev(SW))/(1 - e1 - e2)
   SWt <- ((1 - e1)*SW - e1*rev(WS))/(1 - e1 - e2)
-  # Same expression without 1-e1-e2 that simplifies in ratios
-  WSt2 <- ((1 - e2)*WS - e2*rev(SW))
-  SWt2 <- ((1 - e1)*SW - e1*rev(WS))
   # w <- WSt2*SWt2/(WSt2 + SWt2)
   # Here the weight is written as a function of corrected SFSs
   # This complexifies the whole equation as e1 and e2 appear in w
   # The gradient function is also more complicated
   # Instead we use the weight as a function of observed SFSs
-  w <- WS*SW/(WS + SW)
+  w <- 1/(t_variance(WS) + t_variance(SW))
   x <- c(1:n)/(n+1)
-  y <- log(WSt2/SWt2) + 1/(WSt) - 1/(SWt)
+  y <- t_sfs(WS) - t_sfs(SW)
   ypred <- - M - log(GC) + log(1 - GC) +
     log((1 - f)*ratio_B(B0,x) + f*ratio_B(B1,x)) -
     log((1 - f)*ratio_B(-B0,x) + f*ratio_B(-B1,x))
@@ -288,12 +283,9 @@ gr_sum_of_squares_hotspot2 <- function(par,WS,SW,GC) {
   # True SFS as a function of observed one.
   WSt <- ((1-e2)*WS - e2*rev(SW))/(1 - e1 - e2)
   SWt <- ((1-e1)*SW - e1*rev(WS))/(1 - e1 - e2)
-  # Same expression without 1-e1-e2 that simplifies in ratios
-  WSt2 <- ((1 - e2)*WS - e2*rev(SW))
-  SWt2 <- ((1 - e1)*SW - e1*rev(WS))
-  w <- WS*SW/(WS + SW)
+  w <- 1/(t_variance(WS) + t_variance(SW))
   x <- c(1:n)/(n+1)
-  y <- log(WSt2/SWt2) + 1/(WSt) - 1/(SWt)
+  y <- t_sfs(WS) - t_sfs(SW)
   ypred <- - M - log(GC) + log(1 - GC) +
     log((1 - f)*ratio_B(B0,x) + f*ratio_B(B1,x)) -
     log((1 - f)*ratio_B(-B0,x) + f*ratio_B(-B1,x))
@@ -387,17 +379,9 @@ sum_of_squares_hotspot2bis <- function(par,WS,SW,GC,f) {
   # True SFS as a function of observed one.
   WSt <- ((1 - e2)*WS - e2*rev(SW))/(1 - e1 - e2)
   SWt <- ((1 - e1)*SW - e1*rev(WS))/(1 - e1 - e2)
-  # Same expression without 1-e1-e2 that simplifies in ratios
-  WSt2 <- ((1 - e2)*WS - e2*rev(SW))
-  SWt2 <- ((1 - e1)*SW - e1*rev(WS))
-  # w <- WSt2*SWt2/(WSt2 + SWt2)
-  # Here the weight is written as a function of corrected SFSs
-  # This complexifies the whole equation as e1 and e2 appear in w
-  # The gradient function is also more complicated
-  # Instead we use the weight as a function of observed SFSs
-  w <- WS*SW/(WS + SW)
+  w <- 1/(t_variance(WS) + t_variance(SW))
   x <- c(1:n)/(n+1)
-  y <- log(WSt2/SWt2) + 1/(WSt) - 1/(SWt)
+  y <- t_sfs(WS) - t_sfs(SW)
   ypred <- - M - log(GC) + log(1 - GC) +
     log((1 - f)*ratio_B(B0,x) + f*ratio_B(B1,x)) -
     log((1 - f)*ratio_B(-B0,x) + f*ratio_B(-B1,x))
@@ -455,12 +439,9 @@ gr_sum_of_squares_hotspot2bis <- function(par,WS,SW,GC,f) {
   # True SFS as a function of observed one.
   WSt <- ((1-e2)*WS - e2*rev(SW))/(1 - e1 - e2)
   SWt <- ((1-e1)*SW - e1*rev(WS))/(1 - e1 - e2)
-  # Same expression without 1-e1-e2 that simplifies in ratios
-  WSt2 <- ((1 - e2)*WS - e2*rev(SW))
-  SWt2 <- ((1 - e1)*SW - e1*rev(WS))
-  w <- WS*SW/(WS + SW)
+  w <- 1/(t_variance(WS) + t_variance(SW))
   x <- c(1:n)/(n+1)
-  y <- log(WSt2/SWt2) + 1/(WSt) - 1/(SWt)
+  y <- t_sfs(WS) - t_sfs(SW)
   ypred <- - M - log(GC) + log(1 - GC) +
     log((1 - f)*ratio_B(B0,x) + f*ratio_B(B1,x)) -
     log((1 - f)*ratio_B(-B0,x) + f*ratio_B(-B1,x))

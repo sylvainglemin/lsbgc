@@ -38,13 +38,11 @@ sum_of_squares_NULL <- function(WS,SW) {
     abort("The two SFSs, WS and SW, must have the same length")
   }
   #Main
-  w <- WS*SW/(WS + SW)
-  y <- log(WS/SW) + 1/(2*WS) - 1/(2*SW)
+  w <- 1/(t_variance(WS) + t_variance(SW))
+  y <- t_sfs(WS) - t_sfs(SW)
   removeNA <- which(WS!=0 & SW!=0)
   w <- w[removeNA]
   y <- y[removeNA]
-  SW <- SW[removeNA]
-  WS <- WS[removeNA]
   y_mean <- mean(y)
   return(
     list(
@@ -110,15 +108,16 @@ sum_of_squares_M <- function(par,WS,SW,GC) {
   WSt <- ((1 - e2)*WS - e2*rev(SW))/(1 - e1 - e2)
   SWt <- ((1 - e1)*SW - e1*rev(WS))/(1 - e1 - e2)
   # Same expression without 1-e1-e2 that simplifies in ratios
-  WSt2 <- ((1 - e2)*WS - e2*rev(SW))
-  SWt2 <- ((1 - e1)*SW - e1*rev(WS))
+  #WSt2 <- ((1 - e2)*WS - e2*rev(SW))
+  #SWt2 <- ((1 - e1)*SW - e1*rev(WS))
   # w <- WSt2*SWt2/(WSt2 + SWt2)
   # Here the weight is written as a function of corrected SFSs
   # This complexifies the whole equation as e1 and e2 appear in w
   # The gradient function is also more complicated
   # Instead we use the weight as a function of observed SFSs
-  w <- WS*SW/(WS + SW)
-  y <- log(WSt2/SWt2) + 1/(WSt) - 1/(SWt)
+  w <- 1/(t_variance(WS) + t_variance(SW))
+  y <- t_sfs(WSt) - t_sfs(SWt)
+  # y <- log(WSt2/SWt2) + 1/(WSt) - 1/(SWt)
   ypred <- rep(- M - log(GC) + log(1 - GC),n)
   removeNA <- which(WS!=0 & SW!=0)
   w <- w[removeNA]
@@ -165,12 +164,8 @@ gr_sum_of_squares_M <- function(par,WS,SW,GC) {
   # True SFS as a function of observed one.
   WSt <- ((1 - e2)*WS - e2*rev(SW))/(1 - e1 - e2)
   SWt <- ((1 - e1)*SW - e1*rev(WS))/(1 - e1 - e2)
-  # Same expression without 1-e1-e2 that simplifies in ratios
-  WSt2 <- ((1 - e2)*WS - e2*rev(SW))
-  SWt2 <- ((1 - e1)*SW - e1*rev(WS))
-  w <- WS*SW/(WS + SW)
-  x <- c(1:(n-1))/n
-  y <- log(WSt2/SWt2) + 1/(WSt) - 1/(SWt)
+  w <- 1/(t_variance(WS) + t_variance(SW))
+  y <- t_sfs(WS) - t_sfs(SW)
   ypred <- rep(- M - log(GC) + log(1 - GC),n)
   # Derivative of y as a function of error rates
   # Approximated version, derivative of log(WSt2/SWt2) without additional terms
@@ -178,7 +173,6 @@ gr_sum_of_squares_M <- function(par,WS,SW,GC) {
   dy2 <- d_expected_log_ratio(WS,SW,e1,e2)$d2
   removeNA <- which(WS!=0 & SW!=0)
   w <- w[removeNA]
-  x <- x[removeNA]
   y <- y[removeNA]
   ypred <- ypred[removeNA]
   dy1 <- dy1[removeNA]
@@ -247,16 +241,17 @@ sum_of_squares_B <- function(par,WS,SW,GC) {
   WSt <- ((1 - e2)*WS - e2*rev(SW))/(1 - e1 - e2)
   SWt <- ((1 - e1)*SW - e1*rev(WS))/(1 - e1 - e2)
   # Same expression without 1-e1-e2 that simplifies in ratios
-  WSt2 <- ((1 - e2)*WS - e2*rev(SW))
-  SWt2 <- ((1 - e1)*SW - e1*rev(WS))
+  #WSt2 <- ((1 - e2)*WS - e2*rev(SW))
+  #SWt2 <- ((1 - e1)*SW - e1*rev(WS))
   # w <- WSt2*SWt2/(WSt2 + SWt2)
   # Here the weight is written as a function of corrected SFSs
   # This complexifies the whole equation as e1 and e2 appear in w
   # The gradient function is also more complicated
   # Instead we use the weight as a function of observed SFSs
-  w <- WS*SW/(WS + SW)
+  w <- 1/(t_variance(WS) + t_variance(SW))
   x <- c(1:n)/(n+1)
-  y <- log(WSt2/SWt2) + 1/(WSt) - 1/(SWt)
+  y <- t_sfs(WS) - t_sfs(SW)
+  #y <- log(WSt2/SWt2) + 1/(WSt) - 1/(SWt)
   ypred <- B*x - log(GC) + log(1 - GC)
   removeNA <- which(WS!=0 & SW!=0)
   w <- w[removeNA]
@@ -304,11 +299,12 @@ gr_sum_of_squares_B <- function(par,WS,SW,GC) {
   WSt <- ((1-e2)*WS - e2*rev(SW))/(1 - e1 - e2)
   SWt <- ((1-e1)*SW - e1*rev(WS))/(1 - e1 - e2)
   # Same expression without 1-e1-e2 that simplifies in ratios
-  WSt2 <- ((1 - e2)*WS - e2*rev(SW))
-  SWt2 <- ((1 - e1)*SW - e1*rev(WS))
-  w <- WS*SW/(WS + SW)
+  #WSt2 <- ((1 - e2)*WS - e2*rev(SW))
+  #SWt2 <- ((1 - e1)*SW - e1*rev(WS))
+  w <- 1/(t_variance(WS) + t_variance(SW))
   x <- c(1:n)/(n+1)
-  y <- log(WSt2/SWt2) + 1/(WSt) - 1/(SWt)
+  y <- t_sfs(WS) - t_sfs(SW)
+  #y <- log(WSt2/SWt2) + 1/(WSt) - 1/(SWt)
   ypred <- B*x - log(GC) + log(1 - GC)
   # Derivative of y as a function of error rates
   # Approximated version, derivative of log(WSt2/SWt2) without additional terms
@@ -385,15 +381,17 @@ sum_of_squares_BM <- function(par,WS,SW,GC) {
   WSt <- ((1 - e2)*WS - e2*rev(SW))/(1 - e1 - e2)
   SWt <- ((1 - e1)*SW - e1*rev(WS))/(1 - e1 - e2)
   # Same expression without 1-e1-e2 that simplifies in ratios
-  WSt2 <- ((1 - e2)*WS - e2*rev(SW))
-  SWt2 <- ((1 - e1)*SW - e1*rev(WS))
+  #WSt2 <- ((1 - e2)*WS - e2*rev(SW))
+  #SWt2 <- ((1 - e1)*SW - e1*rev(WS))
+  w <- 1/(t_variance(WS) + t_variance(SW))
   x <- c(1:n)/(n+1)
+  y <- t_sfs(WS) - t_sfs(SW)
   # w <- WSt2*SWt2/(WSt2 + SWt2)
   # Here the weight is written as a function of corrected SFSs
   # This complexifies the whole equation as e1 and e2 appear in w
   # The gradient function is also more complicated
   # Instead we use the weight as a function of observed SFSs
-  w <- WS*SW/(WS + SW)
+  # w <- WS*SW/(WS + SW)
   #w <- 1/( (-1+3*WS-5*WS^2+4*WS^3)/(4*WS^4) + (-1+3*SW-5*SW^2+4*SW^3)/(4*SW^4) )
   #w <- 1/((1+2*WS)^2/(4*WS*(1+WS)^2) + (1+2*SW)^2/(4*SW*(1+SW)^2))
   #w <- 4/(log((2 + 6*WS + WS^2)/(WS*(2 + WS))) + log((2 + 6*SW + SW^2)/(SW*(2 + SW))))
@@ -404,7 +402,7 @@ sum_of_squares_BM <- function(par,WS,SW,GC) {
   #     (-1 + 16*SW^2 + 44*SW^3 + 44*SW^4 + 16*SW^5)/((16*SW^2)* (1 + SW)^4)
   #)
   #y <- log(WSt2/SWt2) + 1/(2*WSt) - 1/(2*SWt)
-  y <- log(WS/SW) # - 1/(2*WS) + 1/(2*SW)
+  #y <- log(WS/SW) # - 1/(2*WS) + 1/(2*SW)
   #y <- (log(WS/SW) + log((WS+1)/(SW+1)))/2
   ypred <- B*x - M - log(GC) + log(1 - GC)
   removeNA <- which(WS>0 & SW>0)
@@ -456,11 +454,11 @@ gr_sum_of_squares_BM <- function(par,WS,SW,GC) {
   WSt <- ((1-e2)*WS - e2*rev(SW))/(1 - e1 - e2)
   SWt <- ((1-e1)*SW - e1*rev(WS))/(1 - e1 - e2)
   # Same expression without 1-e1-e2 that simplifies in ratios
-  WSt2 <- ((1 - e2)*WS - e2*rev(SW))
-  SWt2 <- ((1 - e1)*SW - e1*rev(WS))
-  w <- WS*SW/(WS + SW)
+  #WSt2 <- ((1 - e2)*WS - e2*rev(SW))
+  #SWt2 <- ((1 - e1)*SW - e1*rev(WS))
+  w <- 1/(t_variance(WS) + t_variance(SW))
   x <- c(1:n)/(n+1)
-  y <- log(WSt2/SWt2) + 1/(WSt) - 1/(SWt)
+  y <- t_sfs(WS) - t_sfs(SW)
   ypred <- B*x - M - log(GC) + log(1 - GC)
   # Derivative of y as a function of error rates
   # Approximated version, derivative of log(WSt2/SWt2) without additional terms
