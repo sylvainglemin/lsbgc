@@ -30,7 +30,8 @@ t_sfs <- function(sfs) {
     abort("sfs must be a numeric vector")
   }
   # Main
-  log(sfs) + 0.444/sfs - 0.107/(sfs^2) - 0.927/(sfs^3)
+  #log(sfs) + 0.444/sfs - 0.107/(sfs^2) - 0.927/(sfs^3)
+  log(sfs) + 0.987/sfs - 1.557/(sfs^2)
 }
 
 #' @title Expected variance of the transformed sfs
