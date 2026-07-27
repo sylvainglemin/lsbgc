@@ -30,8 +30,9 @@ t_sfs <- function(sfs) {
     abort("sfs must be a numeric vector")
   }
   # Main
-  #log(sfs) + 0.444/sfs - 0.107/(sfs^2) - 0.927/(sfs^3)
-  log(sfs) + 0.987/sfs - 1.557/(sfs^2)
+  #log(sfs) -0.0654/sfs + 4.716/(sfs^2) -5.526/(sfs^3)
+  log(sfs) -0.05/sfs + 4.6/(sfs^2) -5.4/(sfs^3)
+
 }
 
 #' @title Expected variance of the transformed sfs
@@ -56,27 +57,21 @@ t_variance <- function(sfs) {
     abort("sfs must be a numeric vector")
   }
   # Main
-  return(0.5/sfs - 0.69/(sfs)^2)
-  # This is the full version of the variance
-  # However exponentials lead to numerical issues
-  # exp_sfs <- exp(sfs)
-  # exp_neg_sfs <- exp(-sfs)
-  # denominator <- 4 * (-1 + exp_neg_sfs)^2 * (-1 + exp_sfs) * sfs^8
-  # term_exp <- exp(-10 * sfs)
-  # term_cubed <- (-1 + exp_sfs)^3
-  # term_linear <- (-1 + exp_sfs - sfs)
-  # inner_A1 <- 33.48 + 0.66 * sfs
-  # inner_A2 <- -33.48 + (-1.32 + 0.88 * sfs) * sfs
-  # inner_A3 <- 11.16 + sfs * (0.66 + sfs * (-0.88 + 1 * sfs))
-  # term_A <- -11.16 + exp_sfs * (inner_A1 + exp_sfs * (inner_A2 + exp_sfs * inner_A3))
-  # inner_B1 <- 8.37 + 0.22 * sfs
-  # inner_B2 <- -8.37 + (-0.44 + 0.44 * sfs) * sfs
-  # inner_B3 <- 2.79 + sfs * (0.22 + sfs * (-0.44 + 1 * sfs))
-  # term_B <- -2.79 + exp_sfs * (inner_B1 + exp_sfs * (inner_B2 + exp_sfs * inner_B3))
-  # combined_terms <- (-1) * (-1 + exp_sfs -  sfs) * (term_A)^2 +
-  #   2 * exp_sfs * sfs * (term_B)^2
-  # t_var <- (1 / denominator) * term_exp * term_cubed * term_linear * combined_terms
-  # return(t_var)
+  var <- 1/sfs + 0.1/(sfs)^2
+  corvar <- c(0, 0.54, 0.43, 0.24, 0.11, 0.04,0) # Manual correcting factor computed for integers between 2 and 6
+  # Interpolation for non-integer values
+  corvarextrapol <- function(x) {
+    xplus <- ceiling(x)
+    xminus <- floor(x)
+    f <- xplus - x
+    return(f*corvar[xminus]+(1-f)*corvar[xplus])
+  }
+  var <- ifelse(sfs>6,var,
+                ifelse(sfs<2,1.1, # 1 and 2 have roughly the same value: plateau between them
+                       var+corvarextrapol(sfs) # linear interpolation of the correcting factor
+                       )
+                )
+  return(var)
 }
 
 
