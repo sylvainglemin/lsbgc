@@ -66,7 +66,7 @@ t_variance <- function(sfs) {
     return(f*corvar[xminus]+(1-f)*corvar[xplus])
   }
   var <- ifelse(sfs>6,var,
-                ifelse(sfs<2,1.1, # 1 and 2 have roughly the same value: plateau between them
+                ifelse(sfs<2,1.07, # 1 and 2 have roughly the same value: plateau between them
                        var+corvarextrapol(sfs) # linear interpolation of the correcting factor
                        )
                 )
