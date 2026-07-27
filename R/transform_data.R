@@ -32,7 +32,6 @@ t_sfs <- function(sfs) {
   # Main
   #log(sfs) -0.0654/sfs + 4.716/(sfs^2) -5.526/(sfs^3)
   log(sfs) -0.05/sfs + 4.6/(sfs^2) -5.4/(sfs^3)
-
 }
 
 #' @title Expected variance of the transformed sfs
