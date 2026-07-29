@@ -252,6 +252,7 @@ gr_sum_of_squares_B_err <- function(par,WS,SW,GC,cor=COR) {
   x <- c(1:n)/(n+1)
   x <- x[removeNA]
   y <- t_sfs(WSt,cor) - t_sfs(SWt,cor)
+  ypred <- B*x - log(GC) + log(1 - GC)
   dy1 <- d_expected_log_ratio(WS,SW,e1,e2)$d1
   dy2 <- d_expected_log_ratio(WS,SW,e1,e2)$d2
   grB <- sum(w*(-2*x*(y - ypred))/sum(w))
