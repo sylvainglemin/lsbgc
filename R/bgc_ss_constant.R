@@ -20,6 +20,7 @@
 #'
 #' @param WS the WS observed SFS
 #' @param SW the SW observed SFS
+#' @param cor a Boolean to add a correction to the transformed SFS (default = TRUE)
 #'
 #' @returns The weighted sum of squares
 #'
@@ -29,7 +30,7 @@
 #' sfsWS <- c(100,50,30,15,10)
 #' sfsSW <- c(200,80, 30, 10, 5)
 #' sum_of_squares_NULL(sfsWS,sfsSW)
-sum_of_squares_NULL <- function(WS,SW) {
+sum_of_squares_NULL <- function(WS,SW,cor=COR) {
   #Error checking
   if(!is.numeric(c(WS,SW)) || length(which(c(WS,SW)<0))>0 ) {
     abort("The two SFSs must have positive numeric values")
@@ -41,8 +42,8 @@ sum_of_squares_NULL <- function(WS,SW) {
   removeNA <- which(WS>=1 & SW>=1)
   WS <- WS[removeNA]
   SW <- SW[removeNA]
-  w <- 1/(t_variance(WS) + t_variance(SW))
-  y <- t_sfs(WS) - t_sfs(SW)
+  w <- 1/(t_variance(WS,cor) + t_variance(SW,cor))
+  y <- t_sfs(WS,cor) - t_sfs(SW,cor)
   y_mean <- mean(y)
   return(
     list(
@@ -73,7 +74,7 @@ sum_of_squares_NULL <- function(WS,SW) {
 #' @param WS the WS observed SFS
 #' @param SW the SW observed SFS
 #' @param GC GC content
-#' @param cor a Boolean to add a correction to the transformed SFS (default = FALSE)
+#' @param cor a Boolean to add a correction to the transformed SFS (default = TRUE)
 #'
 #' @returns The weighted sum of squares
 #'
@@ -185,7 +186,7 @@ gr_sum_of_squares_M <- function(par,WS,SW,GC,cor=COR) {
 #' @param WS the WS observed SFS
 #' @param SW the SW observed SFS
 #' @param GC the GC content
-#' @param cor a Boolean to add a correction to the transformed SFS (default = FALSE)
+#' @param cor a Boolean to add a correction to the transformed SFS (default = TRUE)
 #'
 #' @returns The weighted sum of squares
 #'
@@ -295,7 +296,7 @@ gr_sum_of_squares_B <- function(par,WS,SW,GC,cor=COR) {
 #' @param WS the WS observed SFS
 #' @param SW the SW observed SFS
 #' @param GC the GC content
-#' @param cor a Boolean to add a correction to the transformed SFS (default = FALSE)
+#' @param cor a Boolean to add a correction to the transformed SFS (default = TRUE)
 #'
 #' @returns The weighted sum of squares
 #'
@@ -346,6 +347,7 @@ sum_of_squares_BM <- function(par,WS,SW,GC,cor=COR) {
 #' @param WS the WS observed SFS
 #' @param SW the SW observed SFS
 #' @param GC the GC content
+#' @param cor a Boolean to add a correction to the transformed SFS (default = TRUE)
 #'
 #' @returns The gradient function
 #'

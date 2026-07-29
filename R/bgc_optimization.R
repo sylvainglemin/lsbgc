@@ -46,7 +46,7 @@ AICls <- function(n,np,SSres){
 #' @param WS the WS observed SFS
 #' @param SW the SW observed SFS
 #' @param GC GC content
-#' @param cor a Boolean to add a correction to the transformed SFS (default = FALSE)
+#' @param cor a Boolean to add a correction to the transformed SFS (default = TRUE)
 #' @param Mmin minimum for the range of M, default value = -5
 #' @param Mmax maximum or the range of M, default value = 5
 #' @param Maxit maximum number of iterations (option for optim), see manual, default value = 100
@@ -123,7 +123,7 @@ least_square_M <- function(WS,SW,GC,cor=COR,
 #' @param WS the WS observed SFS
 #' @param SW the SW observed SFS
 #' @param GC GC content
-#' @param cor a Boolean to add a correction to the transformed SFS (default = FALSE)
+#' @param cor a Boolean to add a correction to the transformed SFS (default = TRUE)
 #' @param Bmin minimum for the range of B, default value = -100
 #' @param Bmax maximum for the range of B, default value = 100
 #' @param Maxit maximum number of iterations (option for optim), see manual, default value = 100
@@ -206,7 +206,7 @@ least_square_B <- function(WS,SW,GC,cor=COR,
 #' @param WS the WS observed SFS
 #' @param SW the SW observed SFS
 #' @param GC GC content
-#' @param cor a Boolean to add a correction to the transformed SFS (default = FALSE)
+#' @param cor a Boolean to add a correction to the transformed SFS (default = TRUE)
 #' @param Bmin minimum for the range of B, default value = -100
 #' @param Bmax maximum for the range of B, default value = 100
 #' @param Mmin minimum for the range of M, default value = -5
@@ -294,7 +294,7 @@ least_square_BM <- function(WS,SW,GC,cor=COR,
 #' @param WS the WS observed SFS
 #' @param SW the SW observed SFS
 #' @param GC GC content
-#' @param cor a Boolean to add a correction to the transformed SFS (default = FALSE)
+#' @param cor a Boolean to add a correction to the transformed SFS (default = TRUE)
 #' @param Bmin minimum for the range of B0, default value = -100
 #' @param Bmax maximum for the range of B0, default value = 100
 #' @param Mmin minimum for the range of M, default value = -5
@@ -384,7 +384,7 @@ least_square_hotspot1 <- function(WS,SW,GC,cor=COR,
 #' @param WS the WS observed SFS
 #' @param SW the SW observed SFS
 #' @param GC GC content
-#' @param cor a Boolean to add a correction to the transformed SFS (default = FALSE)
+#' @param cor a Boolean to add a correction to the transformed SFS (default = TRUE)
 #' @param B0min minimum for the range of B0, default value = -100
 #' @param B0max maximum for the range of B0, default value = 100
 #' @param B1min minimum for the range of B1, default value = -100
@@ -480,7 +480,7 @@ least_square_hotspot2 <- function(WS,SW,GC,cor=COR,
 #' @param WS the WS observed SFS
 #' @param SW the SW observed SFS
 #' @param GC GC content
-#' @param cor a Boolean to add a correction to the transformed SFS (default = FALSE)
+#' @param cor a Boolean to add a correction to the transformed SFS (default = TRUE)
 #' @param f proportion of hotspots (fixed by the user: 0 ≤ f ≤ 1/2)
 #' @param B0min minimum for the range of B0, default value = -100
 #' @param B0max maximum for the range of B0, default value = 100

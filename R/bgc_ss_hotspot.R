@@ -27,7 +27,7 @@
 #' @param WS the WS observed SFS
 #' @param SW the SW observed SFS
 #' @param GC the GC content
-#' @param cor a Boolean to add a correction to the transformed SFS (default = FALSE)
+#' @param cor a Boolean to add a correction to the transformed SFS (default = TRUE)
 #'
 #' @returns The weighted sum of squares
 #'
@@ -86,7 +86,7 @@ sum_of_squares_hotspot1 <- function(par,WS,SW,GC,cor=COR) {
 #' @param WS the WS observed SFS
 #' @param SW the SW observed SFS
 #' @param GC the GC content
-#' @param cor a Boolean to add a correction to the transformed SFS (default = FALSE)
+#' @param cor a Boolean to add a correction to the transformed SFS (default = TRUE)
 #'
 #' @returns The gradient function
 #'
@@ -161,7 +161,7 @@ gr_sum_of_squares_hotspot1 <- function(par,WS,SW,GC,cor=COR) {
 #' @param WS the WS observed SFS
 #' @param SW the SW observed SFS
 #' @param GC the GC content
-#' @param cor a Boolean to add a correction to the transformed SFS (default = FALSE)
+#' @param cor a Boolean to add a correction to the transformed SFS (default = TRUE)
 #'
 #' @returns The weighted sum of squares
 #'
@@ -220,7 +220,7 @@ sum_of_squares_hotspot2 <- function(par,WS,SW,GC,cor=COR) {
 #' @param WS the WS observed SFS
 #' @param SW the SW observed SFS
 #' @param GC the GC content
-#' @param cor a Boolean to add a correction to the transformed SFS (default = FALSE)
+#' @param cor a Boolean to add a correction to the transformed SFS (default = TRUE)
 #'
 #' @returns The gradient function
 #'
@@ -296,7 +296,7 @@ gr_sum_of_squares_hotspot2 <- function(par,WS,SW,GC,cor=COR) {
 #' @param SW the SW observed SFS
 #' @param GC the GC content
 #' @param f fraction of hotspots, fixed, not estimated (0<f<1/2)
-#' @param cor a Boolean to add a correction to the transformed SFS (default = FALSE)
+#' @param cor a Boolean to add a correction to the transformed SFS (default = TRUE)
 #'
 #' @returns The weighted sum of squares
 #'
@@ -356,7 +356,7 @@ sum_of_squares_hotspot2bis <- function(par,WS,SW,GC,f,cor=COR) {
 #' @param SW the SW observed SFS
 #' @param GC the GC content
 #' @param f fraction of hotpsots
-#' @param cor a Boolean to add a correction to the transformed SFS (default = FALSE)
+#' @param cor a Boolean to add a correction to the transformed SFS (default = TRUE)
 #'
 #' @returns The gradient function
 #'

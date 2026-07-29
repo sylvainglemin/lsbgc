@@ -4,7 +4,7 @@
 \alias{sum_of_squares_hotspot2bis_err}
 \title{Sum of squares of the hotspot 2bis model: background gBGC + fixed proportion of hotspots}
 \usage{
-sum_of_squares_hotspot2bis_err(par, WS, SW, GC, f)
+sum_of_squares_hotspot2bis_err(par, WS, SW, GC, f, cor = COR)
 }
 \arguments{
 \item{par}{a vector with the five parameters of the model.
@@ -21,6 +21,8 @@ par(5) = e2}
 \item{GC}{the GC content}
 
 \item{f}{fraction of hotspots, fixed, not estimated (0<f<1/2)}
+
+\item{cor}{a Boolean to add a correction to the transformed SFS (default = TRUE)}
 }
 \value{
 The weighted sum of squares

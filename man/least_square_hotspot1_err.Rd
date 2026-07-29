@@ -8,6 +8,7 @@ least_square_hotspot1_err(
   WS,
   SW,
   GC,
+  cor = COR,
   Bmin = BMIN,
   Bmax = BMAX,
   Mmin = MMIN,
@@ -25,6 +26,8 @@ least_square_hotspot1_err(
 \item{SW}{the SW observed SFS}
 
 \item{GC}{GC content}
+
+\item{cor}{a Boolean to add a correction to the transformed SFS (default = TRUE)}
 
 \item{Bmin}{minimum for the range of B0, default value = -100}
 

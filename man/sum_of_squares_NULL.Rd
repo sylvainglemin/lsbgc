@@ -4,12 +4,14 @@
 \alias{sum_of_squares_NULL}
 \title{Sum of squares of the null model}
 \usage{
-sum_of_squares_NULL(WS, SW)
+sum_of_squares_NULL(WS, SW, cor = COR)
 }
 \arguments{
 \item{WS}{the WS observed SFS}
 
 \item{SW}{the SW observed SFS}
+
+\item{cor}{a Boolean to add a correction to the transformed SFS (default = TRUE)}
 }
 \value{
 The weighted sum of squares

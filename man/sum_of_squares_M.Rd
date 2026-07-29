@@ -16,7 +16,7 @@ par(1) = M (i.e. log(mut_bias))}
 
 \item{GC}{GC content}
 
-\item{cor}{a Boolean to add a correction to the transformed SFS (default = FALSE)}
+\item{cor}{a Boolean to add a correction to the transformed SFS (default = TRUE)}
 }
 \value{
 The weighted sum of squares

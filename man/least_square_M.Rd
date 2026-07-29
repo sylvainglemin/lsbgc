@@ -25,7 +25,7 @@ least_square_M(
 
 \item{GC}{GC content}
 
-\item{cor}{a Boolean to add a correction to the transformed SFS (default = FALSE)}
+\item{cor}{a Boolean to add a correction to the transformed SFS (default = TRUE)}
 
 \item{Mmin}{minimum for the range of M, default value = -5}
 

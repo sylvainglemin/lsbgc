@@ -29,6 +29,7 @@
 #' @param WS the WS observed SFS
 #' @param SW the SW observed SFS
 #' @param GC the GC content
+#' @param cor a Boolean to add a correction to the transformed SFS (default = TRUE)
 #'
 #' @returns The weighted sum of squares
 #'
@@ -39,7 +40,7 @@
 #' sfsSW <- c(200,80, 30, 10, 5)
 #' param <- c(1,0.1,2,0.02,0.01)
 #' sum_of_squares_hotspot1_err(param,sfsWS,sfsSW,0.5)
-sum_of_squares_hotspot1_err <- function(par,WS,SW,GC) {
+sum_of_squares_hotspot1_err <- function(par,WS,SW,GC,cor=COR) {
   #Error checking
   if(!is.numeric(c(WS,SW)) || length(which(c(WS,SW)<0))>0 ) {
     abort("The two SFSs must have positive numeric values")
@@ -63,24 +64,16 @@ sum_of_squares_hotspot1_err <- function(par,WS,SW,GC) {
   # True SFS as a function of observed one.
   WSt <- ((1 - e2)*WS - e2*rev(SW))/(1 - e1 - e2)
   SWt <- ((1 - e1)*SW - e1*rev(WS))/(1 - e1 - e2)
-  # Same expression without 1-e1-e2 that simplifies in ratios
-  #WSt2 <- ((1 - e2)*WS - e2*rev(SW))
-  #SWt2 <- ((1 - e1)*SW - e1*rev(WS))
-  # w <- WSt2*SWt2/(WSt2 + SWt2)
-  # Here the weight is written as a function of corrected SFSs
-  # This complexifies the whole equation as e1 and e2 appear in w
-  # The gradient function is also more complicated
-  # Instead we use the weight as a function of observed SFSs
-  w <- 1/(t_variance(WS) + t_variance(SW))
+  removeNA <- which(WSt>=1 & SWt>=1)
+  WSt <- WSt[removeNA]
+  SWt <- SWt[removeNA]
+  w <- 1/(t_variance(WSt,cor) + t_variance(SWt,cor))
   x <- c(1:n)/(n+1)
-  y <- t_sfs(WS) - t_sfs(SW)
+  x <- x[removeNA]
+  y <- t_sfs(WSt,cor) - t_sfs(SWt,cor)
   ypred <- - M - log(GC) + log(1 - GC) +
     log((1 - f)*ratio_B(0,x) + f*ratio_B(B,x)) -
     log((1 - f)*ratio_B(0,x) + f*ratio_B(-B,x))
-  removeNA <- !is.na(y)
-  w <- w[removeNA]
-  y <- y[removeNA]
-  ypred <- ypred[removeNA]
   return( sum(w*(y-ypred)^2)/sum(w) )
 }
 
@@ -99,11 +92,12 @@ sum_of_squares_hotspot1_err <- function(par,WS,SW,GC) {
 #' @param WS the WS observed SFS
 #' @param SW the SW observed SFS
 #' @param GC the GC content
+#' @param cor a Boolean to add a correction to the transformed SFS (default = TRUE)
 #'
 #' @returns The gradient function
 #'
 #' @noRd
-gr_sum_of_squares_hotspot1_err <- function(par,WS,SW,GC) {
+gr_sum_of_squares_hotspot1_err <- function(par,WS,SW,GC,cor=COR) {
   #Error checking
   if(!is.numeric(c(WS,SW)) || length(which(c(WS,SW)<0))>0 ) {
     abort("The two SFSs must have positive numeric values")
@@ -127,10 +121,13 @@ gr_sum_of_squares_hotspot1_err <- function(par,WS,SW,GC) {
   # True SFS as a function of observed one.
   WSt <- ((1-e2)*WS - e2*rev(SW))/(1 - e1 - e2)
   SWt <- ((1-e1)*SW - e1*rev(WS))/(1 - e1 - e2)
-  # Same expression without 1-e1-e2 that simplifies in ratios
-  w <- 1/(t_variance(WS) + t_variance(SW))
+  removeNA <- which(WSt>=1 & SWt>=1)
+  WSt <- WSt[removeNA]
+  SWt <- SWt[removeNA]
+  w <- 1/(t_variance(WSt,cor) + t_variance(SWt,cor))
   x <- c(1:n)/(n+1)
-  y <- t_sfs(WS) - t_sfs(SW)
+  x <- x[removeNA]
+  y <- t_sfs(WSt,cor) - t_sfs(SWt,cor)
   ypred <- - M - log(GC) + log(1 - GC) +
     log((1 - f)*ratio_B(0,x) + f*ratio_B(B,x)) -
     log((1 - f)*ratio_B(0,x) + f*ratio_B(-B,x))
@@ -141,15 +138,6 @@ gr_sum_of_squares_hotspot1_err <- function(par,WS,SW,GC) {
   # Approximated version, derivative of log(WSt2/SWt2) without additional terms
   dy1 <- d_expected_log_ratio(WS,SW,e1,e2)$d1
   dy2 <- d_expected_log_ratio(WS,SW,e1,e2)$d2
-  # Removing NA values in SFS ratio
-  removeNA <- !is.na(y)
-  w <- w[removeNA]
-  y <- y[removeNA]
-  ypred <- ypred[removeNA]
-  dB <- dB[removeNA]
-  df <- df[removeNA]
-  dy1 <- dy1[removeNA]
-  dy2 <- dy2[removeNA]
   grB <- sum(w*(2*(y - ypred)*dB)/sum(w))
   grf <- sum(w*(2*(y - ypred)*df)/sum(w))
   grM <- sum(w*(2*(y - ypred))/sum(w))
@@ -185,6 +173,7 @@ gr_sum_of_squares_hotspot1_err <- function(par,WS,SW,GC) {
 #' @param WS the WS observed SFS
 #' @param SW the SW observed SFS
 #' @param GC the GC content
+#' @param cor a Boolean to add a correction to the transformed SFS (default = TRUE)
 #'
 #' @returns The weighted sum of squares
 #'
@@ -195,7 +184,7 @@ gr_sum_of_squares_hotspot1_err <- function(par,WS,SW,GC) {
 #' sfsSW <- c(200,80, 30, 10, 5)
 #' param <- c(0.1,5,0.1,2,0.02,0.01)
 #' sum_of_squares_hotspot2_err(param,sfsWS,sfsSW,0.5)
-sum_of_squares_hotspot2_err <- function(par,WS,SW,GC) {
+sum_of_squares_hotspot2_err <- function(par,WS,SW,GC,cor=COR) {
   #Error checking
   if(!is.numeric(c(WS,SW)) || length(which(c(WS,SW)<0))>0 ) {
     abort("The two SFSs must have positive numeric values")
@@ -220,14 +209,13 @@ sum_of_squares_hotspot2_err <- function(par,WS,SW,GC) {
   # True SFS as a function of observed one.
   WSt <- ((1 - e2)*WS - e2*rev(SW))/(1 - e1 - e2)
   SWt <- ((1 - e1)*SW - e1*rev(WS))/(1 - e1 - e2)
-  # w <- WSt2*SWt2/(WSt2 + SWt2)
-  # Here the weight is written as a function of corrected SFSs
-  # This complexifies the whole equation as e1 and e2 appear in w
-  # The gradient function is also more complicated
-  # Instead we use the weight as a function of observed SFSs
-  w <- 1/(t_variance(WS) + t_variance(SW))
+  removeNA <- which(WSt>=1 & SWt>=1)
+  WSt <- WSt[removeNA]
+  SWt <- SWt[removeNA]
+  w <- 1/(t_variance(WSt,cor) + t_variance(SWt,cor))
   x <- c(1:n)/(n+1)
-  y <- t_sfs(WS) - t_sfs(SW)
+  x <- x[removeNA]
+  y <- t_sfs(WSt,cor) - t_sfs(SWt,cor)
   ypred <- - M - log(GC) + log(1 - GC) +
     log((1 - f)*ratio_B(B0,x) + f*ratio_B(B1,x)) -
     log((1 - f)*ratio_B(-B0,x) + f*ratio_B(-B1,x))
@@ -254,11 +242,12 @@ sum_of_squares_hotspot2_err <- function(par,WS,SW,GC) {
 #' @param WS the WS observed SFS
 #' @param SW the SW observed SFS
 #' @param GC the GC content
+#' @param cor a Boolean to add a correction to the transformed SFS (default = TRUE)
 #'
 #' @returns The gradient function
 #'
 #' @noRd
-gr_sum_of_squares_hotspot2_err <- function(par,WS,SW,GC) {
+gr_sum_of_squares_hotspot2_err <- function(par,WS,SW,GC,cor=COR) {
   #Error checking
   if(!is.numeric(c(WS,SW)) || length(which(c(WS,SW)<0))>0 ) {
     abort("The two SFSs must have positive numeric values")
@@ -283,9 +272,13 @@ gr_sum_of_squares_hotspot2_err <- function(par,WS,SW,GC) {
   # True SFS as a function of observed one.
   WSt <- ((1-e2)*WS - e2*rev(SW))/(1 - e1 - e2)
   SWt <- ((1-e1)*SW - e1*rev(WS))/(1 - e1 - e2)
-  w <- 1/(t_variance(WS) + t_variance(SW))
+  removeNA <- which(WSt>=1 & SWt>=1)
+  WSt <- WSt[removeNA]
+  SWt <- SWt[removeNA]
+  w <- 1/(t_variance(WSt,cor) + t_variance(SWt,cor))
   x <- c(1:n)/(n+1)
-  y <- t_sfs(WS) - t_sfs(SW)
+  x <- x[removeNA]
+  y <- t_sfs(WSt,cor) - t_sfs(SWt,cor)
   ypred <- - M - log(GC) + log(1 - GC) +
     log((1 - f)*ratio_B(B0,x) + f*ratio_B(B1,x)) -
     log((1 - f)*ratio_B(-B0,x) + f*ratio_B(-B1,x))
@@ -297,16 +290,6 @@ gr_sum_of_squares_hotspot2_err <- function(par,WS,SW,GC) {
   # Approximated version, derivative of log(WSt2/SWt2) without additional terms
   dy1 <- d_expected_log_ratio(WS,SW,e1,e2)$d1
   dy2 <- d_expected_log_ratio(WS,SW,e1,e2)$d2
-  # Removing NA values in SFS ratio
-  removeNA <- !is.na(y)
-  w <- w[removeNA]
-  y <- y[removeNA]
-  ypred <- ypred[removeNA]
-  dB0 <- dB0[removeNA]
-  dB1 <- dB1[removeNA]
-  df <- df[removeNA]
-  dy1 <- dy1[removeNA]
-  dy2 <- dy2[removeNA]
   grB0 <- sum(w*(2*(y - ypred)*dB0)/sum(w))
   grB1 <- sum(w*(2*(y - ypred)*dB1)/sum(w))
   grf <- sum(w*(2*(y - ypred)*df)/sum(w))
@@ -342,6 +325,7 @@ gr_sum_of_squares_hotspot2_err <- function(par,WS,SW,GC) {
 #' @param SW the SW observed SFS
 #' @param GC the GC content
 #' @param f fraction of hotspots, fixed, not estimated (0<f<1/2)
+#' @param cor a Boolean to add a correction to the transformed SFS (default = TRUE)
 #'
 #' @returns The weighted sum of squares
 #'
@@ -352,7 +336,7 @@ gr_sum_of_squares_hotspot2_err <- function(par,WS,SW,GC) {
 #' sfsSW <- c(200,80, 30, 10, 5)
 #' param <- c(0.1,5,2,0.02,0.01)
 #' sum_of_squares_hotspot2bis_err(param,sfsWS,sfsSW,0.5,0.1)
-sum_of_squares_hotspot2bis_err <- function(par,WS,SW,GC,f) {
+sum_of_squares_hotspot2bis_err <- function(par,WS,SW,GC,f,cor=COR) {
   #Error checking
   if(!is.numeric(c(WS,SW)) || length(which(c(WS,SW)<0))>0 ) {
     abort("The two SFSs must have positive numeric values")
@@ -379,16 +363,16 @@ sum_of_squares_hotspot2bis_err <- function(par,WS,SW,GC,f) {
   # True SFS as a function of observed one.
   WSt <- ((1 - e2)*WS - e2*rev(SW))/(1 - e1 - e2)
   SWt <- ((1 - e1)*SW - e1*rev(WS))/(1 - e1 - e2)
-  w <- 1/(t_variance(WS) + t_variance(SW))
+  removeNA <- which(WSt>=1 & SWt>=1)
+  WSt <- WSt[removeNA]
+  SWt <- SWt[removeNA]
+  w <- 1/(t_variance(WSt,cor) + t_variance(SWt,cor))
   x <- c(1:n)/(n+1)
-  y <- t_sfs(WS) - t_sfs(SW)
+  x <- x[removeNA]
+  y <- t_sfs(WSt,cor) - t_sfs(SWt,cor)
   ypred <- - M - log(GC) + log(1 - GC) +
     log((1 - f)*ratio_B(B0,x) + f*ratio_B(B1,x)) -
     log((1 - f)*ratio_B(-B0,x) + f*ratio_B(-B1,x))
-  removeNA <- !is.na(y)
-  w <- w[removeNA]
-  y <- y[removeNA]
-  ypred <- ypred[removeNA]
   return( sum(w*(y-ypred)^2)/sum(w) )
 }
 
@@ -408,11 +392,12 @@ sum_of_squares_hotspot2bis_err <- function(par,WS,SW,GC,f) {
 #' @param SW the SW observed SFS
 #' @param GC the GC content
 #' @param f fraction of hotpsots
+#' @param cor a Boolean to add a correction to the transformed SFS (default = TRUE)
 #'
 #' @returns The gradient function
 #'
 #' @noRd
-gr_sum_of_squares_hotspot2bis_err <- function(par,WS,SW,GC,f) {
+gr_sum_of_squares_hotspot2bis_err <- function(par,WS,SW,GC,f,cor=COR) {
   #Error checking
   if(!is.numeric(c(WS,SW)) || length(which(c(WS,SW)<0))>0 ) {
     abort("The two SFSs must have positive numeric values")
@@ -439,9 +424,13 @@ gr_sum_of_squares_hotspot2bis_err <- function(par,WS,SW,GC,f) {
   # True SFS as a function of observed one.
   WSt <- ((1-e2)*WS - e2*rev(SW))/(1 - e1 - e2)
   SWt <- ((1-e1)*SW - e1*rev(WS))/(1 - e1 - e2)
-  w <- 1/(t_variance(WS) + t_variance(SW))
+  removeNA <- which(WSt>=1 & SWt>=1)
+  WSt <- WSt[removeNA]
+  SWt <- SWt[removeNA]
+  w <- 1/(t_variance(WSt,cor) + t_variance(SWt,cor))
   x <- c(1:n)/(n+1)
-  y <- t_sfs(WS) - t_sfs(SW)
+  x <- x[removeNA]
+  y <- t_sfs(WSt,cor) - t_sfs(SWt,cor)
   ypred <- - M - log(GC) + log(1 - GC) +
     log((1 - f)*ratio_B(B0,x) + f*ratio_B(B1,x)) -
     log((1 - f)*ratio_B(-B0,x) + f*ratio_B(-B1,x))
@@ -452,15 +441,6 @@ gr_sum_of_squares_hotspot2bis_err <- function(par,WS,SW,GC,f) {
   # Approximated version, derivative of log(WSt2/SWt2) without additional terms
   dy1 <- d_expected_log_ratio(WS,SW,e1,e2)$d1
   dy2 <- d_expected_log_ratio(WS,SW,e1,e2)$d2
-  # Removing NA values in SFS ratio
-  removeNA <- !is.na(y)
-  w <- w[removeNA]
-  y <- y[removeNA]
-  ypred <- ypred[removeNA]
-  dB0 <- dB0[removeNA]
-  dB1 <- dB1[removeNA]
-  dy1 <- dy1[removeNA]
-  dy2 <- dy2[removeNA]
   grB0 <- sum(w*(2*(y - ypred)*dB0)/sum(w))
   grB1 <- sum(w*(2*(y - ypred)*dB1)/sum(w))
   grM <- sum(w*(2*(y - ypred))/sum(w))

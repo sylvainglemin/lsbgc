@@ -8,6 +8,7 @@ least_square_B_err(
   WS,
   SW,
   GC,
+  cor = COR,
   Bmin = BMIN,
   Bmax = BMAX,
   Maxit = MAXIT,
@@ -23,6 +24,8 @@ least_square_B_err(
 \item{SW}{the SW observed SFS}
 
 \item{GC}{GC content}
+
+\item{cor}{a Boolean to add a correction to the transformed SFS (default = TRUE)}
 
 \item{Bmin}{minimum for the range of B, default value = -100}
 

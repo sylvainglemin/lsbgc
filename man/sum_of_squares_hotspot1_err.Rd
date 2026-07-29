@@ -4,7 +4,7 @@
 \alias{sum_of_squares_hotspot1_err}
 \title{Sum of squares of the hotspot 1 model: no background gBGC + hotspot}
 \usage{
-sum_of_squares_hotspot1_err(par, WS, SW, GC)
+sum_of_squares_hotspot1_err(par, WS, SW, GC, cor = COR)
 }
 \arguments{
 \item{par}{a vector with the six parameters of the model.
@@ -19,6 +19,8 @@ par(5) = e2}
 \item{SW}{the SW observed SFS}
 
 \item{GC}{the GC content}
+
+\item{cor}{a Boolean to add a correction to the transformed SFS (default = TRUE)}
 }
 \value{
 The weighted sum of squares

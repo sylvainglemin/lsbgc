@@ -32,7 +32,7 @@ least_square_hotspot2bis(
 
 \item{f}{proportion of hotspots (fixed by the user: 0 ≤ f ≤ 1/2)}
 
-\item{cor}{a Boolean to add a correction to the transformed SFS (default = FALSE)}
+\item{cor}{a Boolean to add a correction to the transformed SFS (default = TRUE)}
 
 \item{B0min}{minimum for the range of B0, default value = -100}
 

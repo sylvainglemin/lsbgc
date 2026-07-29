@@ -15,6 +15,7 @@
 #' @param WS the WS observed SFS
 #' @param SW the SW observed SFS
 #' @param GC GC content
+#' @param cor a Boolean to add a correction to the transformed SFS (default = TRUE)
 #' @param Mmin minimum for the range of M, default value = -5
 #' @param Mmax maximum or the range of M, default value = 5
 #' @param Maxit maximum number of iterations (option for optim), see manual, default value = 100
@@ -38,7 +39,7 @@
 #' LS <- least_square_M_err(sfsWS,sfsSW,0.5)
 #' LS$param$mutbias # mutation bias
 #' LS$criteria$AIC # model AIC
-least_square_M_err <- function(WS,SW,GC,
+least_square_M_err <- function(WS,SW,GC,cor=COR,
                            Mmin=MMIN,Mmax=MMAX,
                            Maxit=MAXIT,Factr=FACTR,Lmm=LMM,Verbose=VERBOSE,Usegr=USEGR) {
   # Determination of initial values for optimization: use of the simple regression
@@ -56,8 +57,8 @@ least_square_M_err <- function(WS,SW,GC,
   n <- length(WS)
   Minit <- mean(log(WS/SW),na.rm=T) + log(1 - GC) - log(GC)
   # To avoid negative values in SFS after transformation the error rates must be bounded as follows:
-  e1max <- min(SW/(SW + rev(WS)),na.rm=T) * ONE
-  e2max <- min(WS/(WS + rev(SW)),na.rm=T) * ONE
+  e1max <- max(ZERO,min(SW/(SW + rev(WS)),na.rm=T) * ONE)
+  e2max <- max(ZERO,min(WS/(WS + rev(SW)),na.rm=T) * ONE)
   # The factor ONE is to avoid 0 values in the SFS
   init <- c(Minit,e1max/2,e2max/2)
   # Boundaries for optimization
@@ -69,7 +70,7 @@ least_square_M_err <- function(WS,SW,GC,
     par = init,
     fn = sum_of_squares_M_err,
     gr = gradient,
-    WS = WS, SW = SW, GC = GC,
+    WS = WS, SW = SW, GC = GC, cor = cor,
     lower = inf,upper = sup,
     method = "L-BFGS-B",
     control=list(parscale=SCALE,maxit=Maxit,factr=Factr,lmm=Lmm,trace=Verbose))
@@ -97,6 +98,7 @@ least_square_M_err <- function(WS,SW,GC,
 #' @param WS the WS observed SFS
 #' @param SW the SW observed SFS
 #' @param GC GC content
+#' @param cor a Boolean to add a correction to the transformed SFS (default = TRUE)
 #' @param Bmin minimum for the range of B, default value = -100
 #' @param Bmax maximum for the range of B, default value = 100
 #' @param Maxit maximum number of iterations (option for optim), see manual, default value = 100
@@ -121,7 +123,7 @@ least_square_M_err <- function(WS,SW,GC,
 #' LS <- least_square_B_err(sfsWS,sfsSW,0.5)
 #' LS$param$B # population-scaled gBGC
 #' LS$criteria$R2 # R2 of the model
-least_square_B_err <- function(WS,SW,GC,
+least_square_B_err <- function(WS,SW,GC,cor=COR,
                            Bmin=BMIN,Bmax=BMAX,
                            Maxit=MAXIT,Factr=FACTR,Lmm=LMM,Verbose=VERBOSE,Usegr=USEGR) {
   # Determination of initial values for optimization: use of the simple regression
@@ -143,8 +145,8 @@ least_square_B_err <- function(WS,SW,GC,
   reginit <- lm(log(WS[NONZERO]/SW[NONZERO]) ~ x[NONZERO] - 1)
   Binit <- reginit$coef
   # To avoid negative values in SFS after transformation the error rates must be bounded as follows:
-  e1max <- min(SW/(SW + rev(WS)),na.rm=T) * ONE
-  e2max <- min(WS/(WS + rev(SW)),nA.rm=T) * ONE
+  e1max <- max(ZERO,min(SW/(SW + rev(WS)),na.rm=T) * ONE)
+  e2max <- max(ZERO,min(WS/(WS + rev(SW)),na.rm=T) * ONE)
   # The factor ONE is to avoid 0 values in the SFS
   init <- c(Binit,e1max/2,e2max/2)
   # Boundaries for optimization
@@ -156,7 +158,7 @@ least_square_B_err <- function(WS,SW,GC,
     par = init,
     fn = sum_of_squares_B_err,
     gr = gradient,
-    WS = WS, SW = SW, GC = GC,
+    WS = WS, SW = SW, GC = GC, cor = cor,
     lower = inf,upper = sup,
     method = "L-BFGS-B",
     control=list(parscale=SCALE,maxit=Maxit,factr=Factr,lmm=Lmm,trace=Verbose))
@@ -184,6 +186,7 @@ least_square_B_err <- function(WS,SW,GC,
 #' @param WS the WS observed SFS
 #' @param SW the SW observed SFS
 #' @param GC GC content
+#' @param cor a Boolean to add a correction to the transformed SFS (default = TRUE)
 #' @param Bmin minimum for the range of B, default value = -100
 #' @param Bmax maximum for the range of B, default value = 100
 #' @param Mmin minimum for the range of M, default value = -5
@@ -210,7 +213,7 @@ least_square_B_err <- function(WS,SW,GC,
 #' LS <- least_square_BM_err(sfsWS,sfsSW,0.5)
 #' LS$B # population-scaled gBGC
 #' LS$mutbias # mutation bias
-least_square_BM_err <- function(WS,SW,GC,
+least_square_BM_err <- function(WS,SW,GC,cor=COR,
                             Bmin=BMIN,Bmax=BMAX,Mmin=MMIN,Mmax=MMAX,
                             Maxit=MAXIT,Factr=FACTR,Lmm=LMM,Verbose=VERBOSE,Usegr=USEGR) {
   # Determination of initial values for optimization: use of the simple regression
@@ -233,8 +236,8 @@ least_square_BM_err <- function(WS,SW,GC,
   Minit <- -reginit$coef[1] + log(1 - GC) - log(GC)
   Binit <- reginit$coef[2]
   # To avoid negative values in SFS after transformation the error rates must be bounded as follows:
-  e1max <- max(ZERO, min(SW/(SW + rev(WS)),na.rm=T) * ONE)
-  e2max <- max(ZERO, min(WS/(WS + rev(SW)),na.rm=T) * ONE)
+  e1max <- max(ZERO,min(SW/(SW + rev(WS)),na.rm=T) * ONE)
+  e2max <- max(ZERO,min(WS/(WS + rev(SW)),na.rm=T) * ONE)
   # The factor ONE is to avoid 0 values in the SFS
   init <- c(Binit,Minit,e1max/2,e2max/2)
   # Boundaries for optimization
@@ -246,7 +249,7 @@ least_square_BM_err <- function(WS,SW,GC,
     par = init,
     fn = sum_of_squares_BM_err,
     gr = gradient,
-    WS = WS, SW = SW, GC = GC,
+    WS = WS, SW = SW, GC = GC, cor = cor,
     lower = inf,upper = sup,
     method = "L-BFGS-B",
     control=list(parscale=SCALE,maxit=Maxit,factr=Factr,lmm=Lmm,trace=Verbose)
@@ -276,6 +279,7 @@ least_square_BM_err <- function(WS,SW,GC,
 #' @param WS the WS observed SFS
 #' @param SW the SW observed SFS
 #' @param GC GC content
+#' @param cor a Boolean to add a correction to the transformed SFS (default = TRUE)
 #' @param Bmin minimum for the range of B0, default value = -100
 #' @param Bmax maximum for the range of B0, default value = 100
 #' @param Mmin minimum for the range of M, default value = -5
@@ -302,7 +306,7 @@ least_square_BM_err <- function(WS,SW,GC,
 #' LS <- least_square_hotspot1_err(sfsWS,sfsSW,0.5)
 #' LS$B # population-scaled hotspot gBGC
 #' LS$f # proportion of hotspots
-least_square_hotspot1_err <- function(WS,SW,GC,
+least_square_hotspot1_err <- function(WS,SW,GC,cor=COR,
                                   Bmin=BMIN,Bmax=BMAX,Mmin=MMIN,Mmax=MMAX,
                                   Maxit=MAXIT,Factr=FACTR,Lmm=LMM,Verbose=VERBOSE,Usegr=USEGR) {
   # Determination of initial values for optimization: use of the simple regression
@@ -327,8 +331,8 @@ least_square_hotspot1_err <- function(WS,SW,GC,
   Minit <- -reginit$coef[1] + log(1 - GC) - log(GC)
   Binit <- reginit$coef[2]/finit
   # To avoid negative values in SFS after transformation the error rates must be bounded as follows:
-  e1max <- min(SW/(SW + rev(WS)),na.rm=T) * ONE
-  e2max <- min(WS/(WS + rev(SW)),na.rm=T) * ONE
+  e1max <- max(ZERO,min(SW/(SW + rev(WS)),na.rm=T) * ONE)
+  e2max <- max(ZERO,min(WS/(WS + rev(SW)),na.rm=T) * ONE)
   # The factor ONE is to avoid 0 values in the SFS
   init <- c(Binit,finit,Minit,e1max/2,e2max/2)
   # Boundaries for optimization
@@ -340,7 +344,7 @@ least_square_hotspot1_err <- function(WS,SW,GC,
     par = init,
     fn = sum_of_squares_hotspot1_err,
     gr = gradient,
-    WS = WS, SW = SW, GC = GC,
+    WS = WS, SW = SW, GC = GC, cor = cor,
     lower = inf,upper = sup,
     method = "L-BFGS-B",
     control=list(parscale=SCALE,maxit=Maxit,factr=Factr,lmm=Lmm,trace=Verbose))
@@ -371,6 +375,7 @@ least_square_hotspot1_err <- function(WS,SW,GC,
 #' @param WS the WS observed SFS
 #' @param SW the SW observed SFS
 #' @param GC GC content
+#' @param cor a Boolean to add a correction to the transformed SFS (default = TRUE)
 #' @param B0min minimum for the range of B0, default value = -100
 #' @param B0max maximum for the range of B0, default value = 100
 #' @param B1min minimum for the range of B1, default value = -100
@@ -400,7 +405,7 @@ least_square_hotspot1_err <- function(WS,SW,GC,
 #' LS$B0 # population-scaled background gBGC
 #' LS$B1 # population-scaled hotspot gBGC
 #' LS$f # proportion of hotspots
-least_square_hotspot2_err <- function(WS,SW,GC,
+least_square_hotspot2_err <- function(WS,SW,GC,cor=COR,
                                   B0min=BMIN,B0max=BMAX,B1min=BMIN,B1max=BMAX,Mmin=MMIN,Mmax=MMAX,
                                   Maxit=MAXIT,Factr=FACTR,Lmm=LMM,Verbose=VERBOSE,Usegr=USEGR) {
   #Error checking
@@ -426,8 +431,8 @@ least_square_hotspot2_err <- function(WS,SW,GC,
   B0init <- reginit$coef[2]/(1 + 4*finit)
   B1init <- 5*reginit$coef[2]/(1 + 4*finit)
   # To avoid negative values in SFS after transformation the error rates must be bounded as follows:
-  e1max <- min(SW/(SW + rev(WS)),na.rm=T) * ONE
-  e2max <- min(WS/(WS + rev(SW)),na.rm=T) * ONE
+  e1max <- max(ZERO,min(SW/(SW + rev(WS)),na.rm=T) * ONE)
+  e2max <- max(ZERO,min(WS/(WS + rev(SW)),na.rm=T) * ONE)
   # The factor ONE is to avoid 0 values in the SFS
   init <- c(B0init,B1init,finit,Minit,e1max/2,e2max/2)
   # Boundaries for optimization
@@ -439,7 +444,7 @@ least_square_hotspot2_err <- function(WS,SW,GC,
     par = init,
     fn = sum_of_squares_hotspot2_err,
     gr = gradient,
-    WS = WS, SW = SW, GC = GC,
+    WS = WS, SW = SW, GC = GC, cor = cor,
     lower = inf,upper = sup,
     method = "L-BFGS-B",
     control=list(parscale=SCALE,maxit=Maxit,factr=Factr,lmm=Lmm,trace=Verbose))
@@ -472,6 +477,7 @@ least_square_hotspot2_err <- function(WS,SW,GC,
 #' @param WS the WS observed SFS
 #' @param SW the SW observed SFS
 #' @param GC GC content
+#' @param cor a Boolean to add a correction to the transformed SFS (default = TRUE)
 #' @param f proportion of hotspots (fixed by the user: 0 ≤ f ≤ 1/2)
 #' @param B0min minimum for the range of B0, default value = -100
 #' @param B0max maximum for the range of B0, default value = 100
@@ -501,7 +507,7 @@ least_square_hotspot2_err <- function(WS,SW,GC,
 #' LS <- least_square_hotspot2bis_err(sfsWS,sfsSW,0.5,0.2)
 #' LS$B0 # population-scaled background gBGC
 #' LS$B1 # population-scaled hotspot gBGC
-least_square_hotspot2bis_err <- function(WS,SW,GC,f,
+least_square_hotspot2bis_err <- function(WS,SW,GC,f,cor = COR,
                                      B0min=BMIN,B0max=BMAX,B1min=BMIN,B1max=BMAX,Mmin=MMIN,Mmax=MMAX,
                                      Maxit=MAXIT,Factr=FACTR,Lmm=LMM,Verbose=VERBOSE,Usegr=USEGR) {
   #Error checking
@@ -528,8 +534,8 @@ least_square_hotspot2bis_err <- function(WS,SW,GC,f,
   B0init <- reginit$coef[2]/(1 + 4*f)
   B1init <- 5*reginit$coef[2]/(1 + 4*f)
   # To avoid negative values in SFS after transformation the error rates must be bounded as follows:
-  e1max <- min(SW/(SW + rev(WS)),na.rm=T) * ONE
-  e2max <- min(WS/(WS + rev(SW)),na.rm=T) * ONE
+  e1max <- max(ZERO,min(SW/(SW + rev(WS)),na.rm=T) * ONE)
+  e2max <- max(ZERO,min(WS/(WS + rev(SW)),na.rm=T) * ONE)
   # The factor ONE is to avoid 0 values in the SFS
   init <- c(B0init,B1init,Minit,e1max/2,e2max/2)
   # Boundaries for optimization
@@ -541,7 +547,7 @@ least_square_hotspot2bis_err <- function(WS,SW,GC,f,
     par = init,
     fn = sum_of_squares_hotspot2bis_err,
     gr = gradient,
-    WS = WS, SW = SW, GC = GC, f = f,
+    WS = WS, SW = SW, GC = GC, f = f, cor = cor,
     lower = inf,upper = sup,
     method = "L-BFGS-B",
     control=list(parscale=SCALE,maxit=Maxit,factr=Factr,lmm=Lmm,trace=Verbose))

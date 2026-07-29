@@ -20,7 +20,7 @@ par(3) = M (i.e. log(mut_bias))}
 
 \item{f}{fraction of hotspots, fixed, not estimated (0<f<1/2)}
 
-\item{cor}{a Boolean to add a correction to the transformed SFS (default = FALSE)}
+\item{cor}{a Boolean to add a correction to the transformed SFS (default = TRUE)}
 }
 \value{
 The weighted sum of squares

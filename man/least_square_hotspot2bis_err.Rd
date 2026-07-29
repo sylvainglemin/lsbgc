@@ -9,6 +9,7 @@ least_square_hotspot2bis_err(
   SW,
   GC,
   f,
+  cor = COR,
   B0min = BMIN,
   B0max = BMAX,
   B1min = BMIN,
@@ -30,6 +31,8 @@ least_square_hotspot2bis_err(
 \item{GC}{GC content}
 
 \item{f}{proportion of hotspots (fixed by the user: 0 ≤ f ≤ 1/2)}
+
+\item{cor}{a Boolean to add a correction to the transformed SFS (default = TRUE)}
 
 \item{B0min}{minimum for the range of B0, default value = -100}
 
