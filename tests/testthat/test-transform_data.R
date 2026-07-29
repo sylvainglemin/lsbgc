@@ -12,22 +12,22 @@ test_that("t_sfs throws error for invalid inputs", {
 test_that("t_sfs returns correct transformed SFS", {
   # Test with example from documentation
   sfs <- c(100, 50, 30, 20, 3)
-  expected_t_sfs <- log(sfs) -0.05/sfs + 4.6/(sfs^2) -5.4/(sfs^3)
+  expected_t_sfs <- log(sfs) + 0.5/sfs
   expect_equal(t_sfs(sfs), expected_t_sfs, tolerance = 1e-6)
 
   # Test with single-value SFS
   sfs_single <- c(50)
-  expected_single <- log(50) -0.05/50 + 4.6/(50^2) -5.4/(50^3)
+  expected_single <- log(50) + 0.5/50
   expect_equal(t_sfs(sfs_single), expected_single, tolerance = 1e-6)
 
   # Test with large values
   sfs_large <- c(1000, 2000, 3000)
-  expected_large <- log(sfs_large) -0.05/sfs_large + 4.6/(sfs_large^2) -5.4/(sfs_large^3)
+  expected_large <- log(sfs_large) + 0.5/sfs_large
   expect_equal(t_sfs(sfs_large), expected_large, tolerance = 1e-6)
 
   # Test with small values (but > 0)
   sfs_small <- c(0.1, 0.5, 1)
-  expected_small <- log(sfs_small) -0.05/sfs_small + 4.6/(sfs_small^2) -5.4/(sfs_small^3)
+  expected_small <- log(sfs_small) + 0.5/sfs_small
   expect_equal(t_sfs(sfs_small), expected_small, tolerance = 1e-6)
 })
 
@@ -55,17 +55,17 @@ test_that("t_variance throws error for invalid inputs", {
 test_that("t_variance returns correct expected variance", {
   # Test with example from documentation
   sfs <- c(100, 50, 30, 20, 3)
-  expected_t_var <- 1/sfs + 0.1/(sfs)^2 + c(0,0,0,0,0.43) # adding the correcting factor
+  expected_t_var <- 1/sfs - 1/(sfs^2) + 1/(4*sfs^3)
   expect_equal(t_variance(sfs), expected_t_var, tolerance = 1e-6)
 
   # Test with single-value SFS
   sfs_single <- c(50)
-  expected_single_var <- 1/50 + 0.1/(50)^2
+  expected_single_var <- 1/50 - 1/(50^2) + 1/(4*50^3)
   expect_equal(t_variance(sfs_single), expected_single_var, tolerance = 1e-6)
 
   # Test with large values
   sfs_large <- c(1000, 2000, 3000)
-  expected_large_var <- 1/sfs_large + 0.1/(sfs_large^2)
+  expected_large_var <- 1/sfs_large - 1/(sfs_large^2) + 1/(4*sfs_large^3)
   expect_equal(t_variance(sfs_large), expected_large_var, tolerance = 1e-6)
 })
 
@@ -101,3 +101,4 @@ test_that("t_sfs and t_variance work together", {
   # Check that t_ratio is finite
   expect_true(all(is.finite(t_ratio)))
 })
+

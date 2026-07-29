@@ -5,10 +5,12 @@
 \title{Log transformation of the SFS plus additional terms to remove bias
 (see article for mathematical justification)}
 \usage{
-t_sfs(sfs)
+t_sfs(sfs, cor = COR)
 }
 \arguments{
 \item{sfs}{a site frequency spectrum (a numerical vector)}
+
+\item{cor}{a Boolean to add a correction to the transformed SFS (default = FALSE)}
 }
 \value{
 the transformed sfs

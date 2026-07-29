@@ -202,3 +202,4 @@ test_that("simulated_sfs_hotspot throws error for invalid inputs", {
   expect_error(simulated_sfs_hotspot(n, theta, B0, B1, f, mut_bias, GC, eWS, 1.1, vect_r), "eSW must be a numerical value higher than 0 and lower than 1")
   expect_error(simulated_sfs_hotspot(n, theta, B0, B1, f, mut_bias, GC, eWS, eSW, c(1, 1)), "vect_r must be a vector of positive numerical values of length n-1")
 })
+

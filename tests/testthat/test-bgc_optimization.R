@@ -43,20 +43,20 @@ test_that("least_square_M returns correct structure for valid inputs", {
   sfsWS <- c(1000, 500, 300, 200, 80, 50)
   sfsSW <- c(2000, 800, 400, 150, 50, 10)
   GC <- 0.5
-  result <- least_square_M(sfsWS, sfsSW, GC, Usegr = USEGR)
+  result <- least_square_M(sfsWS, sfsSW, GC)
   expect_type(result, "list")
   expect_equal(names(result), c("param", "criteria"))
-  expect_equal(names(result$param), c("mutbias", "e1", "e2"))
+  expect_equal(names(result$param), c("mutbias"))
   expect_equal(names(result$criteria), c("SStot", "SSres", "R2", "AIC"))
 })
 
 test_that("least_square_M throws error for invalid inputs", {
   sfsWS <- c(1000, 500, 300, 200, 80, 50)
   sfsSW <- c(2000, 800, 400, 150, 50, 10)
-  expect_error(least_square_M("abc", sfsSW, 0.5, Usegr = USEGR), "The two SFSs must have positive numeric values")
-  expect_error(least_square_M(sfsWS, sfsSW[-1], 0.5, Usegr = USEGR), "The two SFSs, WS and SW, must have the same length")
-  expect_error(least_square_M(sfsWS, sfsSW, 0, Usegr = USEGR), "GC content must be strictly between 0 and 1")
-  expect_error(least_square_M(sfsWS, sfsSW, 1, Usegr = USEGR), "GC content must be strictly between 0 and 1")
+  expect_error(least_square_M("abc", sfsSW, 0.5), "The two SFSs must have positive numeric values")
+  expect_error(least_square_M(sfsWS, sfsSW[-1], 0.5), "The two SFSs, WS and SW, must have the same length")
+  expect_error(least_square_M(sfsWS, sfsSW, 0), "GC content must be strictly between 0 and 1")
+  expect_error(least_square_M(sfsWS, sfsSW, 1), "GC content must be strictly between 0 and 1")
 })
 
 # --- Tests for least_square_B ---
@@ -64,19 +64,19 @@ test_that("least_square_B returns correct structure for valid inputs", {
   sfsWS <- c(1000, 500, 300, 200, 80, 50)
   sfsSW <- c(2000, 800, 400, 150, 50, 10)
   GC <- 0.5
-  result <- least_square_B(sfsWS, sfsSW, GC, Usegr = USEGR)
+  result <- least_square_B(sfsWS, sfsSW, GC)
   expect_type(result, "list")
   expect_equal(names(result), c("param", "criteria"))
-  expect_equal(names(result$param), c("B", "e1", "e2"))
+  expect_equal(names(result$param), c("B"))
   expect_equal(names(result$criteria), c("SStot", "SSres", "R2", "AIC"))
 })
 
 test_that("least_square_B throws error for invalid inputs", {
   sfsWS <- c(1000, 500, 300, 200, 80, 50)
   sfsSW <- c(2000, 800, 400, 150, 50, 10)
-  expect_error(least_square_B("abc", sfsSW, 0.5, Usegr = USEGR), "The two SFSs must have positive numeric values")
-  expect_error(least_square_B(sfsWS, sfsSW[-1], 0.5, Usegr = USEGR), "The two SFSs, WS and SW, must have the same length")
-  expect_error(least_square_B(sfsWS, sfsSW, 0, Usegr = USEGR), "GC content must be strictly between 0 and 1")
+  expect_error(least_square_B("abc", sfsSW, 0.5), "The two SFSs must have positive numeric values")
+  expect_error(least_square_B(sfsWS, sfsSW[-1], 0.5), "The two SFSs, WS and SW, must have the same length")
+  expect_error(least_square_B(sfsWS, sfsSW, 0), "GC content must be strictly between 0 and 1")
 })
 
 # --- Tests for least_square_BM ---
@@ -84,19 +84,19 @@ test_that("least_square_BM returns correct structure for valid inputs", {
   sfsWS <- c(1000, 500, 300, 200, 80, 50)
   sfsSW <- c(2000, 800, 400, 150, 50, 10)
   GC <- 0.5
-  result <- least_square_BM(sfsWS, sfsSW, GC, Usegr = USEGR)
+  result <- least_square_BM(sfsWS, sfsSW, GC)
   expect_type(result, "list")
   expect_equal(names(result), c("param", "criteria"))
-  expect_equal(names(result$param), c("B", "mutbias", "e1", "e2"))
+  expect_equal(names(result$param), c("B", "mutbias"))
   expect_equal(names(result$criteria), c("SStot", "SSres", "R2", "AIC"))
 })
 
 test_that("least_square_BM throws error for invalid inputs", {
   sfsWS <- c(1000, 500, 300, 200, 80, 50)
   sfsSW <- c(2000, 800, 400, 150, 50, 10)
-  expect_error(least_square_BM("abc", sfsSW, 0.5, Usegr = USEGR), "The two SFSs must have positive numeric values")
-  expect_error(least_square_BM(sfsWS, sfsSW[-1], 0.5, Usegr = USEGR), "The two SFSs, WS and SW, must have the same length")
-  expect_error(least_square_BM(sfsWS, sfsSW, 0, Usegr = USEGR), "GC content must be strictly between 0 and 1")
+  expect_error(least_square_BM("abc", sfsSW, 0.5), "The two SFSs must have positive numeric values")
+  expect_error(least_square_BM(sfsWS, sfsSW[-1], 0.5), "The two SFSs, WS and SW, must have the same length")
+  expect_error(least_square_BM(sfsWS, sfsSW, 0), "GC content must be strictly between 0 and 1")
 })
 
 # --- Tests for least_square_hotspot1 ---
@@ -104,19 +104,19 @@ test_that("least_square_hotspot1 returns correct structure for valid inputs", {
   sfsWS <- c(1000, 500, 300, 200, 80, 50)
   sfsSW <- c(2000, 800, 400, 150, 50, 10)
   GC <- 0.5
-  result <- least_square_hotspot1(sfsWS, sfsSW, GC, Usegr = USEGR)
+  result <- least_square_hotspot1(sfsWS, sfsSW, GC)
   expect_type(result, "list")
   expect_equal(names(result), c("param", "criteria"))
-  expect_equal(names(result$param), c("B", "f", "mutbias", "e1", "e2"))
+  expect_equal(names(result$param), c("B", "f", "mutbias"))
   expect_equal(names(result$criteria), c("SStot", "SSres", "R2", "AIC"))
 })
 
 test_that("least_square_hotspot1 throws error for invalid inputs", {
   sfsWS <- c(1000, 500, 300, 200, 80, 50)
   sfsSW <- c(2000, 800, 400, 150, 50, 10)
-  expect_error(least_square_hotspot1("abc", sfsSW, 0.5, Usegr = USEGR), "The two SFSs must have positive numeric values")
-  expect_error(least_square_hotspot1(sfsWS, sfsSW[-1], 0.5, Usegr = USEGR), "The two SFSs, WS and SW, must have the same length")
-  expect_error(least_square_hotspot1(sfsWS, sfsSW, 0, Usegr = USEGR), "GC content must be strictly between 0 and 1")
+  expect_error(least_square_hotspot1("abc", sfsSW, 0.5), "The two SFSs must have positive numeric values")
+  expect_error(least_square_hotspot1(sfsWS, sfsSW[-1], 0.5), "The two SFSs, WS and SW, must have the same length")
+  expect_error(least_square_hotspot1(sfsWS, sfsSW, 0), "GC content must be strictly between 0 and 1")
 })
 
 # --- Tests for least_square_hotspot2 ---
@@ -124,19 +124,19 @@ test_that("least_square_hotspot2 returns correct structure for valid inputs", {
   sfsWS <- c(1000, 500, 300, 200, 80, 50)
   sfsSW <- c(2000, 800, 400, 150, 50, 10)
   GC <- 0.5
-  result <- least_square_hotspot2(sfsWS, sfsSW, GC, Usegr = USEGR)
+  result <- least_square_hotspot2(sfsWS, sfsSW, GC)
   expect_type(result, "list")
   expect_equal(names(result), c("param", "criteria"))
-  expect_equal(names(result$param), c("B0", "B1", "f", "mutbias", "e1", "e2"))
+  expect_equal(names(result$param), c("B0", "B1", "f", "mutbias"))
   expect_equal(names(result$criteria), c("SStot", "SSres", "R2", "AIC"))
 })
 
 test_that("least_square_hotspot2 throws error for invalid inputs", {
   sfsWS <- c(1000, 500, 300, 200, 80, 50)
   sfsSW <- c(2000, 800, 400, 150, 50, 10)
-  expect_error(least_square_hotspot2("abc", sfsSW, 0.5, Usegr = USEGR), "The two SFSs must have positive numeric values")
-  expect_error(least_square_hotspot2(sfsWS, sfsSW[-1], 0.5, Usegr = USEGR), "The two SFSs, WS and SW, must have the same length")
-  expect_error(least_square_hotspot2(sfsWS, sfsSW, 0, Usegr = USEGR), "GC content must be strictly between 0 and 1")
+  expect_error(least_square_hotspot2("abc", sfsSW, 0.5), "The two SFSs must have positive numeric values")
+  expect_error(least_square_hotspot2(sfsWS, sfsSW[-1], 0.5), "The two SFSs, WS and SW, must have the same length")
+  expect_error(least_square_hotspot2(sfsWS, sfsSW, 0), "GC content must be strictly between 0 and 1")
 })
 
 # --- Tests for least_square_hotspot2bis ---
@@ -145,19 +145,20 @@ test_that("least_square_hotspot2bis returns correct structure for valid inputs",
   sfsSW <- c(2000, 800, 400, 150, 50, 10)
   GC <- 0.5
   f <- 0.2
-  result <- least_square_hotspot2bis(sfsWS, sfsSW, GC, f, Usegr = USEGR)
+  result <- least_square_hotspot2bis(sfsWS, sfsSW, GC, f)
   expect_type(result, "list")
   expect_equal(names(result), c("param", "criteria"))
-  expect_equal(names(result$param), c("B0", "B1", "mutbias", "e1", "e2"))
+  expect_equal(names(result$param), c("B0", "B1", "mutbias"))
   expect_equal(names(result$criteria), c("SStot", "SSres", "R2", "AIC"))
 })
 
 test_that("least_square_hotspot2bis throws error for invalid inputs", {
   sfsWS <- c(1000, 500, 300, 200, 80, 50)
   sfsSW <- c(2000, 800, 400, 150, 50, 10)
-  expect_error(least_square_hotspot2bis("abc", sfsSW, 0.5, 0.2, Usegr = USEGR), "The two SFSs must have positive numeric values")
-  expect_error(least_square_hotspot2bis(sfsWS, sfsSW[-1], 0.5, 0.2, Usegr = USEGR), "The two SFSs, WS and SW, must have the same length")
-  expect_error(least_square_hotspot2bis(sfsWS, sfsSW, 0, 0.2, Usegr = USEGR), "GC content must be strictly between 0 and 1")
-  expect_error(least_square_hotspot2bis(sfsWS, sfsSW, 0.5, -0.1, Usegr = USEGR), "f must be between 0 and 1/2")
-  expect_error(least_square_hotspot2bis(sfsWS, sfsSW, 0.5, 0.6, Usegr = USEGR), "f must be between 0 and 1/2")
+  expect_error(least_square_hotspot2bis("abc", sfsSW, 0.5, 0.2), "The two SFSs must have positive numeric values")
+  expect_error(least_square_hotspot2bis(sfsWS, sfsSW[-1], 0.5, 0.2), "The two SFSs, WS and SW, must have the same length")
+  expect_error(least_square_hotspot2bis(sfsWS, sfsSW, 0, 0.2), "GC content must be strictly between 0 and 1")
+  expect_error(least_square_hotspot2bis(sfsWS, sfsSW, 0.5, -0.1), "f must be between 0 and 1/2")
+  expect_error(least_square_hotspot2bis(sfsWS, sfsSW, 0.5, 0.6), "f must be between 0 and 1/2")
 })
+

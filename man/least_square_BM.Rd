@@ -8,6 +8,7 @@ least_square_BM(
   WS,
   SW,
   GC,
+  cor = COR,
   Bmin = BMIN,
   Bmax = BMAX,
   Mmin = MMIN,
@@ -25,6 +26,8 @@ least_square_BM(
 \item{SW}{the SW observed SFS}
 
 \item{GC}{GC content}
+
+\item{cor}{a Boolean to add a correction to the transformed SFS (default = FALSE)}
 
 \item{Bmin}{minimum for the range of B, default value = -100}
 

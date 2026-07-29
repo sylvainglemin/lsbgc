@@ -8,6 +8,7 @@ least_square_M(
   WS,
   SW,
   GC,
+  cor = COR,
   Mmin = MMIN,
   Mmax = MMAX,
   Maxit = MAXIT,
@@ -23,6 +24,8 @@ least_square_M(
 \item{SW}{the SW observed SFS}
 
 \item{GC}{GC content}
+
+\item{cor}{a Boolean to add a correction to the transformed SFS (default = FALSE)}
 
 \item{Mmin}{minimum for the range of M, default value = -5}
 

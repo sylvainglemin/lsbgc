@@ -24,10 +24,11 @@
 #' par(1) = B (gBGC background)
 #' par(2) = f (proportion of hotspots)
 #' par(3) = M (i.e. log(mut_bias))
+#' par(4) = e1
+#' par(5) = e2
 #' @param WS the WS observed SFS
 #' @param SW the SW observed SFS
 #' @param GC the GC content
-#' @param cor a Boolean to add a correction to the transformed SFS (default = FALSE)
 #'
 #' @returns The weighted sum of squares
 #'
@@ -36,15 +37,15 @@
 #' @examples
 #' sfsWS <- c(100,50,30,15,10)
 #' sfsSW <- c(200,80, 30, 10, 5)
-#' param <- c(1,0.1,2)
-#' sum_of_squares_hotspot1(param,sfsWS,sfsSW,0.5)
-sum_of_squares_hotspot1 <- function(par,WS,SW,GC,cor=COR) {
+#' param <- c(1,0.1,2,0.02,0.01)
+#' sum_of_squares_hotspot1_err(param,sfsWS,sfsSW,0.5)
+sum_of_squares_hotspot1_err <- function(par,WS,SW,GC) {
   #Error checking
   if(!is.numeric(c(WS,SW)) || length(which(c(WS,SW)<0))>0 ) {
     abort("The two SFSs must have positive numeric values")
   }
-  if(length(par)!=3) {
-    abort("A three values vector must be given as par")
+  if(length(par)!=5) {
+    abort("A five values vector must be given as par")
   }
   if(length(WS)!=length(SW)) {
     abort("The two SFSs, WS and SW, must have the same length")
@@ -56,17 +57,27 @@ sum_of_squares_hotspot1 <- function(par,WS,SW,GC,cor=COR) {
   B <- par[1]
   f <- par[2]
   M <- par[3]
+  e1 <- par[4]
+  e2 <- par[5]
   n <- length(WS)
-  removeNA <- which(WS>=1 & SW>=1)
-  WS <- WS[removeNA]
-  SW <- SW[removeNA]
-  w <- 1/(t_variance(WS,cor) + t_variance(SW,cor))
+  # True SFS as a function of observed one.
+  WSt <- ((1 - e2)*WS - e2*rev(SW))/(1 - e1 - e2)
+  SWt <- ((1 - e1)*SW - e1*rev(WS))/(1 - e1 - e2)
+  # Same expression without 1-e1-e2 that simplifies in ratios
+  #WSt2 <- ((1 - e2)*WS - e2*rev(SW))
+  #SWt2 <- ((1 - e1)*SW - e1*rev(WS))
+  # w <- WSt2*SWt2/(WSt2 + SWt2)
+  # Here the weight is written as a function of corrected SFSs
+  # This complexifies the whole equation as e1 and e2 appear in w
+  # The gradient function is also more complicated
+  # Instead we use the weight as a function of observed SFSs
+  w <- 1/(t_variance(WS) + t_variance(SW))
   x <- c(1:n)/(n+1)
-  x <- x[removeNA]
-  y <- t_sfs(WS,cor) - t_sfs(SW,cor)
+  y <- t_sfs(WS) - t_sfs(SW)
   ypred <- - M - log(GC) + log(1 - GC) +
     log((1 - f)*ratio_B(0,x) + f*ratio_B(B,x)) -
     log((1 - f)*ratio_B(0,x) + f*ratio_B(-B,x))
+  removeNA <- !is.na(y)
   w <- w[removeNA]
   y <- y[removeNA]
   ypred <- ypred[removeNA]
@@ -83,21 +94,22 @@ sum_of_squares_hotspot1 <- function(par,WS,SW,GC,cor=COR) {
 #' par(1) = B
 #' par(2) = f
 #' par(3) = M (i.e. log(mut_bias))
+#' par(4) = e1
+#' par(5) = e2
 #' @param WS the WS observed SFS
 #' @param SW the SW observed SFS
 #' @param GC the GC content
-#' @param cor a Boolean to add a correction to the transformed SFS (default = FALSE)
 #'
 #' @returns The gradient function
 #'
 #' @noRd
-gr_sum_of_squares_hotspot1 <- function(par,WS,SW,GC,cor=COR) {
+gr_sum_of_squares_hotspot1_err <- function(par,WS,SW,GC) {
   #Error checking
   if(!is.numeric(c(WS,SW)) || length(which(c(WS,SW)<0))>0 ) {
     abort("The two SFSs must have positive numeric values")
   }
-  if(length(par)!=3) {
-    abort("A three values vector must be given as par")
+  if(length(par)!=5) {
+    abort("A five values vector must be given as par")
   }
   if(length(WS)!=length(SW)) {
     abort("The two SFSs, WS and SW, must have the same length")
@@ -109,14 +121,16 @@ gr_sum_of_squares_hotspot1 <- function(par,WS,SW,GC,cor=COR) {
   B <- par[1]
   f <- par[2]
   M <- par[3]
+  e1 <- par[4]
+  e2 <- par[5]
   n <- length(WS)
-  removeNA <- which(WS>=1 & SW>=1)
-  WS <- WS[removeNA]
-  SW <- SW[removeNA]
-  w <- 1/(t_variance(WS,cor) + t_variance(SW,cor))
+  # True SFS as a function of observed one.
+  WSt <- ((1-e2)*WS - e2*rev(SW))/(1 - e1 - e2)
+  SWt <- ((1-e1)*SW - e1*rev(WS))/(1 - e1 - e2)
+  # Same expression without 1-e1-e2 that simplifies in ratios
+  w <- 1/(t_variance(WS) + t_variance(SW))
   x <- c(1:n)/(n+1)
-  x <- x[removeNA]
-  y <- t_sfs(WS,cor) - t_sfs(SW,cor)
+  y <- t_sfs(WS) - t_sfs(SW)
   ypred <- - M - log(GC) + log(1 - GC) +
     log((1 - f)*ratio_B(0,x) + f*ratio_B(B,x)) -
     log((1 - f)*ratio_B(0,x) + f*ratio_B(-B,x))
@@ -125,9 +139,17 @@ gr_sum_of_squares_hotspot1 <- function(par,WS,SW,GC,cor=COR) {
   df <- d_hotspot1(B,f,x)$df
   # Derivative of y as a function of error rates
   # Approximated version, derivative of log(WSt2/SWt2) without additional terms
-  dy1 <- d_expected_log_ratio(WS,SW,0,0)$d1
-  dy2 <- d_expected_log_ratio(WS,SW,0,0)$d2
+  dy1 <- d_expected_log_ratio(WS,SW,e1,e2)$d1
+  dy2 <- d_expected_log_ratio(WS,SW,e1,e2)$d2
   # Removing NA values in SFS ratio
+  removeNA <- !is.na(y)
+  w <- w[removeNA]
+  y <- y[removeNA]
+  ypred <- ypred[removeNA]
+  dB <- dB[removeNA]
+  df <- df[removeNA]
+  dy1 <- dy1[removeNA]
+  dy2 <- dy2[removeNA]
   grB <- sum(w*(2*(y - ypred)*dB)/sum(w))
   grf <- sum(w*(2*(y - ypred)*df)/sum(w))
   grM <- sum(w*(2*(y - ypred))/sum(w))
@@ -158,10 +180,11 @@ gr_sum_of_squares_hotspot1 <- function(par,WS,SW,GC,cor=COR) {
 #' par(2) = B1 (gBGC in hotspots)
 #' par(3) = f (proportion of hotspots)
 #' par(4) = M (i.e. log(mut_bias))
+#' par(5) = e1
+#' par(6) = e2
 #' @param WS the WS observed SFS
 #' @param SW the SW observed SFS
 #' @param GC the GC content
-#' @param cor a Boolean to add a correction to the transformed SFS (default = FALSE)
 #'
 #' @returns The weighted sum of squares
 #'
@@ -170,15 +193,15 @@ gr_sum_of_squares_hotspot1 <- function(par,WS,SW,GC,cor=COR) {
 #' @examples
 #' sfsWS <- c(100,50,30,15,10)
 #' sfsSW <- c(200,80, 30, 10, 5)
-#' param <- c(0.1,5,0.1,2)
-#' sum_of_squares_hotspot2(param,sfsWS,sfsSW,0.5)
-sum_of_squares_hotspot2 <- function(par,WS,SW,GC,cor=COR) {
+#' param <- c(0.1,5,0.1,2,0.02,0.01)
+#' sum_of_squares_hotspot2_err(param,sfsWS,sfsSW,0.5)
+sum_of_squares_hotspot2_err <- function(par,WS,SW,GC) {
   #Error checking
   if(!is.numeric(c(WS,SW)) || length(which(c(WS,SW)<0))>0 ) {
     abort("The two SFSs must have positive numeric values")
   }
-  if(length(par)!=4) {
-    abort("A four values vector must be given as par")
+  if(length(par)!=6) {
+    abort("A six values vector must be given as par")
   }
   if(length(WS)!=length(SW)) {
     abort("The two SFSs, WS and SW, must have the same length")
@@ -191,18 +214,27 @@ sum_of_squares_hotspot2 <- function(par,WS,SW,GC,cor=COR) {
   B1 <- par[2]
   f <- par[3]
   M <- par[4]
+  e1 <- par[5]
+  e2 <- par[6]
   n <- length(WS)
-  removeNA <- which(WS>=1 & SW>=1)
-  WS <- WS[removeNA]
-  SW <- SW[removeNA]
-  w <- 1/(t_variance(WS,cor) + t_variance(SW,cor))
+  # True SFS as a function of observed one.
+  WSt <- ((1 - e2)*WS - e2*rev(SW))/(1 - e1 - e2)
+  SWt <- ((1 - e1)*SW - e1*rev(WS))/(1 - e1 - e2)
+  # w <- WSt2*SWt2/(WSt2 + SWt2)
+  # Here the weight is written as a function of corrected SFSs
+  # This complexifies the whole equation as e1 and e2 appear in w
+  # The gradient function is also more complicated
+  # Instead we use the weight as a function of observed SFSs
+  w <- 1/(t_variance(WS) + t_variance(SW))
   x <- c(1:n)/(n+1)
-  x <- x[removeNA]
-  y <- t_sfs(WS,cor) - t_sfs(SW,cor)
+  y <- t_sfs(WS) - t_sfs(SW)
   ypred <- - M - log(GC) + log(1 - GC) +
     log((1 - f)*ratio_B(B0,x) + f*ratio_B(B1,x)) -
     log((1 - f)*ratio_B(-B0,x) + f*ratio_B(-B1,x))
   removeNA <- !is.na(y)
+  w <- w[removeNA]
+  y <- y[removeNA]
+  ypred <- ypred[removeNA]
   return( sum(w*(y-ypred)^2)/sum(w) )
 }
 
@@ -217,21 +249,22 @@ sum_of_squares_hotspot2 <- function(par,WS,SW,GC,cor=COR) {
 #' par(2) = B1
 #' par(3) = f
 #' par(4) = M (i.e. log(mut_bias))
+#' par(5) = e1
+#' par(6) = e2
 #' @param WS the WS observed SFS
 #' @param SW the SW observed SFS
 #' @param GC the GC content
-#' @param cor a Boolean to add a correction to the transformed SFS (default = FALSE)
 #'
 #' @returns The gradient function
 #'
 #' @noRd
-gr_sum_of_squares_hotspot2 <- function(par,WS,SW,GC,cor=COR) {
+gr_sum_of_squares_hotspot2_err <- function(par,WS,SW,GC) {
   #Error checking
   if(!is.numeric(c(WS,SW)) || length(which(c(WS,SW)<0))>0 ) {
     abort("The two SFSs must have positive numeric values")
   }
-  if(length(par)!=4) {
-    abort("A four values vector must be given as par")
+  if(length(par)!=6) {
+    abort("A six values vector must be given as par")
   }
   if(length(WS)!=length(SW)) {
     abort("The two SFSs, WS and SW, must have the same length")
@@ -244,14 +277,15 @@ gr_sum_of_squares_hotspot2 <- function(par,WS,SW,GC,cor=COR) {
   B1 <- par[2]
   f <- par[3]
   M <- par[4]
+  e1 <- par[5]
+  e2 <- par[6]
   n <- length(WS)
-  removeNA <- which(WS>=1 & SW>=1)
-  WS <- WS[removeNA]
-  SW <- SW[removeNA]
-  w <- 1/(t_variance(WS,cor) + t_variance(SW,cor))
+  # True SFS as a function of observed one.
+  WSt <- ((1-e2)*WS - e2*rev(SW))/(1 - e1 - e2)
+  SWt <- ((1-e1)*SW - e1*rev(WS))/(1 - e1 - e2)
+  w <- 1/(t_variance(WS) + t_variance(SW))
   x <- c(1:n)/(n+1)
-  x <- x[removeNA]
-  y <- t_sfs(WS,cor) - t_sfs(SW,cor)
+  y <- t_sfs(WS) - t_sfs(SW)
   ypred <- - M - log(GC) + log(1 - GC) +
     log((1 - f)*ratio_B(B0,x) + f*ratio_B(B1,x)) -
     log((1 - f)*ratio_B(-B0,x) + f*ratio_B(-B1,x))
@@ -261,8 +295,18 @@ gr_sum_of_squares_hotspot2 <- function(par,WS,SW,GC,cor=COR) {
   df <- d_hotspot2(B0,B1,f,x)$df
   # Derivative of y as a function of error rates
   # Approximated version, derivative of log(WSt2/SWt2) without additional terms
-  dy1 <- d_expected_log_ratio(WS,SW,0,0)$d1
-  dy2 <- d_expected_log_ratio(WS,SW,0,0)$d2
+  dy1 <- d_expected_log_ratio(WS,SW,e1,e2)$d1
+  dy2 <- d_expected_log_ratio(WS,SW,e1,e2)$d2
+  # Removing NA values in SFS ratio
+  removeNA <- !is.na(y)
+  w <- w[removeNA]
+  y <- y[removeNA]
+  ypred <- ypred[removeNA]
+  dB0 <- dB0[removeNA]
+  dB1 <- dB1[removeNA]
+  df <- df[removeNA]
+  dy1 <- dy1[removeNA]
+  dy2 <- dy2[removeNA]
   grB0 <- sum(w*(2*(y - ypred)*dB0)/sum(w))
   grB1 <- sum(w*(2*(y - ypred)*dB1)/sum(w))
   grf <- sum(w*(2*(y - ypred)*df)/sum(w))
@@ -292,11 +336,12 @@ gr_sum_of_squares_hotspot2 <- function(par,WS,SW,GC,cor=COR) {
 #' par(1) = B0 (gBGC background)
 #' par(2) = B1 (gBGC in hotspots)
 #' par(3) = M (i.e. log(mut_bias))
+#' par(4) = e1
+#' par(5) = e2
 #' @param WS the WS observed SFS
 #' @param SW the SW observed SFS
 #' @param GC the GC content
 #' @param f fraction of hotspots, fixed, not estimated (0<f<1/2)
-#' @param cor a Boolean to add a correction to the transformed SFS (default = FALSE)
 #'
 #' @returns The weighted sum of squares
 #'
@@ -305,15 +350,15 @@ gr_sum_of_squares_hotspot2 <- function(par,WS,SW,GC,cor=COR) {
 #' @examples
 #' sfsWS <- c(100,50,30,15,10)
 #' sfsSW <- c(200,80, 30, 10, 5)
-#' param <- c(0.1,5,2)
-#' sum_of_squares_hotspot2bis(param,sfsWS,sfsSW,0.5,0.1)
-sum_of_squares_hotspot2bis <- function(par,WS,SW,GC,f,cor=COR) {
+#' param <- c(0.1,5,2,0.02,0.01)
+#' sum_of_squares_hotspot2bis_err(param,sfsWS,sfsSW,0.5,0.1)
+sum_of_squares_hotspot2bis_err <- function(par,WS,SW,GC,f) {
   #Error checking
   if(!is.numeric(c(WS,SW)) || length(which(c(WS,SW)<0))>0 ) {
     abort("The two SFSs must have positive numeric values")
   }
-  if(length(par)!=3) {
-    abort("A three values vector must be given as par")
+  if(length(par)!=5) {
+    abort("A five values vector must be given as par")
   }
   if(length(WS)!=length(SW)) {
     abort("The two SFSs, WS and SW, must have the same length")
@@ -328,17 +373,22 @@ sum_of_squares_hotspot2bis <- function(par,WS,SW,GC,f,cor=COR) {
   B0 <- par[1]
   B1 <- par[2]
   M <- par[3]
+  e1 <- par[4]
+  e2 <- par[5]
   n <- length(WS)
-  removeNA <- which(WS>=1 & SW>=1)
-  WS <- WS[removeNA]
-  SW <- SW[removeNA]
-  w <- 1/(t_variance(WS,cor) + t_variance(SW,cor))
+  # True SFS as a function of observed one.
+  WSt <- ((1 - e2)*WS - e2*rev(SW))/(1 - e1 - e2)
+  SWt <- ((1 - e1)*SW - e1*rev(WS))/(1 - e1 - e2)
+  w <- 1/(t_variance(WS) + t_variance(SW))
   x <- c(1:n)/(n+1)
-  x <- x[removeNA]
-  y <- t_sfs(WS,cor) - t_sfs(SW,cor)
+  y <- t_sfs(WS) - t_sfs(SW)
   ypred <- - M - log(GC) + log(1 - GC) +
     log((1 - f)*ratio_B(B0,x) + f*ratio_B(B1,x)) -
     log((1 - f)*ratio_B(-B0,x) + f*ratio_B(-B1,x))
+  removeNA <- !is.na(y)
+  w <- w[removeNA]
+  y <- y[removeNA]
+  ypred <- ypred[removeNA]
   return( sum(w*(y-ypred)^2)/sum(w) )
 }
 
@@ -352,22 +402,23 @@ sum_of_squares_hotspot2bis <- function(par,WS,SW,GC,f,cor=COR) {
 #' par(1) = B0
 #' par(2) = B1
 #' par(3) = M (i.e. log(mut_bias))
+#' par(4) = e1
+#' par(5) = e2
 #' @param WS the WS observed SFS
 #' @param SW the SW observed SFS
 #' @param GC the GC content
 #' @param f fraction of hotpsots
-#' @param cor a Boolean to add a correction to the transformed SFS (default = FALSE)
 #'
 #' @returns The gradient function
 #'
 #' @noRd
-gr_sum_of_squares_hotspot2bis <- function(par,WS,SW,GC,f,cor=COR) {
+gr_sum_of_squares_hotspot2bis_err <- function(par,WS,SW,GC,f) {
   #Error checking
   if(!is.numeric(c(WS,SW)) || length(which(c(WS,SW)<0))>0 ) {
     abort("The two SFSs must have positive numeric values")
   }
-  if(length(par)!=3) {
-    abort("A three values vector must be given as par")
+  if(length(par)!=5) {
+    abort("A five values vector must be given as par")
   }
   if(length(WS)!=length(SW)) {
     abort("The two SFSs, WS and SW, must have the same length")
@@ -382,14 +433,15 @@ gr_sum_of_squares_hotspot2bis <- function(par,WS,SW,GC,f,cor=COR) {
   B0 <- par[1]
   B1 <- par[2]
   M <- par[3]
+  e1 <- par[4]
+  e2 <- par[5]
   n <- length(WS)
-  removeNA <- which(WS>=1 & SW>=1)
-  WS <- WS[removeNA]
-  SW <- SW[removeNA]
-  w <- 1/(t_variance(WS,cor) + t_variance(SW,cor))
+  # True SFS as a function of observed one.
+  WSt <- ((1-e2)*WS - e2*rev(SW))/(1 - e1 - e2)
+  SWt <- ((1-e1)*SW - e1*rev(WS))/(1 - e1 - e2)
+  w <- 1/(t_variance(WS) + t_variance(SW))
   x <- c(1:n)/(n+1)
-  x <- x[removeNA]
-  y <- t_sfs(WS,cor) - t_sfs(SW,cor)
+  y <- t_sfs(WS) - t_sfs(SW)
   ypred <- - M - log(GC) + log(1 - GC) +
     log((1 - f)*ratio_B(B0,x) + f*ratio_B(B1,x)) -
     log((1 - f)*ratio_B(-B0,x) + f*ratio_B(-B1,x))
@@ -398,8 +450,16 @@ gr_sum_of_squares_hotspot2bis <- function(par,WS,SW,GC,f,cor=COR) {
   dB1 <- d_hotspot2(B0,B1,f,x)$dB1
   # Derivative of y as a function of error rates
   # Approximated version, derivative of log(WSt2/SWt2) without additional terms
-  dy1 <- d_expected_log_ratio(WS,SW,0,0)$d1
-  dy2 <- d_expected_log_ratio(WS,SW,0,0)$d2
+  dy1 <- d_expected_log_ratio(WS,SW,e1,e2)$d1
+  dy2 <- d_expected_log_ratio(WS,SW,e1,e2)$d2
+  # Removing NA values in SFS ratio
+  removeNA <- !is.na(y)
+  w <- w[removeNA]
+  y <- y[removeNA]
+  ypred <- ypred[removeNA]
+  dB0 <- dB0[removeNA]
+  dB1 <- dB1[removeNA]
+  dy1 <- dy1[removeNA]
   dy2 <- dy2[removeNA]
   grB0 <- sum(w*(2*(y - ypred)*dB0)/sum(w))
   grB1 <- sum(w*(2*(y - ypred)*dB1)/sum(w))

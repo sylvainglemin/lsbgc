@@ -189,3 +189,4 @@ test_that("ens_hotspot2_err throws error for invalid inputs", {
   expect_error(ens_hotspot2_err(10, 10, 1, 1, 0.5, 0.1, -0.1, 10, 1), "e2 must be a numeric value between 0 and 1")
   expect_error(ens_hotspot2_err(10, 10, 1, 1, 0.5, 0.1, 0.1, 1, 1), "n must be an integer higher than 1")
 })
+

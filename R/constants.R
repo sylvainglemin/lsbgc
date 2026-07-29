@@ -16,9 +16,11 @@ BMAX <- 100
 # Log of the mutation bias
 MMIN <- -5
 MMAX <- 5
+# Choice of the correction to applied to SFS
+COR <- TRUE
 # Option parameters of the optim function
 MAXIT <- 100
 FACTR <- 10^7
 LMM <- 20
 VERBOSE <- 0
-USEGR <- F
+USEGR <- FALSE

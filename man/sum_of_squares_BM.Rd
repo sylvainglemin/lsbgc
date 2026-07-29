@@ -4,20 +4,20 @@
 \alias{sum_of_squares_BM}
 \title{Sum of squares of model BM}
 \usage{
-sum_of_squares_BM(par, WS, SW, GC)
+sum_of_squares_BM(par, WS, SW, GC, cor = COR)
 }
 \arguments{
 \item{par}{a vector with the four parameters of the model.
 par(1) = B
-par(2) = M (i.e. log(mut_bias))
-par(3) = e1
-par(4) = e2}
+par(2) = M (i.e. log(mut_bias))}
 
 \item{WS}{the WS observed SFS}
 
 \item{SW}{the SW observed SFS}
 
 \item{GC}{the GC content}
+
+\item{cor}{a Boolean to add a correction to the transformed SFS (default = FALSE)}
 }
 \value{
 The weighted sum of squares
@@ -35,6 +35,6 @@ w(j) = Ows(j)*Osw(j) / (Ows(j)+Osw(j)) is the weight used in the least square
 \examples{
 sfsWS <- c(100,50,30,15,10)
 sfsSW <- c(200,80, 30, 10, 5)
-param <- c(1,2,0.02,0.01)
+param <- c(1,2)
 sum_of_squares_BM(param,sfsWS,sfsSW,0.5)
 }

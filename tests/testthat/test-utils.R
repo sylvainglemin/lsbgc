@@ -53,3 +53,4 @@ test_that("project_sfs returns same SFS when m = n", {
   projected <- project_sfs(sfs, n)
   expect_equal(projected, sfs, tolerance = 1e-6)
 })
+

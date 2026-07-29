@@ -111,3 +111,4 @@ test_that("d_hotspot2 throws error for invalid inputs", {
   expect_error(d_hotspot2(0.1, 5.0, 0.2, -0.1), "x must be between 0 and 1")
   expect_error(d_hotspot2(0.1, 5.0, 0.2, 1.1), "x must be between 0 and 1")
 })
+

@@ -9,6 +9,7 @@
 #' (see article for mathematical justification)
 #'
 #' @param sfs a site frequency spectrum (a numerical vector)
+#' @param cor a Boolean to add a correction to the transformed SFS (default = FALSE)
 #'
 #' @returns the transformed sfs
 #' @export
@@ -24,20 +25,28 @@
 #' # Comparison
 #' plot(l_ratio)
 #' points(t_ratio,col="red")
-t_sfs <- function(sfs) {
+t_sfs <- function(sfs,cor=COR) {
   #Error checking
   if(!is.numeric(sfs)){
     abort("sfs must be a numeric vector")
   }
   # Main
-  #log(sfs) -0.0654/sfs + 4.716/(sfs^2) -5.526/(sfs^3)
-  log(sfs) -0.05/sfs + 4.6/(sfs^2) -5.4/(sfs^3)
+  if(COR) {
+    return( log(sfs) + 1/(2*sfs) - 1/(2*sfs^2) - 1/(3*sfs^3))
+    # return( log(sfs) + 1/(2*sfs) - 1/(2*sfs^2) - 1/(3*sfs^3) - 1/(4*sfs^4) )
+    #return(log(sfs) -0.05/sfs + 4.6/(sfs^2) -5.4/(sfs^3))
+  }
+  else {
+    return(log(sfs))
+  }
+
 }
 
 #' @title Expected variance of the transformed sfs
 #' Assuming that each class follows a Poisson dsitribution
 #'
 #' @param sfs a site frequency spectrum (a numerical vector)
+#' @param cor a Boolean to add a correction to the transformed SFS (default = FALSE)
 #'
 #' @returns the expected variance of the sfs
 #' @export
@@ -50,27 +59,35 @@ t_sfs <- function(sfs) {
 #' t_ratio <- t_sfs(sfs_ws) - t_sfs(sfs_sw)
 #' # The weight for each class is given by the inverse of the variance
 #' weight <- 1/(t_variance(sfs_ws) + t_variance(sfs_sw))
-t_variance <- function(sfs) {
+t_variance <- function(sfs,cor=COR) {
   #Error checking
   if(!is.numeric(sfs)){
     abort("sfs must be a numeric vector")
   }
   # Main
-  var <- 1/sfs + 0.1/(sfs)^2
-  corvar <- c(0, 0.54, 0.43, 0.24, 0.11, 0.04,0) # Manual correcting factor computed for integers between 2 and 6
-  # Interpolation for non-integer values
-  corvarextrapol <- function(x) {
-    xplus <- ceiling(x)
-    xminus <- floor(x)
-    f <- xplus - x
-    return(f*corvar[xminus]+(1-f)*corvar[xplus])
+  if(cor) {
+    #a0 <- (1 - 2*sfs)^2/(4*sfs^3)
+    #a1 <- -(3 - 7*sfs + 4*sfs^3)/(4*sfs^3)
+    #a2 <- (3 -2*sfs - 4*sfs^2)/(4*sfs^3)
+    #a3 <- -(1 + sfs)/(4*sfs^3)
+    #return( a0 + a1*exp(-sfs) + a2*exp(-2*sfs) + a3*exp(-3*sfs) )
+    return(1/sfs - 1/(sfs^2) + 1/(4*sfs^3))
+    var <- 1/sfs + 0.1/(sfs)^2
+    corvar <- c(0, 0.54, 0.43, 0.24, 0.11, 0.04,rep(0,max(sfs))) # Manual correcting factor
+    # Interpolation for non-integer values
+    corvarextrapol <- function(x) {
+      xplus <- ceiling(x)
+      xminus <- max(1,floor(x))
+      f <- xplus - x
+      return(f*corvar[xminus]+(1-f)*corvar[xplus])
+    }
+    var <- var+corvarextrapol(sfs)
+    return(var)
   }
-  var <- ifelse(sfs>6,var,
-                ifelse(sfs<2,1.07, # 1 and 2 have roughly the same value: plateau between them
-                       var+corvarextrapol(sfs) # linear interpolation of the correcting factor
-                       )
-                )
-  return(var)
+  else {
+    return(1/sfs)
+  }
+
 }
 
 

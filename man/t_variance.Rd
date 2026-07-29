@@ -5,10 +5,12 @@
 \title{Expected variance of the transformed sfs
 Assuming that each class follows a Poisson dsitribution}
 \usage{
-t_variance(sfs)
+t_variance(sfs, cor = COR)
 }
 \arguments{
 \item{sfs}{a site frequency spectrum (a numerical vector)}
+
+\item{cor}{a Boolean to add a correction to the transformed SFS (default = FALSE)}
 }
 \value{
 the expected variance of the sfs
