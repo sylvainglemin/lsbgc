@@ -12,22 +12,22 @@ test_that("t_sfs throws error for invalid inputs", {
 test_that("t_sfs returns correct transformed SFS", {
   # Test with example from documentation
   sfs <- c(100, 50, 30, 20, 3)
-  expected_t_sfs <- log(sfs) + 1/(2*sfs) - 1/(2*sfs^2) - 1/(3*sfs^3)
+  expected_t_sfs <- log(sfs) + 1/(2*sfs) - 1/(2*sfs^2) - 0.04*exp(-sfs) - 1.19*exp(-sfs^2)
   expect_equal(t_sfs(sfs), expected_t_sfs, tolerance = 1e-6)
 
   # Test with single-value SFS
   sfs_single <- c(50)
-  expected_single <- log(50) + 1/(2*50) - 1/(2*50^2) - 1/(3*50^3)
+  expected_single <- log(50) + 1/(2*50) - 1/(2*50^2) - 0.04*exp(-50) - 1.19*exp(-50^2)
   expect_equal(t_sfs(sfs_single), expected_single, tolerance = 1e-6)
 
   # Test with large values
   sfs_large <- c(1000, 2000, 3000)
-  expected_large <- log(sfs_large) + 1/(2*sfs_large) - 1/(2*sfs_large^2) - 1/(3*sfs_large^3)
+  expected_large <- log(sfs_large) + 1/(2*sfs_large) - 1/(2*sfs_large^2) - 0.04*exp(-sfs_large) - 1.19*exp(-sfs_large^2)
   expect_equal(t_sfs(sfs_large), expected_large, tolerance = 1e-6)
 
   # Test with small values (but > 0)
   sfs_small <- c(0.1, 0.5, 1)
-  expected_small <- log(sfs_small) + 1/(2*sfs_small) - 1/(2*sfs_small^2) - 1/(3*sfs_small^3)
+  expected_small <- log(sfs_small) + 1/(2*sfs_small) - 1/(2*sfs_small^2) - 0.04*exp(-sfs_small) - 1.19*exp(-sfs_small^2)
   expect_equal(t_sfs(sfs_small), expected_small, tolerance = 1e-6)
 })
 

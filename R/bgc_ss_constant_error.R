@@ -319,13 +319,27 @@ sum_of_squares_BM_err <- function(par,WS,SW,GC,cor=COR) {
   # True SFS as a function of observed one.
   WSt <- ((1 - e2)*WS - e2*rev(SW))/(1 - e1 - e2)
   SWt <- ((1 - e1)*SW - e1*rev(WS))/(1 - e1 - e2)
-  removeNA <- which(WSt>=1 & SWt>=1)
+  WSt2 <- ((1 - e2)*WS - e2*rev(SW))
+  SWt2 <- ((1 - e1)*SW - e1*rev(WS))
+  #C1 <- 1 - e1 - e2
+  #C2 <- 1 + e1 + e2
+  #C3 <- 1 - 3*e1 - 3*e2
+  #WSt <- (1+2*e1)*WS - 2*e2*rev(SW)
+  #SWt <- (1+2*e2)*SW - 2*e1*rev(SW)
+  #WSt <- ((1 - e2)*WS - e2*rev(SW))/C1 + C2*(e1*WS - e2*rev(SW))/(C1*C3)
+  #SWt <- ((1 - e1)*SW - e1*rev(WS))/(1 - e1 - e2) + C2*(e2*SW - e1*rev(WS))/(C1*C3)
+  removeNA <- which(WSt>=1 & SWt>=1 & WS>=1 & SW>=1)
+  WS <- WS[removeNA]
+  SW <- SW[removeNA]
   WSt <- WSt[removeNA]
   SWt <- SWt[removeNA]
+  WSt2 <- WSt2[removeNA]
+  SWt2 <- SWt2[removeNA]
   w <- 1/(t_variance(WSt,cor) + t_variance(SWt,cor))
   x <- c(1:n)/(n+1)
   x <- x[removeNA]
   y <- t_sfs(WSt,cor) - t_sfs(SWt,cor)
+  #y <- log(WSt2) - log(SWt2) + 0.5/WSt - 0.5/SWt
   ypred <- B*x - M - log(GC) + log(1 - GC)
   return( sum(w*(y-ypred)^2)/sum(w) )
 }
