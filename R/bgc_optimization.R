@@ -39,6 +39,7 @@ AICls <- function(n,np,SSres){
 # Functions to minimize the sum of squares of the different models
 
 
+
 #' @title Sum of squares minimization of model M
 #'
 #' @description Function that searches for the three parameters that minimize the sum_of_squares function
@@ -86,8 +87,8 @@ least_square_M <- function(WS,SW,GC,cor=COR,snpthresh=SNPTHRESH,
     abort("GC content must be strictly between 0 and 1")
   }
   #Main
-  n <- length(WS)
-  Minit <- mean(log(WS/SW),na.rm=T) + log(1 - GC) - log(GC)
+  NONZERO <- which(WS!=0 & SW!=0)
+  Minit <- mean(log(WS[NONZERO]/SW[NONZERO]),na.rm=T) + log(1 - GC) - log(GC)
   init <- c(Minit)
   # Boundaries for optimization
   inf <- c(Mmin)

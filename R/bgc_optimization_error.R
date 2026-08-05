@@ -59,8 +59,8 @@ least_square_M_err <- function(WS,SW,GC,cor=COR,snpthresh=SNPTHRESH,
     abort("GC content must be strictly between 0 and 1")
   }
   #Main
-  n <- length(WS)
-  Minit <- mean(log(WS/SW),na.rm=T) + log(1 - GC) - log(GC)
+  NONZERO <- which(WS!=0 & SW!=0)
+  Minit <- mean(log(WS[NONZERO]/SW[NONZERO]),na.rm=T) + log(1 - GC) - log(GC)
   init <- c(Minit,e1init,e2init)
   # Boundaries for optimization
   inf <- c(Mmin,0,0)
