@@ -32,6 +32,7 @@
 #' @param SW the SW observed SFS
 #' @param GC GC content
 #' @param cor a Boolean to add a correction to the transformed SFS (default = TRUE)
+#' @param snpthresh the value below which the SNP category is removed (default = 1)
 #'
 #' @returns The weighted sum of squares
 #'
@@ -42,7 +43,7 @@
 #' sfsSW <- c(200,80,30,10,5)
 #' param <- c(2,0.02,0.01)
 #' sum_of_squares_M_err(param,sfsWS,sfsSW,0.5)
-sum_of_squares_M_err <- function(par,WS,SW,GC,cor=COR) {
+sum_of_squares_M_err <- function(par,WS,SW,GC,cor=COR,snpthresh=SNPTHRESH) {
   #Error checking
   if(!is.numeric(c(WS,SW)) || length(which(c(WS,SW)<0))>0 ) {
     abort("The two SFSs must have positive numeric values")
@@ -64,13 +65,13 @@ sum_of_squares_M_err <- function(par,WS,SW,GC,cor=COR) {
   # True SFS as a function of observed one.
   WSt <- ((1 - e2)*WS - e2*rev(SW))/(1 - e1 - e2)
   SWt <- ((1 - e1)*SW - e1*rev(WS))/(1 - e1 - e2)
-  # Same expression without 1-e1-e2 that simplifies in ratios
-  #WSt2 <- ((1 - e2)*WS - e2*rev(SW))
-  #SWt2 <- ((1 - e1)*SW - e1*rev(WS))
-  # y <- log(WSt2/SWt2) + 1/(WSt) - 1/(SWt)
-  removeNA <- which(WSt>=1 & SWt>=1)
+  # Suppressing values below the threshold
+  removeNA <- which(WSt>=snpthresh & SWt>=snpthresh & WS>=snpthresh & SW>=snpthresh)
+  WS <- WS[removeNA]
+  SW <- SW[removeNA]
   WSt <- WSt[removeNA]
   SWt <- SWt[removeNA]
+  # Variables for the regression
   w <- 1/(t_variance(WSt,cor) + t_variance(SWt,cor))
   x <- c(1:n)/(n+1)
   x <- x[removeNA]
@@ -93,11 +94,12 @@ sum_of_squares_M_err <- function(par,WS,SW,GC,cor=COR) {
 #' @param SW the SW observed SFS
 #' @param GC the GC content
 #' @param cor a Boolean to add a correction to the transformed SFS (default = TRUE)
+#' @param snpthresh the value below which the SNP category is removed (default = 1)
 #'
 #' @returns The gradient function
 #'
 #' @noRd
-gr_sum_of_squares_M_err <- function(par,WS,SW,GC,cor=COR) {
+gr_sum_of_squares_M_err <- function(par,WS,SW,GC,cor=COR,snpthresh=SNPTHRESH) {
   #Error checking
   if(!is.numeric(c(WS,SW)) || length(which(c(WS,SW)<0))>0 ) {
     abort("The two SFSs must have positive numeric values")
@@ -119,14 +121,19 @@ gr_sum_of_squares_M_err <- function(par,WS,SW,GC,cor=COR) {
   # True SFS as a function of observed one.
   WSt <- ((1 - e2)*WS - e2*rev(SW))/(1 - e1 - e2)
   SWt <- ((1 - e1)*SW - e1*rev(WS))/(1 - e1 - e2)
-  removeNA <- which(WSt>=1 & SWt>=1)
+  # Suppressing values below the threshold
+  removeNA <- which(WSt>=snpthresh & SWt>=snpthresh & WS>=snpthresh & SW>=snpthresh)
+  WS <- WS[removeNA]
+  SW <- SW[removeNA]
   WSt <- WSt[removeNA]
   SWt <- SWt[removeNA]
+  # Variables for the regression
   w <- 1/(t_variance(WSt,cor) + t_variance(SWt,cor))
   x <- c(1:n)/(n+1)
   x <- x[removeNA]
   y <- t_sfs(WSt,cor) - t_sfs(SWt,cor)
   ypred <- rep(- M - log(GC) + log(1 - GC),n)
+  ypred <- ypred[removeNA]
   # Derivative of y as a function of error rates
   # Approximated version, derivative of log(WSt2/SWt2) without additional terms
   dy1 <- d_expected_log_ratio(WS,SW,e1,e2)$d1
@@ -163,6 +170,7 @@ gr_sum_of_squares_M_err <- function(par,WS,SW,GC,cor=COR) {
 #' @param SW the SW observed SFS
 #' @param GC the GC content
 #' @param cor a Boolean to add a correction to the transformed SFS (default = TRUE)
+#' @param snpthresh the value below which the SNP category is removed (default = 1)
 #'
 #' @returns The weighted sum of squares
 #'
@@ -173,7 +181,7 @@ gr_sum_of_squares_M_err <- function(par,WS,SW,GC,cor=COR) {
 #' sfsSW <- c(200,80, 30, 10, 5)
 #' param <- c(1,0.02,0.01)
 #' sum_of_squares_B_err(param,sfsWS,sfsSW,0.5)
-sum_of_squares_B_err <- function(par,WS,SW,GC,cor=COR) {
+sum_of_squares_B_err <- function(par,WS,SW,GC,cor=COR,snpthresh=SNPTHRESH) {
   #Error checking
   if(!is.numeric(c(WS,SW)) || length(which(c(WS,SW)<0))>0 ) {
     abort("The two SFSs must have positive numeric values")
@@ -195,9 +203,13 @@ sum_of_squares_B_err <- function(par,WS,SW,GC,cor=COR) {
   # True SFS as a function of observed one.
   WSt <- ((1 - e2)*WS - e2*rev(SW))/(1 - e1 - e2)
   SWt <- ((1 - e1)*SW - e1*rev(WS))/(1 - e1 - e2)
-  removeNA <- which(WSt>=1 & SWt>=1)
+  # Suppressing values below the threshold
+  removeNA <- which(WSt>=snpthresh & SWt>=snpthresh & WS>=snpthresh & SW>=snpthresh)
+  WS <- WS[removeNA]
+  SW <- SW[removeNA]
   WSt <- WSt[removeNA]
   SWt <- SWt[removeNA]
+  # Variables for the regression
   w <- 1/(t_variance(WSt,cor) + t_variance(SWt,cor))
   x <- c(1:n)/(n+1)
   x <- x[removeNA]
@@ -219,11 +231,12 @@ sum_of_squares_B_err <- function(par,WS,SW,GC,cor=COR) {
 #' @param SW the SW observed SFS
 #' @param GC the GC content
 #' @param cor a Boolean to add a correction to the transformed SFS (default = TRUE)
+#' @param snpthresh the value below which the SNP category is removed (default = 1)
 #'
 #' @returns The gradient function
 #'
 #' @noRd
-gr_sum_of_squares_B_err <- function(par,WS,SW,GC,cor=COR) {
+gr_sum_of_squares_B_err <- function(par,WS,SW,GC,cor=COR,snpthresh=SNPTHRESH) {
   #Error checking
   if(!is.numeric(c(WS,SW)) || length(which(c(WS,SW)<0))>0 ) {
     abort("The two SFSs must have positive numeric values")
@@ -245,9 +258,13 @@ gr_sum_of_squares_B_err <- function(par,WS,SW,GC,cor=COR) {
   # True SFS as a function of observed one.
   WSt <- ((1-e2)*WS - e2*rev(SW))/(1 - e1 - e2)
   SWt <- ((1-e1)*SW - e1*rev(WS))/(1 - e1 - e2)
-  removeNA <- which(WSt>=1 & SWt>=1)
+  # Suppressing values below the threshold
+  removeNA <- which(WSt>=snpthresh & SWt>=snpthresh & WS>=snpthresh & SW>=snpthresh)
+  WS <- WS[removeNA]
+  SW <- SW[removeNA]
   WSt <- WSt[removeNA]
   SWt <- SWt[removeNA]
+  # Variables for the regression
   w <- 1/(t_variance(WSt,cor) + t_variance(SWt,cor))
   x <- c(1:n)/(n+1)
   x <- x[removeNA]
@@ -286,6 +303,7 @@ gr_sum_of_squares_B_err <- function(par,WS,SW,GC,cor=COR) {
 #' @param SW the SW observed SFS
 #' @param GC the GC content
 #' @param cor a Boolean to add a correction to the transformed SFS (default = TRUE)
+#' @param snpthresh the value below which the SNP category is removed (default = 1)
 #'
 #' @returns The weighted sum of squares
 #'
@@ -296,7 +314,7 @@ gr_sum_of_squares_B_err <- function(par,WS,SW,GC,cor=COR) {
 #' sfsSW <- c(200,80, 30, 10, 5)
 #' param <- c(1,2,0.02,0.01)
 #' sum_of_squares_BM_err(param,sfsWS,sfsSW,0.5)
-sum_of_squares_BM_err <- function(par,WS,SW,GC,cor=COR) {
+sum_of_squares_BM_err <- function(par,WS,SW,GC,cor=COR,snpthresh=SNPTHRESH) {
   #Error checking
   if(!is.numeric(c(WS,SW)) || length(which(c(WS,SW)<0))>0 ) {
     abort("The two SFSs must have positive numeric values")
@@ -319,27 +337,17 @@ sum_of_squares_BM_err <- function(par,WS,SW,GC,cor=COR) {
   # True SFS as a function of observed one.
   WSt <- ((1 - e2)*WS - e2*rev(SW))/(1 - e1 - e2)
   SWt <- ((1 - e1)*SW - e1*rev(WS))/(1 - e1 - e2)
-  WSt2 <- ((1 - e2)*WS - e2*rev(SW))
-  SWt2 <- ((1 - e1)*SW - e1*rev(WS))
-  #C1 <- 1 - e1 - e2
-  #C2 <- 1 + e1 + e2
-  #C3 <- 1 - 3*e1 - 3*e2
-  #WSt <- (1+2*e1)*WS - 2*e2*rev(SW)
-  #SWt <- (1+2*e2)*SW - 2*e1*rev(SW)
-  #WSt <- ((1 - e2)*WS - e2*rev(SW))/C1 + C2*(e1*WS - e2*rev(SW))/(C1*C3)
-  #SWt <- ((1 - e1)*SW - e1*rev(WS))/(1 - e1 - e2) + C2*(e2*SW - e1*rev(WS))/(C1*C3)
-  removeNA <- which(WSt>=1 & SWt>=1 & WS>=1 & SW>=1)
+  # Suppressing values below the threshold
+  removeNA <- which(WSt>=snpthresh & SWt>=snpthresh & WS>=snpthresh & SW>=snpthresh)
   WS <- WS[removeNA]
   SW <- SW[removeNA]
   WSt <- WSt[removeNA]
   SWt <- SWt[removeNA]
-  WSt2 <- WSt2[removeNA]
-  SWt2 <- SWt2[removeNA]
+  # Variables for the regression
   w <- 1/(t_variance(WSt,cor) + t_variance(SWt,cor))
   x <- c(1:n)/(n+1)
   x <- x[removeNA]
   y <- t_sfs(WSt,cor) - t_sfs(SWt,cor)
-  #y <- log(WSt2) - log(SWt2) + 0.5/WSt - 0.5/SWt
   ypred <- B*x - M - log(GC) + log(1 - GC)
   return( sum(w*(y-ypred)^2)/sum(w) )
 }
@@ -358,11 +366,12 @@ sum_of_squares_BM_err <- function(par,WS,SW,GC,cor=COR) {
 #' @param SW the SW observed SFS
 #' @param GC the GC content
 #' @param cor a Boolean to add a correction to the transformed SFS (default = TRUE)
+#' @param snpthresh the value below which the SNP category is removed (default = 1)
 #'
 #' @returns The gradient function
 #'
 #' @noRd
-gr_sum_of_squares_BM_err <- function(par,WS,SW,GC,cor=COR) {
+gr_sum_of_squares_BM_err <- function(par,WS,SW,GC,cor=COR,snpthresh=SNPTHRESH) {
   #Error checking
   if(!is.numeric(c(WS,SW)) || length(which(c(WS,SW)<0))>0 ) {
     abort("The two SFSs must have positive numeric values")
@@ -385,9 +394,13 @@ gr_sum_of_squares_BM_err <- function(par,WS,SW,GC,cor=COR) {
   # True SFS as a function of observed one.
   WSt <- ((1-e2)*WS - e2*rev(SW))/(1 - e1 - e2)
   SWt <- ((1-e1)*SW - e1*rev(WS))/(1 - e1 - e2)
-  removeNA <- which(WSt>=1 & SWt>=1)
+  # Suppressing values below the threshold
+  removeNA <- which(WSt>=snpthresh & SWt>=snpthresh & WS>=snpthresh & SW>=snpthresh)
+  WS <- WS[removeNA]
+  SW <- SW[removeNA]
   WSt <- WSt[removeNA]
   SWt <- SWt[removeNA]
+  # Variables for the regression
   w <- 1/(t_variance(WSt,cor) + t_variance(SWt,cor))
   x <- c(1:n)/(n+1)
   x <- x[removeNA]

@@ -4,7 +4,7 @@
 \alias{sum_of_squares_NULL}
 \title{Sum of squares of the null model}
 \usage{
-sum_of_squares_NULL(WS, SW, cor = COR)
+sum_of_squares_NULL(WS, SW, cor = COR, snpthresh = SNPTHRESH)
 }
 \arguments{
 \item{WS}{the WS observed SFS}
@@ -12,6 +12,8 @@ sum_of_squares_NULL(WS, SW, cor = COR)
 \item{SW}{the SW observed SFS}
 
 \item{cor}{a Boolean to add a correction to the transformed SFS (default = TRUE)}
+
+\item{snpthresh}{the value below which the SNP category is removed (default = 1)}
 }
 \value{
 The weighted sum of squares

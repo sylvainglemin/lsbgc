@@ -33,7 +33,7 @@ t_sfs <- function(sfs,cor=COR) {
   # Main
   if(COR) {
     return( log(sfs) + 1/(2*sfs) - 1/(2*sfs^2) - 0.04*exp(-sfs) - 1.19*exp(-sfs^2))
-    #return( log(sfs) + 1/(2*sfs) - 1/(2*sfs^2) - 1/(3*sfs^3))
+    #return( log(sfs) + 1/(2*sfs) - 1/(2*sfs^2))
     # return( log(sfs) + 1/(2*sfs) - 1/(2*sfs^2) - 1/(3*sfs^3) - 1/(4*sfs^4) )
     #return(log(sfs) -0.05/sfs + 4.6/(sfs^2) -5.4/(sfs^3))
   }
@@ -73,6 +73,8 @@ t_variance <- function(sfs,cor=COR) {
     #a3 <- -(1 + sfs)/(4*sfs^3)
     #return( a0 + a1*exp(-sfs) + a2*exp(-2*sfs) + a3*exp(-3*sfs) )
     return(1/sfs - 1/(sfs^2) + 1/(4*sfs^3))
+    #return(1/sfs - 1/(sfs^2))
+    # return(1/sfs)
     # var <- 1/sfs + 0.1/(sfs)^2
     # corvar <- c(0, 0.54, 0.43, 0.24, 0.11, 0.04,rep(0,max(sfs))) # Manual correcting factor
     # # Interpolation for non-integer values

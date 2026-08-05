@@ -9,6 +9,8 @@
 # Constants used when functions are not defined in 0
 ZERO <- 10^(-8)
 ONE <- 1 - ZERO
+# Value below which the snp category is removed
+SNPTHRESH <- 1
 # Default parameters for optimization
 # gBGC coefficient
 BMIN <- -100
@@ -16,6 +18,9 @@ BMAX <- 100
 # Log of the mutation bias
 MMIN <- -5
 MMAX <- 5
+# Error rates
+EMAX <- 0.49
+EINIT <- 0.01
 # Choice of the correction to applied to SFS
 COR <- TRUE
 # Option parameters of the optim function

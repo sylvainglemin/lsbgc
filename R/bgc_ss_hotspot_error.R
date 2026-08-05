@@ -30,6 +30,7 @@
 #' @param SW the SW observed SFS
 #' @param GC the GC content
 #' @param cor a Boolean to add a correction to the transformed SFS (default = TRUE)
+#' @param snpthresh the value below which the SNP category is removed (default = 1)
 #'
 #' @returns The weighted sum of squares
 #'
@@ -40,7 +41,7 @@
 #' sfsSW <- c(200,80, 30, 10, 5)
 #' param <- c(1,0.1,2,0.02,0.01)
 #' sum_of_squares_hotspot1_err(param,sfsWS,sfsSW,0.5)
-sum_of_squares_hotspot1_err <- function(par,WS,SW,GC,cor=COR) {
+sum_of_squares_hotspot1_err <- function(par,WS,SW,GC,cor=COR,snpthresh=SNPTHRESH) {
   #Error checking
   if(!is.numeric(c(WS,SW)) || length(which(c(WS,SW)<0))>0 ) {
     abort("The two SFSs must have positive numeric values")
@@ -64,9 +65,13 @@ sum_of_squares_hotspot1_err <- function(par,WS,SW,GC,cor=COR) {
   # True SFS as a function of observed one.
   WSt <- ((1 - e2)*WS - e2*rev(SW))/(1 - e1 - e2)
   SWt <- ((1 - e1)*SW - e1*rev(WS))/(1 - e1 - e2)
-  removeNA <- which(WSt>=1 & SWt>=1)
+  # Suppressing values below the threshold
+  removeNA <- which(WSt>=snpthresh & SWt>=snpthresh & WS>=snpthresh & SW>=snpthresh)
+  WS <- WS[removeNA]
+  SW <- SW[removeNA]
   WSt <- WSt[removeNA]
   SWt <- SWt[removeNA]
+  # Variables for the regression
   w <- 1/(t_variance(WSt,cor) + t_variance(SWt,cor))
   x <- c(1:n)/(n+1)
   x <- x[removeNA]
@@ -93,11 +98,12 @@ sum_of_squares_hotspot1_err <- function(par,WS,SW,GC,cor=COR) {
 #' @param SW the SW observed SFS
 #' @param GC the GC content
 #' @param cor a Boolean to add a correction to the transformed SFS (default = TRUE)
+#' @param snpthresh the value below which the SNP category is removed (default = 1)
 #'
 #' @returns The gradient function
 #'
 #' @noRd
-gr_sum_of_squares_hotspot1_err <- function(par,WS,SW,GC,cor=COR) {
+gr_sum_of_squares_hotspot1_err <- function(par,WS,SW,GC,cor=COR,snpthresh=SNPTHRESH) {
   #Error checking
   if(!is.numeric(c(WS,SW)) || length(which(c(WS,SW)<0))>0 ) {
     abort("The two SFSs must have positive numeric values")
@@ -121,9 +127,13 @@ gr_sum_of_squares_hotspot1_err <- function(par,WS,SW,GC,cor=COR) {
   # True SFS as a function of observed one.
   WSt <- ((1-e2)*WS - e2*rev(SW))/(1 - e1 - e2)
   SWt <- ((1-e1)*SW - e1*rev(WS))/(1 - e1 - e2)
-  removeNA <- which(WSt>=1 & SWt>=1)
+  # Suppressing values below the threshold
+  removeNA <- which(WSt>=snpthresh & SWt>=snpthresh & WS>=snpthresh & SW>=snpthresh)
+  WS <- WS[removeNA]
+  SW <- SW[removeNA]
   WSt <- WSt[removeNA]
   SWt <- SWt[removeNA]
+  # Variables for the regression
   w <- 1/(t_variance(WSt,cor) + t_variance(SWt,cor))
   x <- c(1:n)/(n+1)
   x <- x[removeNA]
@@ -174,6 +184,7 @@ gr_sum_of_squares_hotspot1_err <- function(par,WS,SW,GC,cor=COR) {
 #' @param SW the SW observed SFS
 #' @param GC the GC content
 #' @param cor a Boolean to add a correction to the transformed SFS (default = TRUE)
+#' @param snpthresh the value below which the SNP category is removed (default = 1)
 #'
 #' @returns The weighted sum of squares
 #'
@@ -184,7 +195,7 @@ gr_sum_of_squares_hotspot1_err <- function(par,WS,SW,GC,cor=COR) {
 #' sfsSW <- c(200,80, 30, 10, 5)
 #' param <- c(0.1,5,0.1,2,0.02,0.01)
 #' sum_of_squares_hotspot2_err(param,sfsWS,sfsSW,0.5)
-sum_of_squares_hotspot2_err <- function(par,WS,SW,GC,cor=COR) {
+sum_of_squares_hotspot2_err <- function(par,WS,SW,GC,cor=COR,snpthresh=SNPTHRESH) {
   #Error checking
   if(!is.numeric(c(WS,SW)) || length(which(c(WS,SW)<0))>0 ) {
     abort("The two SFSs must have positive numeric values")
@@ -209,9 +220,13 @@ sum_of_squares_hotspot2_err <- function(par,WS,SW,GC,cor=COR) {
   # True SFS as a function of observed one.
   WSt <- ((1 - e2)*WS - e2*rev(SW))/(1 - e1 - e2)
   SWt <- ((1 - e1)*SW - e1*rev(WS))/(1 - e1 - e2)
-  removeNA <- which(WSt>=1 & SWt>=1)
+  # Suppressing values below the threshold
+  removeNA <- which(WSt>=snpthresh & SWt>=snpthresh & WS>=snpthresh & SW>=snpthresh)
+  WS <- WS[removeNA]
+  SW <- SW[removeNA]
   WSt <- WSt[removeNA]
   SWt <- SWt[removeNA]
+  # Variables for the regression
   w <- 1/(t_variance(WSt,cor) + t_variance(SWt,cor))
   x <- c(1:n)/(n+1)
   x <- x[removeNA]
@@ -219,10 +234,6 @@ sum_of_squares_hotspot2_err <- function(par,WS,SW,GC,cor=COR) {
   ypred <- - M - log(GC) + log(1 - GC) +
     log((1 - f)*ratio_B(B0,x) + f*ratio_B(B1,x)) -
     log((1 - f)*ratio_B(-B0,x) + f*ratio_B(-B1,x))
-  removeNA <- !is.na(y)
-  w <- w[removeNA]
-  y <- y[removeNA]
-  ypred <- ypred[removeNA]
   return( sum(w*(y-ypred)^2)/sum(w) )
 }
 
@@ -243,11 +254,12 @@ sum_of_squares_hotspot2_err <- function(par,WS,SW,GC,cor=COR) {
 #' @param SW the SW observed SFS
 #' @param GC the GC content
 #' @param cor a Boolean to add a correction to the transformed SFS (default = TRUE)
+#' @param snpthresh the value below which the SNP category is removed (default = 1)
 #'
 #' @returns The gradient function
 #'
 #' @noRd
-gr_sum_of_squares_hotspot2_err <- function(par,WS,SW,GC,cor=COR) {
+gr_sum_of_squares_hotspot2_err <- function(par,WS,SW,GC,cor=COR,snpthresh=SNPTHRESH) {
   #Error checking
   if(!is.numeric(c(WS,SW)) || length(which(c(WS,SW)<0))>0 ) {
     abort("The two SFSs must have positive numeric values")
@@ -272,9 +284,13 @@ gr_sum_of_squares_hotspot2_err <- function(par,WS,SW,GC,cor=COR) {
   # True SFS as a function of observed one.
   WSt <- ((1-e2)*WS - e2*rev(SW))/(1 - e1 - e2)
   SWt <- ((1-e1)*SW - e1*rev(WS))/(1 - e1 - e2)
-  removeNA <- which(WSt>=1 & SWt>=1)
+  # Suppressing values below the threshold
+  removeNA <- which(WSt>=snpthresh & SWt>=snpthresh & WS>=snpthresh & SW>=snpthresh)
+  WS <- WS[removeNA]
+  SW <- SW[removeNA]
   WSt <- WSt[removeNA]
   SWt <- SWt[removeNA]
+  # Variables for the regression
   w <- 1/(t_variance(WSt,cor) + t_variance(SWt,cor))
   x <- c(1:n)/(n+1)
   x <- x[removeNA]
@@ -326,6 +342,7 @@ gr_sum_of_squares_hotspot2_err <- function(par,WS,SW,GC,cor=COR) {
 #' @param GC the GC content
 #' @param f fraction of hotspots, fixed, not estimated (0<f<1/2)
 #' @param cor a Boolean to add a correction to the transformed SFS (default = TRUE)
+#' @param snpthresh the value below which the SNP category is removed (default = 1)
 #'
 #' @returns The weighted sum of squares
 #'
@@ -336,7 +353,7 @@ gr_sum_of_squares_hotspot2_err <- function(par,WS,SW,GC,cor=COR) {
 #' sfsSW <- c(200,80, 30, 10, 5)
 #' param <- c(0.1,5,2,0.02,0.01)
 #' sum_of_squares_hotspot2bis_err(param,sfsWS,sfsSW,0.5,0.1)
-sum_of_squares_hotspot2bis_err <- function(par,WS,SW,GC,f,cor=COR) {
+sum_of_squares_hotspot2bis_err <- function(par,WS,SW,GC,f,cor=COR,snpthresh=SNPTHRESH) {
   #Error checking
   if(!is.numeric(c(WS,SW)) || length(which(c(WS,SW)<0))>0 ) {
     abort("The two SFSs must have positive numeric values")
@@ -363,9 +380,13 @@ sum_of_squares_hotspot2bis_err <- function(par,WS,SW,GC,f,cor=COR) {
   # True SFS as a function of observed one.
   WSt <- ((1 - e2)*WS - e2*rev(SW))/(1 - e1 - e2)
   SWt <- ((1 - e1)*SW - e1*rev(WS))/(1 - e1 - e2)
-  removeNA <- which(WSt>=1 & SWt>=1)
+  # Suppressing values below the threshold
+  removeNA <- which(WSt>=snpthresh & SWt>=snpthresh & WS>=snpthresh & SW>=snpthresh)
+  WS <- WS[removeNA]
+  SW <- SW[removeNA]
   WSt <- WSt[removeNA]
   SWt <- SWt[removeNA]
+  # Variables for the regression
   w <- 1/(t_variance(WSt,cor) + t_variance(SWt,cor))
   x <- c(1:n)/(n+1)
   x <- x[removeNA]
@@ -393,11 +414,12 @@ sum_of_squares_hotspot2bis_err <- function(par,WS,SW,GC,f,cor=COR) {
 #' @param GC the GC content
 #' @param f fraction of hotpsots
 #' @param cor a Boolean to add a correction to the transformed SFS (default = TRUE)
+#' @param snpthresh the value below which the SNP category is removed (default = 1)
 #'
 #' @returns The gradient function
 #'
 #' @noRd
-gr_sum_of_squares_hotspot2bis_err <- function(par,WS,SW,GC,f,cor=COR) {
+gr_sum_of_squares_hotspot2bis_err <- function(par,WS,SW,GC,f,cor=COR,snpthresh=SNPTHRESH) {
   #Error checking
   if(!is.numeric(c(WS,SW)) || length(which(c(WS,SW)<0))>0 ) {
     abort("The two SFSs must have positive numeric values")
@@ -424,9 +446,13 @@ gr_sum_of_squares_hotspot2bis_err <- function(par,WS,SW,GC,f,cor=COR) {
   # True SFS as a function of observed one.
   WSt <- ((1-e2)*WS - e2*rev(SW))/(1 - e1 - e2)
   SWt <- ((1-e1)*SW - e1*rev(WS))/(1 - e1 - e2)
-  removeNA <- which(WSt>=1 & SWt>=1)
+  # Suppressing values below the threshold
+  removeNA <- which(WSt>=snpthresh & SWt>=snpthresh & WS>=snpthresh & SW>=snpthresh)
+  WS <- WS[removeNA]
+  SW <- SW[removeNA]
   WSt <- WSt[removeNA]
   SWt <- SWt[removeNA]
+  # Variables for the regression
   w <- 1/(t_variance(WSt,cor) + t_variance(SWt,cor))
   x <- c(1:n)/(n+1)
   x <- x[removeNA]

@@ -9,12 +9,17 @@ least_square_hotspot2_err(
   SW,
   GC,
   cor = COR,
+  snpthresh = SNPTHRESH,
   B0min = BMIN,
   B0max = BMAX,
   B1min = BMIN,
   B1max = BMAX,
   Mmin = MMIN,
   Mmax = MMAX,
+  e1max = EMAX,
+  e2max = EMAX,
+  e1init = EINIT,
+  e2init = EINIT,
   Maxit = MAXIT,
   Factr = FACTR,
   Lmm = LMM,
@@ -31,6 +36,8 @@ least_square_hotspot2_err(
 
 \item{cor}{a Boolean to add a correction to the transformed SFS (default = TRUE)}
 
+\item{snpthresh}{the value below which the SNP category is removed (default = 1)}
+
 \item{B0min}{minimum for the range of B0, default value = -100}
 
 \item{B0max}{maximum for the range of B0, default value = 100}
@@ -42,6 +49,14 @@ least_square_hotspot2_err(
 \item{Mmin}{minimum for the range of M, default value = -5}
 
 \item{Mmax}{maximum or the range of M, default value = 5}
+
+\item{e1max}{maximum for the range of WS error rate, default value = 0.49}
+
+\item{e2max}{maximum for the range of SW error rate, default value = 0.49}
+
+\item{e1init}{initial starting value for optimization for WS error rates, default = 0.01}
+
+\item{e2init}{initial starting value for optimization for SW error rates, default = 0.01}
 
 \item{Maxit}{maximum number of iterations (option for optim), see manual, default value = 100}
 

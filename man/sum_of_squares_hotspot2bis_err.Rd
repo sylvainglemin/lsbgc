@@ -4,7 +4,15 @@
 \alias{sum_of_squares_hotspot2bis_err}
 \title{Sum of squares of the hotspot 2bis model: background gBGC + fixed proportion of hotspots}
 \usage{
-sum_of_squares_hotspot2bis_err(par, WS, SW, GC, f, cor = COR)
+sum_of_squares_hotspot2bis_err(
+  par,
+  WS,
+  SW,
+  GC,
+  f,
+  cor = COR,
+  snpthresh = SNPTHRESH
+)
 }
 \arguments{
 \item{par}{a vector with the five parameters of the model.
@@ -23,6 +31,8 @@ par(5) = e2}
 \item{f}{fraction of hotspots, fixed, not estimated (0<f<1/2)}
 
 \item{cor}{a Boolean to add a correction to the transformed SFS (default = TRUE)}
+
+\item{snpthresh}{the value below which the SNP category is removed (default = 1)}
 }
 \value{
 The weighted sum of squares

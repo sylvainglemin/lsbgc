@@ -4,7 +4,7 @@
 \alias{sum_of_squares_B}
 \title{Sum of squares of model B}
 \usage{
-sum_of_squares_B(par, WS, SW, GC, cor = COR)
+sum_of_squares_B(par, WS, SW, GC, cor = COR, snpthresh = SNPTHRESH)
 }
 \arguments{
 \item{par}{a vector with the three parameters of the model.
@@ -17,6 +17,8 @@ par(1) = B}
 \item{GC}{the GC content}
 
 \item{cor}{a Boolean to add a correction to the transformed SFS (default = TRUE)}
+
+\item{snpthresh}{the value below which the SNP category is removed (default = 1)}
 }
 \value{
 The weighted sum of squares

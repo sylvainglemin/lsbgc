@@ -4,7 +4,7 @@
 \alias{sum_of_squares_hotspot2}
 \title{Sum of squares of the hotspot 2 model: background gBGC + hotspot}
 \usage{
-sum_of_squares_hotspot2(par, WS, SW, GC, cor = COR)
+sum_of_squares_hotspot2(par, WS, SW, GC, cor = COR, snpthresh = SNPTHRESH)
 }
 \arguments{
 \item{par}{a vector with the six parameters of the model.
@@ -20,6 +20,8 @@ par(4) = M (i.e. log(mut_bias))}
 \item{GC}{the GC content}
 
 \item{cor}{a Boolean to add a correction to the transformed SFS (default = TRUE)}
+
+\item{snpthresh}{the value below which the SNP category is removed (default = 1)}
 }
 \value{
 The weighted sum of squares

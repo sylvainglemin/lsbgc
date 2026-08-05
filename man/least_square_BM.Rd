@@ -9,6 +9,7 @@ least_square_BM(
   SW,
   GC,
   cor = COR,
+  snpthresh = SNPTHRESH,
   Bmin = BMIN,
   Bmax = BMAX,
   Mmin = MMIN,
@@ -28,6 +29,8 @@ least_square_BM(
 \item{GC}{GC content}
 
 \item{cor}{a Boolean to add a correction to the transformed SFS (default = TRUE)}
+
+\item{snpthresh}{the value below which the SNP category is removed (default = 1)}
 
 \item{Bmin}{minimum for the range of B, default value = -100}
 

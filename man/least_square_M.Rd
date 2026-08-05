@@ -9,6 +9,7 @@ least_square_M(
   SW,
   GC,
   cor = COR,
+  snpthresh = SNPTHRESH,
   Mmin = MMIN,
   Mmax = MMAX,
   Maxit = MAXIT,
@@ -26,6 +27,8 @@ least_square_M(
 \item{GC}{GC content}
 
 \item{cor}{a Boolean to add a correction to the transformed SFS (default = TRUE)}
+
+\item{snpthresh}{the value below which the SNP category is removed (default = 1)}
 
 \item{Mmin}{minimum for the range of M, default value = -5}
 
