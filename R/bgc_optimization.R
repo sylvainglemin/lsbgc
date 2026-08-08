@@ -170,7 +170,7 @@ least_square_B <- function(WS,SW,GC,cor=COR,snpthresh=SNPTHRESH,
   x <- c(1:n)/(n+1)
   NONZERO <- which(WS!=0 & SW!=0)
   # Determination of initial values for optimization: use of the simple regression
-  reginit <- lm(log(WS[NONZERO]/SW[NONZERO]) ~ x[NONZERO] - 1)
+  reginit <- lm( (log(WS[NONZERO]/SW[NONZERO])  - log(1 - GC) + log(GC)) ~ x[NONZERO]-1)
   Binit <- reginit$coef
   # The factor ONE is to avoid 0 values in the SFS
   init <- c(Binit)
@@ -353,7 +353,7 @@ least_square_hotspot1 <- function(WS,SW,GC,cor=COR,snpthresh=SNPTHRESH,
   init <- c(Binit,finit,Minit)
   # Boundaries for optimization
   inf <- c(Bmin,0,Mmin)
-  sup <- c(Bmax,1/2,Mmax)
+  sup <- c(Bmax,1,Mmax)
   if(Usegr) gradient <- gr_sum_of_squares_hotspot1 else gradient <- NULL
   SCALE <- abs(init)
   minSSE <- optim(
@@ -448,7 +448,7 @@ least_square_hotspot2 <- function(WS,SW,GC,cor=COR,snpthresh=SNPTHRESH,
   init <- c(B0init,B1init,finit,Minit)
   # Boundaries for optimization
   inf <- c(B0min,B1min,0,Mmin)
-  sup <- c(B0max,B1max,1/2,Mmax)
+  sup <- c(B0max,B1max,1,Mmax)
   if(Usegr) gradient <- gr_sum_of_squares_hotspot2 else gradient <- NULL
   SCALE <- abs(init)
   minSSE <- optim(

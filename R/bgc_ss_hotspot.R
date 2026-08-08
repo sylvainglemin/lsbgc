@@ -70,9 +70,6 @@ sum_of_squares_hotspot1 <- function(par,WS,SW,GC,cor=COR,snpthresh=SNPTHRESH) {
   ypred <- - M - log(GC) + log(1 - GC) +
     log((1 - f)*ratio_B(0,x) + f*ratio_B(B,x)) -
     log((1 - f)*ratio_B(0,x) + f*ratio_B(-B,x))
-  w <- w[removeNA]
-  y <- y[removeNA]
-  ypred <- ypred[removeNA]
   return( sum(w*(y-ypred)^2)/sum(w) )
 }
 
@@ -211,7 +208,6 @@ sum_of_squares_hotspot2 <- function(par,WS,SW,GC,cor=COR,snpthresh=SNPTHRESH) {
   ypred <- - M - log(GC) + log(1 - GC) +
     log((1 - f)*ratio_B(B0,x) + f*ratio_B(B1,x)) -
     log((1 - f)*ratio_B(-B0,x) + f*ratio_B(-B1,x))
-  removeNA <- !is.na(y)
   return( sum(w*(y-ypred)^2)/sum(w) )
 }
 

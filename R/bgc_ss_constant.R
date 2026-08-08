@@ -45,10 +45,7 @@ sum_of_squares_NULL <- function(WS,SW,cor=COR,snpthresh=SNPTHRESH) {
   removeNA <- which(WS>=snpthresh & SW>=snpthresh)
   WS <- WS[removeNA]
   SW <- SW[removeNA]
-  # Variables for the regression
   w <- 1/(t_variance(WS,cor) + t_variance(SW,cor))
-  x <- c(1:n)/(n+1)
-  x <- x[removeNA]
   y <- t_sfs(WS,cor) - t_sfs(SW,cor)
   y_mean <- mean(y)
   return(

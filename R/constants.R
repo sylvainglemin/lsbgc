@@ -16,10 +16,10 @@ SNPTHRESH <- 1
 BMIN <- -100
 BMAX <- 100
 # Log of the mutation bias
-MMIN <- -5
-MMAX <- 5
+MMIN <- -3
+MMAX <- 3
 # Error rates
-EMAX <- 0.49
+EMAX <- 0.3
 EINIT <- 0.01
 # Choice of the correction to applied to SFS
 COR <- TRUE
