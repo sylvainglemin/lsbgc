@@ -47,11 +47,10 @@ sum_of_squares_NULL <- function(WS,SW,cor=COR,snpthresh=SNPTHRESH) {
   SW <- SW[removeNA]
   w <- 1/(t_variance(WS,cor) + t_variance(SW,cor))
   y <- t_sfs(WS,cor) - t_sfs(SW,cor)
-  y_mean <- mean(y)
+  ypred <- - log(GC) + log(1 - GC)
   return(
     list(
-      "mean" = y_mean,
-      "SStot"=sum(w*(y - y_mean)^2)/sum(w)
+      "SStot"=sum(w*(y - ypred)^2)/sum(w)
     )
   )
 }
