@@ -67,8 +67,6 @@ sum_of_squares_hotspot1_err <- function(par,WS,SW,GC,cor=COR,snpthresh=SNPTHRESH
   SWt <- ((1 - e1)*SW - e1*rev(WS))/(1 - e1 - e2)
   # Suppressing values below the threshold
   removeNA <- which(WSt>=snpthresh & SWt>=snpthresh & WS>=snpthresh & SW>=snpthresh)
-  WS <- WS[removeNA]
-  SW <- SW[removeNA]
   WSt <- WSt[removeNA]
   SWt <- SWt[removeNA]
   # Variables for the regression
@@ -79,7 +77,12 @@ sum_of_squares_hotspot1_err <- function(par,WS,SW,GC,cor=COR,snpthresh=SNPTHRESH
   ypred <- - M - log(GC) + log(1 - GC) +
     log((1 - f)*ratio_B(0,x) + f*ratio_B(B,x)) -
     log((1 - f)*ratio_B(0,x) + f*ratio_B(-B,x))
-  return( sum(w*(y-ypred)^2)/sum(w) )
+  SS <- sum(w*(y-ypred)^2)/sum(w)
+  if(is.na(SS)) {
+    return(sum_of_squares_NULL(SW,WS)$SStot)
+  } else {
+    return(SS)
+  }
 }
 
 
@@ -222,8 +225,6 @@ sum_of_squares_hotspot2_err <- function(par,WS,SW,GC,cor=COR,snpthresh=SNPTHRESH
   SWt <- ((1 - e1)*SW - e1*rev(WS))/(1 - e1 - e2)
   # Suppressing values below the threshold
   removeNA <- which(WSt>=snpthresh & SWt>=snpthresh & WS>=snpthresh & SW>=snpthresh)
-  WS <- WS[removeNA]
-  SW <- SW[removeNA]
   WSt <- WSt[removeNA]
   SWt <- SWt[removeNA]
   # Variables for the regression
@@ -234,7 +235,12 @@ sum_of_squares_hotspot2_err <- function(par,WS,SW,GC,cor=COR,snpthresh=SNPTHRESH
   ypred <- - M - log(GC) + log(1 - GC) +
     log((1 - f)*ratio_B(B0,x) + f*ratio_B(B1,x)) -
     log((1 - f)*ratio_B(-B0,x) + f*ratio_B(-B1,x))
-  return( sum(w*(y-ypred)^2)/sum(w) )
+  SS <- sum(w*(y-ypred)^2)/sum(w)
+  if(is.na(SS)) {
+    return(sum_of_squares_NULL(SW,WS)$SStot)
+  } else {
+    return(SS)
+  }
 }
 
 
@@ -382,8 +388,6 @@ sum_of_squares_hotspot2bis_err <- function(par,WS,SW,GC,f,cor=COR,snpthresh=SNPT
   SWt <- ((1 - e1)*SW - e1*rev(WS))/(1 - e1 - e2)
   # Suppressing values below the threshold
   removeNA <- which(WSt>=snpthresh & SWt>=snpthresh & WS>=snpthresh & SW>=snpthresh)
-  WS <- WS[removeNA]
-  SW <- SW[removeNA]
   WSt <- WSt[removeNA]
   SWt <- SWt[removeNA]
   # Variables for the regression
@@ -394,7 +398,12 @@ sum_of_squares_hotspot2bis_err <- function(par,WS,SW,GC,f,cor=COR,snpthresh=SNPT
   ypred <- - M - log(GC) + log(1 - GC) +
     log((1 - f)*ratio_B(B0,x) + f*ratio_B(B1,x)) -
     log((1 - f)*ratio_B(-B0,x) + f*ratio_B(-B1,x))
-  return( sum(w*(y-ypred)^2)/sum(w) )
+  SS <- sum(w*(y-ypred)^2)/sum(w)
+  if(is.na(SS)) {
+    return(sum_of_squares_NULL(SW,WS)$SStot)
+  } else {
+    return(SS)
+  }
 }
 
 

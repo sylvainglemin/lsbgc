@@ -78,7 +78,12 @@ sum_of_squares_M_err <- function(par,WS,SW,GC,cor=COR,snpthresh=SNPTHRESH) {
   y <- t_sfs(WSt,cor) - t_sfs(SWt,cor)
   ypred <- rep(- M - log(GC) + log(1 - GC),n)
   ypred <- ypred[removeNA]
-  return( sum(w*(y-ypred)^2)/sum(w) )
+  SS <- sum(w*(y-ypred)^2)/sum(w)
+  if(is.na(SS)) {
+    return(sum_of_squares_NULL(SW,WS)$SStot)
+  } else {
+    return(SS)
+  }
 }
 
 
@@ -215,7 +220,12 @@ sum_of_squares_B_err <- function(par,WS,SW,GC,cor=COR,snpthresh=SNPTHRESH) {
   x <- x[removeNA]
   y <- t_sfs(WSt,cor) - t_sfs(SWt,cor)
   ypred <- B*x - log(GC) + log(1 - GC)
-  return( sum(w*(y-ypred)^2)/sum(w) )
+  SS <- sum(w*(y-ypred)^2)/sum(w)
+  if(is.na(SS)) {
+    return(sum_of_squares_NULL(SW,WS)$SStot)
+  } else {
+    return(SS)
+  }
 }
 
 
@@ -339,8 +349,8 @@ sum_of_squares_BM_err <- function(par,WS,SW,GC,cor=COR,snpthresh=SNPTHRESH) {
   SWt <- ((1 - e1)*SW - e1*rev(WS))/(1 - e1 - e2)
   # Suppressing values below the threshold
   removeNA <- which(WSt>=snpthresh & SWt>=snpthresh & WS>=snpthresh & SW>=snpthresh)
-  WS <- WS[removeNA]
-  SW <- SW[removeNA]
+  #WS <- WS[removeNA]
+  #SW <- SW[removeNA]
   WSt <- WSt[removeNA]
   SWt <- SWt[removeNA]
   # Variables for the regression
@@ -349,7 +359,12 @@ sum_of_squares_BM_err <- function(par,WS,SW,GC,cor=COR,snpthresh=SNPTHRESH) {
   x <- x[removeNA]
   y <- t_sfs(WSt,cor) - t_sfs(SWt,cor)
   ypred <- B*x - M - log(GC) + log(1 - GC)
-  return( sum(w*(y-ypred)^2)/sum(w) )
+  SS <- sum(w*(y-ypred)^2)/sum(w)
+  if(is.na(SS)) {
+    return(sum_of_squares_NULL(SW,WS)$SStot)
+  } else {
+    return(SS)
+  }
 }
 
 
