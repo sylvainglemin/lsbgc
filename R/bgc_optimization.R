@@ -40,6 +40,8 @@ AICls <- function(n,np,SSres){
 
 
 
+
+
 #' @title Sum of squares minimization of model M
 #'
 #' @description Function that searches for the three parameters that minimize the sum_of_squares function

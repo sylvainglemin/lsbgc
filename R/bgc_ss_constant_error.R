@@ -8,7 +8,6 @@
 
 
 
-
 ######################################### #
 # NO BGC, MUTATION BIAS ###################
 ######################################### #
@@ -67,8 +66,6 @@ sum_of_squares_M_err <- function(par,WS,SW,GC,cor=COR,snpthresh=SNPTHRESH) {
   SWt <- ((1 - e1)*SW - e1*rev(WS))/(1 - e1 - e2)
   # Suppressing values below the threshold
   removeNA <- which(WSt>=snpthresh & SWt>=snpthresh & WS>=snpthresh & SW>=snpthresh)
-  WS <- WS[removeNA]
-  SW <- SW[removeNA]
   WSt <- WSt[removeNA]
   SWt <- SWt[removeNA]
   # Variables for the regression
@@ -150,7 +147,6 @@ gr_sum_of_squares_M_err <- function(par,WS,SW,GC,cor=COR,snpthresh=SNPTHRESH) {
 }
 
 
-
 ######################################### #
 # CONSTANT BGC, NO MUTATION BIAS ##########
 ######################################### #
@@ -210,8 +206,6 @@ sum_of_squares_B_err <- function(par,WS,SW,GC,cor=COR,snpthresh=SNPTHRESH) {
   SWt <- ((1 - e1)*SW - e1*rev(WS))/(1 - e1 - e2)
   # Suppressing values below the threshold
   removeNA <- which(WSt>=snpthresh & SWt>=snpthresh & WS>=snpthresh & SW>=snpthresh)
-  WS <- WS[removeNA]
-  SW <- SW[removeNA]
   WSt <- WSt[removeNA]
   SWt <- SWt[removeNA]
   # Variables for the regression
@@ -270,8 +264,6 @@ gr_sum_of_squares_B_err <- function(par,WS,SW,GC,cor=COR,snpthresh=SNPTHRESH) {
   SWt <- ((1-e1)*SW - e1*rev(WS))/(1 - e1 - e2)
   # Suppressing values below the threshold
   removeNA <- which(WSt>=snpthresh & SWt>=snpthresh & WS>=snpthresh & SW>=snpthresh)
-  WS <- WS[removeNA]
-  SW <- SW[removeNA]
   WSt <- WSt[removeNA]
   SWt <- SWt[removeNA]
   # Variables for the regression
@@ -349,8 +341,6 @@ sum_of_squares_BM_err <- function(par,WS,SW,GC,cor=COR,snpthresh=SNPTHRESH) {
   SWt <- ((1 - e1)*SW - e1*rev(WS))/(1 - e1 - e2)
   # Suppressing values below the threshold
   removeNA <- which(WSt>=snpthresh & SWt>=snpthresh & WS>=snpthresh & SW>=snpthresh)
-  #WS <- WS[removeNA]
-  #SW <- SW[removeNA]
   WSt <- WSt[removeNA]
   SWt <- SWt[removeNA]
   # Variables for the regression

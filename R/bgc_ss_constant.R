@@ -6,55 +6,6 @@
 # Series of SS functions and their corresponding gradient where parameters are constant
 
 
-######################################### #
-# NULL MODEL ##############################
-######################################### #
-
-# This model correspond to a fit of the intercept only
-# It gives the mean and the total sum of square of the dataset
-
-
-#' @title Sum of squares of the null model
-#'
-#' @description Function that returns the weighted total sum of squares for the model with only the intercept
-#'
-#' @param WS the WS observed SFS
-#' @param SW the SW observed SFS
-#' @param cor a Boolean to add a correction to the transformed SFS (default = TRUE)
-#' @param snpthresh the value below which the SNP category is removed (default = 1)
-#'
-#' @returns The weighted sum of squares
-#'
-#' @export
-#'
-#' @examples
-#' sfsWS <- c(100,50,30,15,10)
-#' sfsSW <- c(200,80, 30, 10, 5)
-#' sum_of_squares_NULL(sfsWS,sfsSW)
-sum_of_squares_NULL <- function(WS,SW,cor=COR,snpthresh=SNPTHRESH) {
-  #Error checking
-  if(!is.numeric(c(WS,SW)) || length(which(c(WS,SW)<0))>0 ) {
-    abort("The two SFSs must have positive numeric values")
-  }
-  if(length(WS)!=length(SW)) {
-    abort("The two SFSs, WS and SW, must have the same length")
-  }
-  #Main
-  n <- length(WS)
-  # Suppressing values below the threshold
-  removeNA <- which(WS>=snpthresh & SW>=snpthresh)
-  WS <- WS[removeNA]
-  SW <- SW[removeNA]
-  w <- 1/(t_variance(WS,cor) + t_variance(SW,cor))
-  y <- t_sfs(WS,cor) - t_sfs(SW,cor)
-  y_mean <- mean(y)
-  return(
-    list(
-      "mean"=y_mean,
-      "SStot"=sum(w*(y - y_mean)^2)/sum(w)
-    )
-  )
-}
 
 
 ######################################### #
@@ -183,6 +134,8 @@ gr_sum_of_squares_M <- function(par,WS,SW,GC,cor=COR,snpthresh=SNPTHRESH) {
 # CONSTANT BGC, NO MUTATION BIAS ##########
 ######################################### #
 
+# This model can be useful only for specific cases as it corresponds to a regression without intercept
+# In general avoid to use it
 
 #' @title Sum of squares of model B
 #'

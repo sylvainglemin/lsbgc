@@ -8,6 +8,92 @@
 # Functions to minimize the sum of squares of the different models
 
 
+#' @title Sum of squares minimization of the GC null model with error
+#'
+#' @description Function that searches for the three parameters that minimize the sum_of_squares function
+#'
+#' @param WS the WS observed SFS
+#' @param SW the SW observed SFS
+#' @param GC GC content
+#' @param cor a Boolean to add a correction to the transformed SFS (default = TRUE)
+#' @param snpthresh the value below which the SNP category is removed (default = 1)
+#' @param e1max maximum for the range of WS error rate, default value = 0.49
+#' @param e2max maximum for the range of SW error rate, default value = 0.49
+#' @param e1init initial starting value for optimization for WS error rates, default = 0.01
+#' @param e2init initial starting value for optimization for SW error rates, default = 0.01
+#' @param Maxit maximum number of iterations (option for optim), see manual, default value = 100
+#' @param Factr level of control the convergence (option for optim, see manual), default value = 10^7
+#' @param Lmm number of updates in the method (option for optim, see manual)
+#' @param Verbose from 0 (default) to 5: level of outputs during optimization (option for optim, see manual)
+#' @param Usegr to use (default) or not the analytical gradient (option for optim, see manual)
+#' It's better to use the analytical gradient function but the option can be turn off for testing
+#'
+#' @returns A list of two lists:
+#' - param: Optimized parameters
+#' - criteria: Model fit criteria
+#'
+#' @importFrom stats optim
+#'
+#' @export
+#'
+#' @examples
+#' sfsWS <- c(1000,500,300,200,80,50)
+#' sfsSW <- c(2000,800,400,150,50,10)
+#' LS <- least_square_NULL_GC_err(sfsWS,sfsSW,0.5)
+#' LS$param$mutbias # mutation bias
+#' LS$criteria$AIC # model AIC
+least_square_NULL_GC_err <- function(WS,SW,GC,cor=COR,snpthresh=SNPTHRESH,
+                               e1max=EMAX,e2max=EMAX,e1init=EINIT,e2init=EINIT,
+                               Maxit=MAXIT,Factr=FACTR,Lmm=LMM,Verbose=VERBOSE,Usegr=USEGR) {
+  # Determination of initial values for optimization: use of the simple regression
+  #Error checking
+  if(!is.numeric(c(WS,SW)) || length(which(c(WS,SW)<0))>0 ) {
+    abort("The two SFSs must have positive numeric values")
+  }
+  if(length(WS)!=length(SW)) {
+    abort("The two SFSs, WS and SW, must have the same length")
+  }
+  if(GC<=0 | GC>=1) {
+    abort("GC content must be strictly between 0 and 1")
+  }
+  #Main
+  NONZERO <- which(WS!=0 & SW!=0)
+  init <- c(e1init,e2init)
+  # Boundaries for optimization
+  inf <- c(0,0)
+  sup <- c(e1max,e2max)
+  if(Usegr) gradient <- gr_sum_of_squares_NULL_GC_err else gradient <- NULL
+  SCALE <- abs(init)
+  minSSE <- optim(
+    par = init,
+    fn = sum_of_squares_NULL_GC_err,
+    gr = gradient,
+    WS = WS, SW = SW, GC = GC, cor = cor, snpthresh = snpthresh,
+    lower = inf,upper = sup,
+    method = "L-BFGS-B",
+    control=list(parscale=SCALE,maxit=Maxit,factr=Factr,lmm=Lmm,trace=Verbose))
+  SStot <- sum_of_squares_NULL(SW,WS)$SStot
+  SSres <- minSSE$value
+  R2 <- 1 - SSres/SStot
+  AIC <- AICls(length(which(WS!=0 & SW!=0)),length(init),SSres)
+  return( list(
+    "param"=list("e1"=minSSE$par[1],
+                 "e2"=minSSE$par[2]),
+    "criteria"=list("SStot"=SStot,
+                    "SSres"=SSres,
+                    "R2"=R2,
+                    "AIC"=AIC) )
+  )
+}
+
+
+
+
+
+
+
+
+
 #' @title Sum of squares minimization of model M with error
 #'
 #' @description Function that searches for the three parameters that minimize the sum_of_squares function
