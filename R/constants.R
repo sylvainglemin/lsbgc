@@ -10,16 +10,16 @@
 ZERO <- 10^(-8)
 ONE <- 1 - ZERO
 # Value below which the snp category is removed
-SNPTHRESH <- 1
+SNPTHRESH <- 0.1
 # Default parameters for optimization
 # gBGC coefficient
 BMIN <- -100
 BMAX <- 100
 # Log of the mutation bias
-MMIN <- -3
-MMAX <- 3
+MMIN <- -2
+MMAX <- 2
 # Error rates
-EMAX <- 0.3
+EMAX <- 0.49
 EINIT <- 0.01
 # Choice of the correction to applied to SFS
 COR <- TRUE
