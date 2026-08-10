@@ -33,6 +33,7 @@ Tws = Ows(1-e2) - rev(Osw)e2 and Tsw = Osw(1-e1) - rev(Ows)*e1
 The function return the weighted least-square as afunction of: sum(w(j) * (log(Tws(j)/Tsw(j)) - B * j/n + log(mut_bias) )^2)
 where Tws and Tsw are expressed as a function of Ows, Osw, e1 and e2
 w(j) = Ows(j)*Osw(j) / (Ows(j)+Osw(j)) is the weight used in the least square
+Note that this function must be optimized for e1 and e2 whereas the other null model directly give the sum of squares
 }
 \examples{
 sfsWS <- c(100,50,30,15,10)

@@ -26,7 +26,7 @@ test_that("sum_of_squares_NULL_GC returns correct structure for valid inputs", {
   GC <- 0.5
   result <- sum_of_squares_NULL_GC(sfsWS, sfsSW,GC)
   expect_type(result, "list")
-  expect_equal(names(result), c("SStot"))
+  expect_equal(names(result), c("SStot", "SSres", "R2", "AIC"))
   expect_type(result$SStot, "double")
 })
 

@@ -25,8 +25,8 @@ AICls <- function(n,np,SSres){
   if(n<=0) {
     abort("n must be strictly positive")
   }
-  if(np<=0 || np > n) {
-    abort("np must be strictly positive and lower than n")
+  if(np< 0 || np > n) {
+    abort("np must be positive and lower than n")
   }
   if(SSres<0) {
     abort("SSres must be positive")

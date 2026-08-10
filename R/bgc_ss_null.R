@@ -103,9 +103,15 @@ sum_of_squares_NULL_GC <- function(WS,SW,GC,cor=COR,snpthresh=SNPTHRESH) {
   w <- 1/(t_variance(WS,cor) + t_variance(SW,cor))
   y <- t_sfs(WS,cor) - t_sfs(SW,cor)
   y_pred <- log(1-GC) - log(GC)
+  SStot <- sum_of_squares_NULL(SW,WS)$SStot
+  SSres <- sum(w*(y - y_pred)^2)/sum(w)
+  R2 <- 1 - SSres/SStot
+  AIC <- AICls(length(which(WS!=0 & SW!=0)),0,SSres)
   return(
-    list(
-      "SStot"=sum(w*(y - y_pred)^2)/sum(w)
+    list("SStot"=SStot,
+         "SSres"=SSres,
+         "R2"=R2,
+         "AIC"=AIC
     )
   )
 }
@@ -130,6 +136,9 @@ sum_of_squares_NULL_GC <- function(WS,SW,GC,cor=COR,snpthresh=SNPTHRESH) {
 #' The function return the weighted least-square as afunction of: sum(w(j) * (log(Tws(j)/Tsw(j)) - B * j/n + log(mut_bias) )^2)
 #' where Tws and Tsw are expressed as a function of Ows, Osw, e1 and e2
 #' w(j) = Ows(j)*Osw(j) / (Ows(j)+Osw(j)) is the weight used in the least square
+#' Note that this function must be optimized for e1 and e2 whereas the other null model directly give the sum of squares
+#'
+#'
 #'
 #' @param par a vector with the for parameters of the model.
 #' par(1) = e1
