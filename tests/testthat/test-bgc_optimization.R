@@ -33,9 +33,9 @@ test_that("AICls handles edge cases for n, np, and SSres", {
 })
 
 test_that("AICls prints warnings for invalid inputs", {
-  expect_error(AICls(0, 3, 123), "n must be strictly positive")
-  expect_error(AICls(100, -1, 123), "np must be positive and lower than n")
-  expect_error(AICls(100, 3, -1), "SSres must be positive")
+  expect_warning(AICls(0, 3, 123), "n must be strictly positive")
+  expect_warning(AICls(100, -1, 123), "np must be positive and lower than n")
+  expect_warning(AICls(100, 3, -1), "SSres must be positive")
 })
 
 # --- Tests for least_square_M ---

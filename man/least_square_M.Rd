@@ -10,6 +10,7 @@ least_square_M(
   GC,
   cor = COR,
   snpthresh = SNPTHRESH,
+  mincat = MINCAT,
   Mmin = MMIN,
   Mmax = MMAX,
   Maxit = MAXIT,
@@ -26,24 +27,25 @@ least_square_M(
 
 \item{GC}{GC content}
 
-\item{cor}{a Boolean to add a correction to the transformed SFS (default = TRUE)}
+\item{cor}{a Boolean to add a correction to the transformed SFS (default = COR)}
 
-\item{snpthresh}{the value below which the SNP category is removed (default = 1)}
+\item{snpthresh}{the value below which the SNP category is removed (default = SNPTHRESH)}
 
-\item{Mmin}{minimum for the range of M, default value = -5}
+\item{mincat}{minimum number of valid SNP categories to do the estimation (default = MINCAT)}
 
-\item{Mmax}{maximum or the range of M, default value = 5}
+\item{Mmin}{minimum for the range of M, default value = MMIN}
 
-\item{Maxit}{maximum number of iterations (option for optim), see manual, default value = 100}
+\item{Mmax}{maximum or the range of M, default value = MMAX}
 
-\item{Factr}{level of control the convergence (option for optim, see manual), default value = 10^7}
+\item{Maxit}{maximum number of iterations (option for optim), see manual, default value = MAXIT}
 
-\item{Lmm}{number of updates in the method (option for optim, see manual)}
+\item{Factr}{level of control the convergence (option for optim, see manual), default value = FACTR}
 
-\item{Verbose}{from 0 (default) to 5: level of outputs during optimization (option for optim, see manual)}
+\item{Lmm}{number of updates in the method (option for optim, see manual), default value = LMM}
 
-\item{Usegr}{to use (default) or not the analytical gradient (option for optim, see manual)
-It's better to use the analytical gradient function but the option can be turn off for testing}
+\item{Verbose}{from 0 to 5: level of outputs during optimization (option for optim, see manual), default value = VERBOSE}
+
+\item{Usegr}{to use or not the analytical gradient (option for optim, see manual), default value = USEGR}
 }
 \value{
 A list of two lists:

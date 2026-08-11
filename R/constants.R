@@ -11,6 +11,8 @@ ZERO <- 10^(-8)
 ONE <- 1 - ZERO
 # Value below which the snp category is removed
 SNPTHRESH <- 0.1
+# Minimum number of valid categories to do the estimations
+MINCAT <- 5
 # Default parameters for optimization
 # gBGC coefficient
 BMIN <- -100
