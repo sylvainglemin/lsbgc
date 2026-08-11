@@ -104,6 +104,7 @@ least_square_M <- function(WS,SW,GC,cor=COR,snpthresh=SNPTHRESH,mincat=MINCAT,
     )
   }
   Minit <- mean(log(WS[NONZERO]/SW[NONZERO]),na.rm=T) + log(1 - GC) - log(GC)
+  Minit <- ifelse(abs(Minit)<ZERO,ZERO,Minit)
   init <- c(Minit)
   # Boundaries for optimization
   inf <- c(Mmin)
@@ -197,6 +198,7 @@ least_square_B <- function(WS,SW,GC,cor=COR,snpthresh=SNPTHRESH,mincat=MINCAT,
   # Determination of initial values for optimization: use of the simple regression
   reginit <- lm( (log(WS[NONZERO]/SW[NONZERO])  - log(1 - GC) + log(GC)) ~ x[NONZERO]-1)
   Binit <- reginit$coef
+  Binit <- ifelse(abs(Binit)<ZERO,ZERO,Binit)
   # The factor ONE is to avoid 0 values in the SFS
   init <- c(Binit)
   # Boundaries for optimization
@@ -295,6 +297,8 @@ least_square_BM <- function(WS,SW,GC,cor=COR,snpthresh=SNPTHRESH,mincat=MINCAT,
   reginit <- lm(log(WS[NONZERO]/SW[NONZERO]) ~ x[NONZERO])
   Minit <- -reginit$coef[1] + log(1 - GC) - log(GC)
   Binit <- reginit$coef[2]
+  Minit <- ifelse(abs(Minit)<ZERO,ZERO,Minit)
+  Binit <- ifelse(abs(Binit)<ZERO,ZERO,Binit)
   # The factor ONE is to avoid 0 values in the SFS
   init <- c(Binit,Minit)
   # Boundaries for optimization
@@ -398,6 +402,8 @@ least_square_hotspot1 <- function(WS,SW,GC,cor=COR,snpthresh=SNPTHRESH,mincat=MI
   reginit <- lm(log(WS[NONZERO]/SW[NONZERO]) ~ x[NONZERO])
   Minit <- -reginit$coef[1] + log(1 - GC) - log(GC)
   Binit <- reginit$coef[2]/finit
+  Minit <- ifelse(abs(Minit)<ZERO,ZERO,Minit)
+  Binit <- ifelse(abs(Binit)<ZERO,ZERO,Binit)
   init <- c(Binit,finit,Minit)
   # Boundaries for optimization
   inf <- c(Bmin,0,Mmin)
@@ -506,6 +512,9 @@ least_square_hotspot2 <- function(WS,SW,GC,cor=COR,snpthresh=SNPTHRESH,mincat=MI
   # Starting values such that B1 = 5*B0
   B0init <- reginit$coef[2]/(1 + 4*finit)
   B1init <- 5*reginit$coef[2]/(1 + 4*finit)
+  Minit <- ifelse(abs(Minit)<ZERO,ZERO,Minit)
+  B0init <- ifelse(abs(B0init)<ZERO,ZERO,B0init)
+  B1init <- ifelse(abs(B1init)<ZERO,ZERO,B1init)
   init <- c(B0init,B1init,finit,Minit)
   # Boundaries for optimization
   inf <- c(B0min,B1min,0,Mmin)
@@ -616,6 +625,9 @@ least_square_hotspot2bis <- function(WS,SW,GC,f,cor=COR,snpthresh=SNPTHRESH,minc
   # Starting values such that B1 = 5*B0
   B0init <- reginit$coef[2]/(1 + 4*f)
   B1init <- 5*reginit$coef[2]/(1 + 4*f)
+  Minit <- ifelse(abs(Minit)<ZERO,ZERO,Minit)
+  B0init <- ifelse(abs(B0init)<ZERO,ZERO,B0init)
+  B1init <- ifelse(abs(B1init)<ZERO,ZERO,B1init)
   init <- c(B0init,B1init,Minit)
   # Boundaries for optimization
   inf <- c(B0min,B1min,Mmin)

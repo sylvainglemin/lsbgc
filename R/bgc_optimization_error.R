@@ -170,6 +170,7 @@ least_square_M_err <- function(WS,SW,GC,cor=COR,snpthresh=SNPTHRESH,mincat=MINCA
     )
   }
   Minit <- mean(log(WS[NONZERO]/SW[NONZERO]),na.rm=T) + log(1 - GC) - log(GC)
+  Minit <- ifelse(abs(Minit)<ZERO,ZERO,Minit)
   init <- c(Minit,e1init,e2init)
   # Boundaries for optimization
   inf <- c(Mmin,0,0)
@@ -271,6 +272,7 @@ least_square_B_err <- function(WS,SW,GC,cor=COR,snpthresh=SNPTHRESH,mincat=MINCA
   # Determination of initial values for optimization: use of the simple regression
   reginit <- lm( (log(WS[NONZERO]/SW[NONZERO]) -log(1 - GC) + log(GC)) ~ x[NONZERO]-1)
   Binit <- reginit$coef
+  Binit <- ifelse(abs(Binit)<ZERO,ZERO,Binit)
   init <- c(Binit,e1init,e2init)
   # Boundaries for optimization
   inf <- c(Bmin,0,0)
@@ -376,6 +378,8 @@ least_square_BM_err <- function(WS,SW,GC,cor=COR,snpthresh=SNPTHRESH,mincat=MINC
   reginit <- lm(log(WS[NONZERO]/SW[NONZERO]) ~ x[NONZERO])
   Minit <- -reginit$coef[1] + log(1 - GC) - log(GC)
   Binit <- reginit$coef[2]
+  Minit <- ifelse(abs(Minit)<ZERO,ZERO,Minit)
+  Binit <- ifelse(abs(Binit)<ZERO,ZERO,Binit)
   # To avoid negative values in SFS after transformation the error rates must be bounded as follows:
   # This solution is too strict empirically
   #e1max <- max(ZERO,min(SW/(SW + rev(WS)),na.rm=T) * ONE)
@@ -490,6 +494,8 @@ least_square_hotspot1_err <- function(WS,SW,GC,cor=COR,snpthresh=SNPTHRESH,minca
   reginit <- lm(log(WS[NONZERO]/SW[NONZERO]) ~ x[NONZERO])
   Minit <- -reginit$coef[1] + log(1 - GC) - log(GC)
   Binit <- reginit$coef[2]/finit
+  Minit <- ifelse(abs(Minit)<ZERO,ZERO,Minit)
+  Binit <- ifelse(abs(Binit)<ZERO,ZERO,Binit)
   init <- c(Binit,finit,Minit,e1init,e2init)
   # Boundaries for optimization
   inf <- c(Bmin,0,Mmin,0,0)
@@ -606,6 +612,9 @@ least_square_hotspot2_err <- function(WS,SW,GC,cor=COR,snpthresh=SNPTHRESH,minca
   # Starting values such that B1 = 5*B0
   B0init <- reginit$coef[2]/(1 + 4*finit)
   B1init <- 5*reginit$coef[2]/(1 + 4*finit)
+  Minit <- ifelse(abs(Minit)<ZERO,ZERO,Minit)
+  B0init <- ifelse(abs(B0init)<ZERO,ZERO,B0init)
+  B1init <- ifelse(abs(B1init)<ZERO,ZERO,B1init)
   init <- c(B0init,B1init,finit,Minit,e1init,e2init)
   # Boundaries for optimization
   inf <- c(B0min,B1min,0,Mmin,0,0)
@@ -724,6 +733,9 @@ least_square_hotspot2bis_err <- function(WS,SW,GC,f,cor=COR,snpthresh=SNPTHRESH,
   # Starting values such that B1 = 5*B0
   B0init <- reginit$coef[2]/(1 + 4*f)
   B1init <- 5*reginit$coef[2]/(1 + 4*f)
+  Minit <- ifelse(abs(Minit)<ZERO,ZERO,Minit)
+  B0init <- ifelse(abs(B0init)<ZERO,ZERO,B0init)
+  B1init <- ifelse(abs(B1init)<ZERO,ZERO,B1init)
   init <- c(B0init,B1init,Minit,e1init,e2init)
   # Boundaries for optimization
   inf <- c(B0min,B1min,Mmin,0,0)
