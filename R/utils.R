@@ -91,3 +91,26 @@ project_sfs <- function(sfs,m){
   }
   return(output)
 }
+
+
+
+#' Rescaling function for the optim function
+#' It avoids too large differences in the scale vector
+#'
+#' @param v a vector
+#'
+#' @returns the scaled vector
+#'
+#' @noRd
+rescale <- function(v,scalethresh=SCALETHRESH) {
+  v <- ifelse(v==0,ZERO,v)
+  lv <- log10(abs(v))
+  delta <- max(lv) - min(lv)
+  if(delta <= scalethresh) {
+    return(abs(v))
+  }
+  else{
+    newlv <- scalethresh*(lv - min(lv))/delta
+    return(min(v)*(10^newlv))
+  }
+}

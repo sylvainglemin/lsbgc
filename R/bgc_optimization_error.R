@@ -74,7 +74,7 @@ least_square_NULL_GC_err <- function(WS,SW,GC,cor=COR,snpthresh=SNPTHRESH,mincat
   inf <- c(0,0)
   sup <- c(e1max,e2max)
   if(Usegr) gradient <- gr_sum_of_squares_NULL_GC_err else gradient <- NULL
-  SCALE <- abs(init)
+  SCALE <- rescale(init)
   minSSE <- optim(
     par = init,
     fn = sum_of_squares_NULL_GC_err,
@@ -176,7 +176,7 @@ least_square_M_err <- function(WS,SW,GC,cor=COR,snpthresh=SNPTHRESH,mincat=MINCA
   inf <- c(Mmin,0,0)
   sup <- c(Mmax,e1max,e2max)
   if(Usegr) gradient <- gr_sum_of_squares_M_err else gradient <- NULL
-  SCALE <- abs(init)
+  SCALE <- rescale(init)
   minSSE <- optim(
     par = init,
     fn = sum_of_squares_M_err,
@@ -278,7 +278,7 @@ least_square_B_err <- function(WS,SW,GC,cor=COR,snpthresh=SNPTHRESH,mincat=MINCA
   inf <- c(Bmin,0,0)
   sup <- c(Bmax,e1max,e2max)
   if(Usegr) gradient <- gr_sum_of_squares_B_err else gradient <- NULL
-  SCALE <- abs(init)
+  SCALE <- rescale(init)
   minSSE <- optim(
     par = init,
     fn = sum_of_squares_B_err,
@@ -389,7 +389,7 @@ least_square_BM_err <- function(WS,SW,GC,cor=COR,snpthresh=SNPTHRESH,mincat=MINC
   inf <- c(Bmin,Mmin,0,0)
   sup <- c(Bmax,Mmax,e1max,e2max)
   if(Usegr) gradient <- gr_sum_of_squares_BM_err else gradient <- NULL
-  SCALE <- abs(init)
+  SCALE <- rescale(init)
   minSSE <- optim(
     par = init,
     fn = sum_of_squares_BM_err,
@@ -501,7 +501,7 @@ least_square_hotspot1_err <- function(WS,SW,GC,cor=COR,snpthresh=SNPTHRESH,minca
   inf <- c(Bmin,0,Mmin,0,0)
   sup <- c(Bmax,1,Mmax,e1max,e2max)
   if(Usegr) gradient <- gr_sum_of_squares_hotspot1_err else gradient <- NULL
-  SCALE <- abs(init)
+  SCALE <- rescale(init)
   minSSE <- optim(
     par = init,
     fn = sum_of_squares_hotspot1_err,
@@ -620,7 +620,7 @@ least_square_hotspot2_err <- function(WS,SW,GC,cor=COR,snpthresh=SNPTHRESH,minca
   inf <- c(B0min,B1min,0,Mmin,0,0)
   sup <- c(B0max,B1max,1,Mmax,e1max,e2max)
   if(Usegr) gradient <- gr_sum_of_squares_hotspot2_err else gradient <- NULL
-  SCALE <- abs(init)
+  SCALE <- rescale(init)
   minSSE <- optim(
     par = init,
     fn = sum_of_squares_hotspot2_err,
@@ -741,7 +741,7 @@ least_square_hotspot2bis_err <- function(WS,SW,GC,f,cor=COR,snpthresh=SNPTHRESH,
   inf <- c(B0min,B1min,Mmin,0,0)
   sup <- c(B0max,B1max,Mmax,e1max,e2max)
   if(Usegr) gradient <- gr_sum_of_squares_hotspot2bis_err else gradient <- NULL
-  SCALE <- abs(init)
+  SCALE <- rescale(init)
   minSSE <- optim(
     par = init,
     fn = sum_of_squares_hotspot2bis_err,
